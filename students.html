@@ -502,7 +502,7 @@
       const qrCodeId = "qr-" + Math.random().toString(36).substr(2, 9); // Generate random QR ID
 
       try {
-        const { error } = await window.db.from('students').insert([
+        const { error } = await supabase.from('students').insert([
           { nis: nis, name: name.toUpperCase(), class_name: kelas, qr_code_id: qrCodeId }
         ]);
 
@@ -520,10 +520,11 @@
     });
 
     // Hapus Siswa
-    async function deleteStudentData(id, nama) {
+async function deleteStudentData(id, nama) {
       if(confirm(`Apakah Anda yakin ingin menghapus siswa ${nama}? Data absennya juga akan terhapus.`)) {
         try {
-          const { error } = await supabase.from('students').delete().eq('id', id);
+          // Ubah 'supabase' menjadi 'window.db'
+          const { error } = await window.db.from('students').delete().eq('id', id);
           if (error) {
             showToast('Gagal menghapus data.', 'error', 'Error');
           } else {
