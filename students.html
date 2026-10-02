@@ -503,7 +503,8 @@
       const qrCodeId = "qr-" + Math.random().toString(36).substr(2, 9);
 
       try {
-        const { error } = await window.supabase.from('students').insert([
+        // Gunakan window.db sesuai inisialisasi di supabase.js
+        const { error } = await window.db.from('students').insert([
           { 
             nis: nis, 
             nama: name.toUpperCase(), 
