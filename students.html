@@ -502,7 +502,7 @@
       const qrCodeId = "qr-" + Math.random().toString(36).substr(2, 9); // Generate random QR ID
 
       try {
-        const { error } = await supabase.from('students').insert([
+        const { error } = await window.db.from('students').insert([
           { nis: nis, name: name.toUpperCase(), class_name: kelas, qr_code_id: qrCodeId }
         ]);
 
