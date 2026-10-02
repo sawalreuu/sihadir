@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <meta content="web_dashboard" name="shell-type" />
+  <title>SIHADIR - Scanner</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+
+  <!-- Library Supabase & HTML5 QR Code -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://unpkg.com/html5-qrcode"></script>
+
+  <!-- Tailwind CSS & Config -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+    
+    /* Styling khusus bawaan html5-qrcode agar rapi di Tailwind */
+    #reader { border: none !important; width: 100%; }
+    #reader img { display: none; } /* Hide default icon */
+    #reader__dashboard_section_csr button {
+      background-color: #004ac6; color: white; padding: 8px 16px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; margin-top: 10px;
+    }
+    #reader__dashboard_section_swaplink { color: #004ac6; text-decoration: underline; margin-top: 10px; display: inline-block; }
+  </style>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "surface-container-high": "#dce9ff", "on-primary-fixed-variant": "#003ea8",
+            "outline-variant": "#c3c6d7", "on-primary-container": "#eeefff",
+            "primary-container": "#2563eb", "inverse-primary": "#b4c5ff",
+            "secondary-fixed-dim": "#6bd8cb", "on-primary": "#ffffff",
+            "surface-container-lowest": "#ffffff", "on-error": "#ffffff",
+            "tertiary-fixed-dim": "#ffb95f", "primary-fixed-dim": "#b4c5ff",
+            "on-secondary-fixed": "#00201d", "inverse-on-surface": "#eaf1ff",
+            "surface": "#f8f9ff", "on-tertiary-fixed": "#2a1700",
+            "outline": "#737686", "surface-dim": "#cbdbf5",
+            "surface-container-low": "#eff4ff", "on-secondary-container": "#006f66",
+            "on-surface": "#0b1c30", "error-container": "#ffdad6",
+            "on-secondary": "#ffffff", "tertiary-container": "#996100",
+            "surface-container": "#e5eeff", "background": "#f8f9ff",
+            "secondary-container": "#86f2e4", "tertiary-fixed": "#ffddb8",
+            "on-surface-variant": "#434655", "primary-fixed": "#dbe1ff",
+            "on-primary-fixed": "#00174b", "secondary": "#006a61",
+            "tertiary": "#784b00", "on-tertiary-fixed-variant": "#653e00",
+            "inverse-surface": "#213145", "surface-variant": "#d3e4fe",
+            "surface-tint": "#0053db", "on-tertiary": "#ffffff",
+            "on-background": "#0b1c30", "on-secondary-fixed-variant": "#005049",
+            "surface-bright": "#f8f9ff", "error": "#ba1a1a",
+            "primary": "#004ac6", "on-tertiary-container": "#ffeedd",
+            "secondary-fixed": "#89f5e7", "surface-container-highest": "#d3e4fe",
+            "on-error-container": "#93000a"
+          },
+          spacing: {
+            "space-sm": "0.5rem", "margin": "2rem", "space-lg": "1.5rem",
+            "space-md": "1rem", "gutter-mobile": "1rem", "space-xs": "0.25rem",
+            "margin-mobile": "1rem", "space-xl": "2rem", "gutter": "1.5rem"
+          },
+          fontFamily: {
+            "label-sm": ["Inter"], "title-md": ["Plus Jakarta Sans"],
+            "body-md": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"],
+            "headline-xl-mobile": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"],
+            "headline-md": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"],
+            "title-lg": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"],
+            "label-md": ["Inter"], "body-sm": ["Plus Jakarta Sans"],
+            "label-lg": ["Inter"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-surface font-body-md text-on-surface min-h-screen">
+  
+  <!-- Sidebar -->
+  <aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col justify-between p-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+    <div class="flex flex-col gap-space-lg">
+      <div class="flex items-center gap-space-sm">
+        <img alt="SIHADIR Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1V5El7QWhUBII4Rgkk5BFx4y1tj4lmoEMBx0sTntd8-82mrVLzcCD_Zef17OJ8cp8cMnmvn57ObNAhEKbFozuOKw-btE3WU4gP1ev4q9apc4WuBS49xrBJS2MLFVKGd_MaDU_yVZV5pkUX4wsExl2ewV5cmMqDjGnnfH5W_vOIF0E0IcvrGp2R30JT2G_D-nLyj3hxD7XhEEg8q00ubCcbOjvdvTB3BvaWf3YaqpnFZX5A9ucjCad2uCck" />
+        <div>
+          <span class="font-title-lg text-title-lg text-primary tracking-tight block">SIHADIR</span>
+          <span class="font-body-sm text-body-sm text-on-surface-variant block">Sistem Presensi Siswa</span>
+        </div>
+      </div>
+      <nav class="flex flex-col gap-space-xs" data-active-classes="bg-primary-container text-on-primary-container font-label-lg rounded-xl shadow-[0_4px_12px_rgba(37,99,235,0.25)]">
+        <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="dashboard" href="index.html">
+          <span class="material-symbols-outlined text-title-lg">dashboard</span>Dashboard
+        </a>
+        <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="data-siswa" href="students.html">
+          <span class="material-symbols-outlined text-title-lg">school</span>Data Siswa
+        </a>
+        <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="rekapitulasi" href="reports.html">
+          <span class="material-symbols-outlined text-title-lg">description</span>Rekapitulasi
+        </a>
+        <a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-all bg-primary-container text-on-primary-container font-label-lg rounded-xl shadow-[0_4px_12px_rgba(37,99,235,0.25)]" data-path="buka-scanner" href="scanner.html">
+          <span class="material-symbols-outlined text-title-lg">qr_code_scanner</span>Buka Scanner
+        </a>
+      </nav>
+    </div>
+    <div class="flex flex-col gap-space-md pt-space-md">
+      <div class="bg-surface-container-low rounded-xl p-space-sm flex items-center justify-between">
+        <div class="flex items-center gap-space-xs">
+          <span class="relative flex h-2 w-2">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+          </span>
+          <span class="font-label-sm text-label-sm text-on-surface">Supabase Terhubung</span>
+        </div>
+        <span class="material-symbols-outlined text-secondary text-body-md">cloud_done</span>
+      </div>
+      <a href="#" class="bg-surface-container-lowest hover:bg-surface-container-high transition-colors rounded-xl p-space-sm flex items-center gap-space-xs text-on-surface-variant">
+        <span class="material-symbols-outlined text-body-md text-primary">settings</span>
+        <div class="flex flex-col">
+          <span class="font-label-sm text-label-sm text-on-surface font-semibold">Pengaturan</span>
+          <span class="font-body-sm text-body-sm text-outline">Konfigurasi sistem</span>
+        </div>
+      </a>
+    </div>
+  </aside>
+
+  <!-- Main Content Area -->
+  <div class="pl-64">
+    <!-- Header -->
+    <header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 px-gutter flex items-center justify-between">
+      <div class="flex items-center gap-space-xs font-body-md text-body-md text-on-surface-variant">
+        <span class="material-symbols-outlined text-title-md">home</span>
+        <span>/</span>
+        <span class="font-title-md text-title-md text-on-surface">Portal Presensi</span>
+      </div>
+      <div class="flex items-center gap-space-lg">
+        <div class="hidden sm:flex items-center gap-space-xs bg-surface-container-low px-space-md py-space-xs rounded-full text-on-surface-variant font-label-md text-label-md">
+          <span class="material-symbols-outlined text-body-md text-primary">calendar_today</span>
+          <span>Kamis, 24 Oktober 2024</span>
+        </div>
+        <button aria-label="Notifikasi" class="relative p-space-xs rounded-full text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors">
+          <span class="material-symbols-outlined">notifications</span>
+          <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error"></span>
+        </button>
+        <div class="flex items-center gap-space-sm pl-space-sm">
+          <div class="text-right hidden md:block">
+            <span class="font-title-md text-title-md text-on-surface block leading-tight">Admin Sekolah</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant block">Petugas Piket</span>
+          </div>
+          <img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe3xWH7adnvgfkpb8Q1JnvJEczn3F2XVBqd9UcpwviPoyJwls-Mqa8JcEJY1JrN6OdKySG5K9YnI0jtUOfsnFYphc6ipvu7en74pqprhkeEqjqAS88ZY_c4sx-LF4TCGBXnpbAWdz5eOJi3NH8p3wTX0RjuyK2PyeTfgCiiN-SvZ5duPTwSTw01IPasVFR-pi-q0KjQRSi6xRqx0Coy78SAa7Z0kDRXghoKwDjbxcqCzV3GCmoQiVL" />
+        </div>
+      </div>
+    </header>
+
+    <main class="w-full pt-16 bg-surface min-h-screen">
+      <div class="flex flex-col w-full">
+        
+        <!-- Interactive Toast Notification untuk Hasil Scan -->
+        <div class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-space-sm px-space-md py-space-sm rounded-xl shadow-xl bg-surface-container-lowest text-on-surface" id="toastNotification">
+          <span class="material-symbols-outlined text-secondary" id="toastIcon">check_circle</span>
+          <div class="flex flex-col">
+            <span class="font-title-md text-title-md leading-snug" id="toastTitle">Berhasil</span>
+            <span class="font-body-sm text-body-sm text-on-surface-variant" id="toastMessage">Scan Kehadiran Sukses</span>
+          </div>
+        </div>
+
+        <div class="p-space-lg max-w-7xl mx-auto w-full flex flex-col gap-space-lg">
+          <!-- Top Bar: Title & Operational Status -->
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-space-md bg-surface-container-lowest p-space-lg rounded-2xl shadow-sm">
+            <div class="flex items-center gap-space-md">
+              <div class="w-12 h-12 rounded-xl bg-primary-container text-on-primary-container flex items-center justify-center shadow-md">
+                <span class="material-symbols-outlined text-headline-md">qr_code_scanner</span>
+              </div>
+              <div>
+                <div class="flex items-center gap-space-xs">
+                  <h1 class="font-headline-lg text-headline-lg text-on-surface">Scan Kehadiran</h1>
+                </div>
+                <p class="font-body-sm text-body-sm text-on-surface-variant">Gerbang Utama • Sesi Pagi (Batas Masuk 07.15 WIB)</p>
+              </div>
+            </div>
+            <!-- Mode Switcher Tabs -->
+            <div class="flex items-center bg-surface-container-low p-1.5 rounded-xl self-start md:self-auto shadow-inner">
+              <button class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg font-label-lg text-label-lg transition-all bg-primary-container text-on-primary-container shadow-sm" id="btn-tab-camera" onclick="switchScannerMode('camera')">
+                <span class="material-symbols-outlined text-body-lg">videocam</span>
+                <span>Kamera Web / HP</span>
+              </button>
+              <button class="flex items-center gap-space-xs px-space-md py-space-sm rounded-lg font-label-lg text-label-lg transition-all text-on-surface-variant hover:text-on-surface" id="btn-tab-physical" onclick="switchScannerMode('physical')">
+                <span class="material-symbols-outlined text-body-lg">barcode_scanner</span>
+                <span>Mode Scanner Fisik</span>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Main Interactive Grid -->
+          <div class="gap-space-lg flex flex-col w-full">
+            <div class="flex flex-col gap-space-md w-full max-w-3xl mx-auto">
+              
+              <!-- Physical Scanner Active Guidance Banner -->
+              <div class="hidden bg-secondary-container text-on-secondary-container p-space-md rounded-2xl flex items-center justify-between shadow-sm cursor-pointer" id="physical-banner" onclick="focusPhysicalScanner()">
+                <div class="flex items-center gap-space-sm">
+                  <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-secondary"></span>
+                  </span>
+                  <div class="flex flex-col">
+                    <span class="font-label-lg text-label-lg">Mode Scanner Fisik Siap Menerima Input</span>
+                    <span class="font-body-sm text-body-sm text-on-secondary-container/80">USB Barcode / RFID Reader aktif. Langsung lakukan tapping kartu pelajar. (Klik area ini jika tidak merespon)</span>
+                  </div>
+                </div>
+                <span class="material-symbols-outlined text-headline-md">usb</span>
+              </div>
+              
+              <!-- Hidden input for USB/Physical Scanners -->
+              <input autocomplete="off" class="opacity-0 absolute pointer-events-none" id="hardware-scanner-input" type="text" />
+              
+              <!-- Camera Scanner Card Container -->
+              <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm flex flex-col items-center w-full" id="camera-container">
+                <!-- Wrapper untuk Plugin html5-qrcode -->
+                <div class="relative w-full overflow-hidden flex flex-col items-center justify-center text-center group">
+                  <div id="reader" class="rounded-2xl overflow-hidden bg-inverse-surface border-none w-full max-w-lg aspect-square sm:aspect-video object-cover"></div>
+                </div>
+              </div>
+              
+              <!-- Quick Tips for Gatekeeper -->
+              <div class="bg-surface-container-low rounded-2xl p-space-md flex items-start gap-space-md w-full">
+                <div class="w-8 h-8 rounded-full bg-surface-container flex items-center justify-center text-primary flex-shrink-0 mt-0.5">
+                  <span class="material-symbols-outlined text-title-md">tips_and_updates</span>
+                </div>
+                <div class="flex flex-col">
+                  <span class="font-title-md text-title-md text-on-surface">Tips Penjaga Piket</span>
+                  <p class="font-body-sm text-body-sm text-on-surface-variant mt-0.5">
+                    Jika kartu pelajar kotor atau tidak terdeteksi oleh kamera, aktifkan <strong class="text-on-surface">Mode Scanner Fisik</strong> dan arahkan barcode reader pistol ke barcode kartu. Presensi langsung terekam tanpa menunggu shutter kamera.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Script Utama (Supabase Config & Scanner Logic) -->
+  <script src="js/supabase.js"></script>
+  <script>
+    let isProcessing = false;
+    let html5QrcodeScanner;
+    const hardwareInput = document.getElementById('hardware-scanner-input');
+    const physicalBanner = document.getElementById('physical-banner');
+    const cameraContainer = document.getElementById('camera-container');
+
+    // --- Toast & Sound Feedback ---
+    let toastTimer = null;
+    function showToast(message, type = 'success', title = 'Berhasil') {
+      const toast = document.getElementById('toastNotification');
+      const toastTitle = document.getElementById('toastTitle');
+      const toastMessage = document.getElementById('toastMessage');
+      const toastIcon = document.getElementById('toastIcon');
+
+      if (!toast) return;
+      clearTimeout(toastTimer);
+
+      toastTitle.innerText = title;
+      toastMessage.innerText = message;
+
+      if (type === 'error') {
+        toastIcon.innerText = 'error';
+        toastIcon.className = 'material-symbols-outlined text-error';
+      } else {
+        toastIcon.innerText = 'check_circle';
+        toastIcon.className = 'material-symbols-outlined text-secondary';
+      }
+
+      toast.classList.remove('translate-y-24', 'opacity-0');
+      toast.classList.add('translate-y-0', 'opacity-100');
+
+      toastTimer = setTimeout(() => {
+        toast.classList.remove('translate-y-0', 'opacity-100');
+        toast.classList.add('translate-y-24', 'opacity-0');
+      }, 4000);
+    }
+
+    function playSound(type) {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContext) return;
+      const ctx = new AudioContext();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain);
+      gain.connect(ctx.destination);
+
+      if (type === "success") {
+        osc.type = "sine";
+        osc.frequency.setValueAtTime(800, ctx.currentTime);
+        gain.gain.setValueAtTime(0.5, ctx.currentTime);
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.2);
+        osc.stop(ctx.currentTime + 0.2);
+      } else {
+        osc.type = "sawtooth";
+        osc.frequency.setValueAtTime(200, ctx.currentTime);
+        gain.gain.setValueAtTime(0.5, ctx.currentTime);
+        osc.start();
+        gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.5);
+        osc.stop(ctx.currentTime + 0.5);
+      }
+    }
+
+    function showStatus(message, isError) {
+      showToast(message, isError ? 'error' : 'success', isError ? 'Gagal' : 'Berhasil');
+      playSound(isError ? 'error' : 'success');
+      
+      // Delay pencegahan scan beruntun cepat
+      setTimeout(() => {
+        isProcessing = false;
+        hardwareInput.value = '';
+        if (!physicalBanner.classList.contains('hidden')) {
+          hardwareInput.focus();
+        }
+      }, 3000); 
+    }
+
+    // --- Fungsi Utama Supabase: Handle Scan ---
+    async function handleScan(qrCodeId) {
+      if (isProcessing) return;
+      isProcessing = true;
+      
+      try {
+        // 1. Cari Siswa
+        const { data: students, error: studentError } = await supabase
+          .from('students')
+          .select('*')
+          .eq('qr_code_id', qrCodeId)
+          .single();
+
+        if (studentError || !students) {
+          showStatus("Data siswa / QR Code tidak dikenali!", true);
+          return;
+        }
+
+        // 2. Cek absen hari ini
+        const today = new Date();
+        today.setHours(0,0,0,0);
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        const { data: attendances } = await supabase
+          .from('attendance')
+          .select('*')
+          .eq('student_id', students.id)
+          .gte('created_at', today.toISOString())
+          .lt('created_at', tomorrow.toISOString())
+          .order('created_at', { ascending: true });
+
+        let status = "";
+        if (!attendances || attendances.length === 0) {
+          status = "MASUK";
+        } else if (attendances.length === 1) {
+          status = "PULANG";
+        } else {
+          showStatus(`${students.name} sudah absen MASUK dan PULANG hari ini.`, true);
+          return;
+        }
+
+        // 3. Simpan absen
+        const { error: insertError } = await supabase
+          .from('attendance')
+          .insert([{ student_id: students.id, status: status }]);
+
+        if (insertError) {
+          showStatus("Gagal menyimpan ke database cloud.", true);
+        } else {
+          showStatus(`Berhasil absen ${status} - ${students.name}`, false);
+        }
+
+      } catch (e) {
+        showStatus("Terjadi kesalahan koneksi sistem.", true);
+      }
+    }
+
+    // --- Inisialisasi html5-qrcode ---
+    function setupWebScanner() {
+      html5QrcodeScanner = new Html5QrcodeScanner(
+        "reader", { fps: 10, qrbox: {width: 250, height: 250} }, false);
+      
+      html5QrcodeScanner.render((decodedText) => {
+        if (!isProcessing) {
+          handleScan(decodedText);
+        }
+      });
+    }
+
+    // --- Logika Mode Switcher ---
+    function switchScannerMode(mode) {
+      const camBtn = document.getElementById('btn-tab-camera');
+      const physBtn = document.getElementById('btn-tab-physical');
+
+      if (mode === 'physical') {
+        // Mode Alat Fisik
+        camBtn.className = "flex items-center gap-space-xs px-space-md py-space-sm rounded-lg font-label-lg text-label-lg transition-all text-on-surface-variant hover:text-on-surface";
+        physBtn.className = "flex items-center gap-space-xs px-space-md py-space-sm rounded-lg font-label-lg text-label-lg transition-all bg-primary-container text-on-primary-container shadow-sm";
+        physicalBanner.classList.remove('hidden');
+        cameraContainer.classList.add('hidden');
+        
+        // Pause web camera if running (menghemat baterai)
+        if (html5QrcodeScanner) {
+          html5QrcodeScanner.pause(true); 
+        }
+        
+        hardwareInput.focus();
+      } else {
+        // Mode Kamera Web
+        physBtn.className = "flex items-center gap-space-xs px-space-md py-space-sm rounded-lg font-label-lg text-label-lg transition-all text-on-surface-variant hover:text-on-surface";
+        camBtn.className = "flex items-center gap-space-xs px-space-md py-space-sm rounded-lg font-label-lg text-label-lg transition-all bg-primary-container text-on-primary-container shadow-sm";
+        physicalBanner.classList.add('hidden');
+        cameraContainer.classList.remove('hidden');
+        
+        // Resume web camera
+        if (html5QrcodeScanner) {
+          html5QrcodeScanner.resume();
+        }
+      }
+    }
+
+    // --- Logika Scanner Fisik (USB Barcode/RFID) ---
+    function focusPhysicalScanner() {
+      hardwareInput.focus();
+      showToast('Scanner Fisik Siap, silakan tap kartu', 'info', 'Mode Fisik');
+    }
+
+    // Tangkap enter dari scanner barcode
+    hardwareInput.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const scannedCode = hardwareInput.value.trim();
+        if (scannedCode) {
+          handleScan(scannedCode);
+        }
+      }
+    });
+
+    // Pastikan input selalu fokus saat di mode fisik
+    document.addEventListener('click', (e) => {
+      // Jika mode fisik sedang aktif dan tidak meng-klik tombol switcher
+      if (!physicalBanner.classList.contains('hidden') && !e.target.closest('button')) {
+        hardwareInput.focus();
+      }
+    });
+
+    // Mulai kamera saat pertama kali muat
+    window.onload = () => {
+      setupWebScanner();
+    };
+  </script>
+</body>
+</html>

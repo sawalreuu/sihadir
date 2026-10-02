@@ -1,0 +1,93 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9fafb;
+  color: #111827;
+}
+
+.sidebar {
+  width: 250px;
+  background-color: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  height: 100vh;
+  position: fixed;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar h2 {
+  color: #2563eb;
+  text-align: center;
+  padding: 20px 0;
+  margin: 0;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.nav-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nav-links li a {
+  display: block;
+  padding: 15px 20px;
+  text-decoration: none;
+  color: #374151;
+  font-weight: 500;
+}
+
+.nav-links li a:hover, .nav-links li a.active {
+  background-color: #eff6ff;
+  color: #1d4ed8;
+}
+
+.content {
+  margin-left: 250px;
+  padding: 30px;
+}
+
+.card {
+  background: #ffffff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+}
+
+.btn {
+  background-color: #2563eb;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+}
+.btn:hover {
+  background-color: #1d4ed8;
+}
+
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+th, td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+th {
+  background-color: #f3f4f6;
+  color: #4b5563;
+}
+
+/* Scanner Hidden Input for Physical Scanners */
+#physical-scanner-input {
+  position: absolute;
+  left: -9999px;
+}
