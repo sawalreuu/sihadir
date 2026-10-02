@@ -1,7 +1,7 @@
 // ==========================================
 // KONFIGURASI SUPABASE (SIHADIR)
 // ==========================================
-const SUPABASE_URL = 'https://iaosgzutbgemmtqdsui.supabase.co';
+const SUPABASE_URL = 'https://iaosgzutbgemmtqdsuil.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlhb3NnenV0YmdlbXRxZHN1bWwiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTczODEzNDEwOCwiZXhwIjoyMDUzNzE0MTA4fQ.vYjpc3M10iJjzdXhFhZm3NInJjZlZi1lh3NnlenV0YmdlbW1V0cwlbW10c2Vncy';
 
 // Inisialisasi Klien Supabase (disimpan ke variabel window.db agar aman global)
