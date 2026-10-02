@@ -489,7 +489,9 @@
         
         applyFilter(); // Reset view filter kalau sebelumnya ada search
       } catch (err) {
-        tableBody.innerHTML = `<tr><td colspan="4" class="py-8 text-center font-body-sm text-error">Gagal mengambil data dari Supabase. Periksa file supabase.js</td></tr>`;
+        console.error('Gagal memuat data siswa:', err);
+        tableBody.innerHTML = `<tr><td colspan="4" class="py-8 text-center font-body-sm text-error">Gagal mengambil data dari Supabase. Buka Console browser untuk melihat detail error.</td></tr>`;
+        totalStudentCount.innerText = "0";
       }
     }
 
@@ -502,7 +504,7 @@
       const qrCodeId = "qr-" + Math.random().toString(36).substr(2, 9); // Generate random QR ID
 
       try {
-        const { error } = await supabase.from('students').insert([
+        const { error } = await window.db.from('students').insert([
           { nis: nis, name: name.toUpperCase(), class_name: kelas, qr_code_id: qrCodeId }
         ]);
 
