@@ -355,6 +355,7 @@
   </div>
 
   <!-- Script Supabase (Pastikan file ini memiliki koneksi Supabase & fungsi getStudents()) -->
+<!-- Script Supabase -->
   <script src="js/supabase.js"></script>
   
   <script>
@@ -425,7 +426,6 @@
     if (cancelModalBtn) cancelModalBtn.addEventListener('click', hideModal);
 
     // --- Helper UI ---
-    // Mendapatkan inisial huruf nama (maks 2 karakter) untuk avatar
     const getInitials = (name) => {
       if (!name) return 'U';
       let parts = name.split(' ');
@@ -437,7 +437,7 @@
       showToast('Silakan pilih berkas format .xlsx atau .csv untuk mengimpor', 'info', 'Impor Excel');
     }
 
-    // --- Data Supabase Integration (Sama dengan versi sebelumnya, disesuaikan untuk UI Tailwind) ---
+    // --- Data Supabase Integration ---
     async function loadData() {
       try {
         const students = await getStudents(); 
@@ -451,7 +451,8 @@
 
         totalStudentCount.innerText = students.length;
         
-   students.forEach(student => {
+        // Render menggunakan kolom database yang benar: nama, kelas, qr_rfid_id
+        students.forEach(student => {
           const avatarColors = ["bg-primary-fixed text-on-primary-fixed", "bg-secondary-fixed text-on-secondary-fixed", "bg-tertiary-fixed text-on-tertiary-fixed", "bg-surface-container-highest text-primary"];
           const rndColor = avatarColors[Math.floor(Math.random() * avatarColors.length)];
 
@@ -486,49 +487,15 @@
           `;
         });
         
-          // Warna acak (contoh styling avatar Tailwind berdasar class)
-          const avatarColors = ["bg-primary-fixed text-on-primary-fixed", "bg-secondary-fixed text-on-secondary-fixed", "bg-tertiary-fixed text-on-tertiary-fixed", "bg-surface-container-highest text-primary"];
-          const rndColor = avatarColors[Math.floor(Math.random() * avatarColors.length)];
-
-          tableBody.innerHTML += `
-            <tr class="student-row hover:bg-surface-container-low/60 transition-colors h-16 group" data-class="${student.class_name}" data-name="${student.name}" data-nis="${student.nis}">
-              <td class="py-space-sm px-space-lg font-mono font-medium text-primary">${student.nis}</td>
-              <td class="py-space-sm px-space-lg">
-                <div class="flex items-center gap-space-md">
-                  <div class="w-10 h-10 rounded-full ${rndColor} flex items-center justify-center font-bold text-title-md shadow-xs">
-                    ${getInitials(student.name)}
-                  </div>
-                  <div class="flex flex-col min-w-0">
-                    <span class="font-title-md text-title-md text-on-surface truncate">${student.name}</span>
-                    <span class="font-body-sm text-body-sm text-outline">Terdaftar NIS ${student.nis}</span>
-                  </div>
-                </div>
-              </td>
-              <td class="py-space-sm px-space-lg">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-label-sm font-label-sm bg-surface-container-high text-primary font-semibold">
-                  <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
-                  ${student.class_name}
-                </span>
-              </td>
-              <td class="py-space-sm px-space-lg text-right">
-                <div class="flex items-center justify-end gap-space-xs">
-                  <button class="p-2 rounded-xl text-error/70 hover:text-error hover:bg-error-container/40 transition-colors" onclick="deleteStudentData('${student.id}', '${student.name}')" title="Hapus Siswa">
-                    <span class="material-symbols-outlined text-title-md">delete</span>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          `;
-        });
-        
-        applyFilter(); // Reset view filter kalau sebelumnya ada search
+        applyFilter();
       } catch (err) {
-        tableBody.innerHTML = `<tr><td colspan="4" class="py-8 text-center font-body-sm text-error">Gagal mengambil data dari Supabase. Periksa file supabase.js</td></tr>`;
+        console.error(err);
+        tableBody.innerHTML = `<tr><td colspan="4" class="py-8 text-center font-body-sm text-error">Gagal mengambil data dari Supabase. Periksa konsol browser.</td></tr>`;
       }
     }
 
     // Submit Tambah Siswa
-document.getElementById('add-student-form').addEventListener('submit', async (e) => {
+    document.getElementById('add-student-form').addEventListener('submit', async (e) => {
       e.preventDefault();
       const nis = document.getElementById('inputNis').value;
       const name = document.getElementById('inputNama').value;
@@ -539,9 +506,9 @@ document.getElementById('add-student-form').addEventListener('submit', async (e)
         const { error } = await window.supabase.from('students').insert([
           { 
             nis: nis, 
-            nama: name.toUpperCase(),  // Sesuaikan dengan kolom 'nama' di Supabase
-            kelas: kelas,              // Sesuaikan dengan kolom 'kelas' di Supabase
-            qr_rfid_id: qrCodeId       // Sesuaikan dengan kolom 'qr_rfid_id' di Supabase
+            nama: name.toUpperCase(), 
+            kelas: kelas,              
+            qr_rfid_id: qrCodeId       
           }
         ]);
 
@@ -562,7 +529,7 @@ document.getElementById('add-student-form').addEventListener('submit', async (e)
     async function deleteStudentData(id, nama) {
       if(confirm(`Apakah Anda yakin ingin menghapus siswa ${nama}? Data absennya juga akan terhapus.`)) {
         try {
-          const { error } = await supabase.from('students').delete().eq('id', id);
+          const { error } = await window.supabase.from('students').delete().eq('id', id);
           if (error) {
             showToast('Gagal menghapus data.', 'error', 'Error');
           } else {
@@ -575,7 +542,7 @@ document.getElementById('add-student-form').addEventListener('submit', async (e)
       }
     }
 
-    // --- Search & Filter Logic (Client-Side) ---
+    // --- Search & Filter Logic ---
     function handleSearch(val) {
       const clearBtn = document.getElementById('clearSearchBtn');
       if (val.length > 0) clearBtn.classList.remove('hidden');
