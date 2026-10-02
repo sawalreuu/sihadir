@@ -1,14 +1,21 @@
-// Ganti dengan URL dan Anon Key dari project Supabase Anda
-const SUPABASE_URL = 'https://iaosgzutbgemmtqdisui.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlhb3NnenV0YmdlbW10cWRpc3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA5MzcwNTcsImV4cCI6MjEwNjUxMzA1N30.kD-coPBUMvSOEh89dvW5vpOwyPzdCh3qwqfRarSGPn8';
+// --- KONFIGURASI SUPABASE ---
+const SUPABASE_URL = 'https://iaosgzutbgemmtqdsuil.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlhb3NnenV0YmdlbXRxZHN1aWwiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTczODEzNDEwOCwiZXhwIjoyMDUzNzE0MTA4fQ.vYjpc3M10iJjzdXhFhZm3NInJjZlZi1lh3NnlenV0YmdlbW1V0cwlbW10c2Vncy'; // (Gunakan key lengkap Anda yang asli)
 
-// Initialize Supabase Client
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// Inisialisasi Klien Supabase global
+window.supabase = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Fungsi Umum (Bisa dipanggil di halaman lain)
+// Fungsi Umum Mengambil Data Siswa
 async function getStudents() {
-  const { data, error } = await supabase.from('students').select('*').order('name');
-  if (error) console.error("Error fetching students:", error);
+  const { data, error } = await window.supabase
+    .from('students')
+    .select('*')
+    .order('name');
+    
+  if (error) {
+    console.error("Error fetching students:", error);
+    return [];
+  }
   return data;
 }
 
