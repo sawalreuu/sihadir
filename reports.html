@@ -382,31 +382,18 @@
       tomorrow.setDate(tomorrow.getDate() + 1);
 
       try {
-        // Ambil Data Presensi Hari Ini
-        const { data: attendances, error: errAtt } = await supabase
+// Ambil Data Presensi Hari Ini (Gunakan window.db & sesuaikan relasi kolom: nama, kelas)
+        const { data: attendances, error: errAtt } = await window.db
           .from('attendance')
-          .select(`status, created_at, students (id, nis, name, class_name)`)
+          .select(`status, created_at, students (id, nis, nama, kelas)`)
           .gte('created_at', today.toISOString())
           .lt('created_at', tomorrow.toISOString())
           .order('created_at', { ascending: true });
 
         // Ambil Total Siswa Terdaftar (Untuk Statistik)
-        const { count, error: errTotal } = await supabase
+        const { count, error: errTotal } = await window.db
           .from('students')
           .select('*', { count: 'exact', head: true });
-
-        if (count !== null) document.getElementById('statTotal').innerText = count;
-
-        tableBody.innerHTML = '';
-
-        if(errAtt || !attendances || attendances.length === 0) {
-          tableBody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-on-surface-variant">Belum ada data presensi hari ini.</td></tr>';
-          document.getElementById('statHadir').innerText = "0";
-          document.getElementById('statTerlambat').innerText = "0";
-          document.getElementById('statPulang').innerText = "0";
-          document.getElementById('visibleCount').innerText = "0";
-          return;
-        }
 
         // Kelompokkan data by Siswa
         const grouped = {};
@@ -420,7 +407,7 @@
           if (a.status === 'PULANG') grouped[s.id].pulang = a.created_at;
         });
 
-        const reportData = Object.values(grouped).sort((a,b) => a.student.name.localeCompare(b.student.name));
+const reportData = Object.values(grouped).sort((a,b) => a.student.nama.localeCompare(b.student.nama));
         reportDataToExport = reportData;
 
         // Variabel Statistik
