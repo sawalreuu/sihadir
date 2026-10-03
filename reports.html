@@ -323,18 +323,8 @@
   </div>
 
   <!-- Script Supabase & Logika Aplikasi -->
-<!-- Script Supabase & Logika Aplikasi (Inline Tanpa File Eksternal) -->
+  <script src="js/supabase.js"></script>
   <script>
-    // ---- INISIALISASI SUPABASE ----
-    const SUPABASE_URL = 'https://iaosgzutbgemmtqdsui.supabase.co';
-    // PENTING: Masukkan Anon Key / Publishable Key Anda yang asli di bawah ini
-    const SUPABASE_ANON_KEY = 'ISI_DENGAN_ANON_KEY_ANDA_YANG_BENAR_YANG_DIAWALI_sb_publishable_ATAU_eyJ';
-    
-    // Cek agar client tidak dobel
-    if (!window.supabaseClient) {
-        window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-    }
-
     // Inisialisasi Tanggal & Waktu di Header
     const now = new Date();
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -392,8 +382,8 @@
       tomorrow.setDate(tomorrow.getDate() + 1);
 
       try {
-        // Ambil Data Presensi Hari Ini
-        const { data: attendances, error: errAtt } = await window.supabaseClient
+// Ambil Data Presensi Hari Ini (Gunakan window.db & sesuaikan relasi kolom: nama, kelas)
+        const { data: attendances, error: errAtt } = await window.db
           .from('attendance')
           .select(`status, created_at, students (id, nis, nama, kelas)`)
           .gte('created_at', today.toISOString())
@@ -401,22 +391,9 @@
           .order('created_at', { ascending: true });
 
         // Ambil Total Siswa Terdaftar (Untuk Statistik)
-        const { count, error: errTotal } = await window.supabaseClient
+        const { count, error: errTotal } = await window.db
           .from('students')
           .select('*', { count: 'exact', head: true });
-
-        if (count !== null) document.getElementById('statTotal').innerText = count;
-
-        tableBody.innerHTML = '';
-
-        if(errAtt || !attendances || attendances.length === 0) {
-          tableBody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-on-surface-variant">Belum ada data presensi hari ini.</td></tr>';
-          document.getElementById('statHadir').innerText = "0";
-          document.getElementById('statTerlambat').innerText = "0";
-          document.getElementById('statPulang').innerText = "0";
-          document.getElementById('visibleCount').innerText = "0";
-          return;
-        }
 
         // Kelompokkan data by Siswa
         const grouped = {};
@@ -430,8 +407,7 @@
           if (a.status === 'PULANG') grouped[s.id].pulang = a.created_at;
         });
 
-        // Urutkan berdasarkan kolom 'nama' (bukan 'name')
-        const reportData = Object.values(grouped).sort((a,b) => a.student.nama.localeCompare(b.student.nama));
+const reportData = Object.values(grouped).sort((a,b) => a.student.nama.localeCompare(b.student.nama));
         reportDataToExport = reportData;
 
         // Variabel Statistik
@@ -446,8 +422,10 @@
           if (late) totalTerlambat++;
           if (d.pulang) totalPulang++;
 
+          // Alternating row color style
           const bgClass = index % 2 === 0 ? "hover:bg-surface-container-low/40" : "bg-surface-container-lowest hover:bg-surface-container-low/40";
           
+          // Badge Waktu Masuk
           let masukUI = `<span class="font-label-lg text-label-lg font-mono text-outline">-</span>`;
           if (d.masuk) {
             if (late) {
@@ -469,6 +447,7 @@
             }
           }
 
+          // Badge Waktu Pulang
           let pulangUI = `
             <div class="flex flex-col gap-1 items-start">
               <span class="font-label-lg text-label-lg font-mono text-outline">-</span>
@@ -495,15 +474,15 @@
               <td class="py-4 px-space-lg">
                 <div class="flex items-center gap-space-sm">
                   <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-title-md text-title-md font-bold">
-                    ${getInitials(d.student.nama)}
+                    ${getInitials(d.student.name)}
                   </div>
                   <div class="flex flex-col">
-                    <span class="font-title-md text-title-md text-on-surface student-name">${d.student.nama}</span>
+                    <span class="font-title-md text-title-md text-on-surface student-name">${d.student.name}</span>
                   </div>
                 </div>
               </td>
               <td class="py-4 px-space-lg font-label-md text-label-md text-on-surface">
-                <span class="px-2.5 py-1 rounded-lg bg-surface-container text-on-surface font-medium">${d.student.kelas}</span>
+                <span class="px-2.5 py-1 rounded-lg bg-surface-container text-on-surface font-medium">${d.student.class_name}</span>
               </td>
               <td class="py-4 px-space-lg">${masukUI}</td>
               <td class="py-4 px-space-lg">${pulangUI}</td>
@@ -518,8 +497,7 @@
         document.getElementById('visibleCount').innerText = reportData.length;
 
       } catch (err) {
-        console.error("Gagal load:", err);
-        tableBody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-error">Gagal memuat data dari database. Silakan periksa koneksi internet.</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-error">Gagal memuat data dari database. Pastikan konfigurasi supabase.js benar.</td></tr>';
       } finally {
         if (reloadIcon) {
           setTimeout(() => reloadIcon.classList.remove('rotate-180'), 500);
@@ -527,7 +505,7 @@
       }
     }
 
-    // --- Search Logic ---
+    // --- Search Logic (Client-Side) ---
     const searchInput = document.getElementById('studentSearch');
     searchInput.addEventListener('input', function(e) {
       const term = e.target.value.toLowerCase().trim();
@@ -543,13 +521,14 @@
       });
     });
 
-    // --- Logika Export CSV ---
+    // --- Logika Export CSV (Dipertahankan dari aslinya) ---
     function exportToCSV() {
       if(reportDataToExport.length === 0) {
         alert("Tidak ada data untuk diexport hari ini!");
         return;
       }
       
+      // UX Button Effect
       const btnExport = document.getElementById('btnExport');
       const originalText = btnExport.innerHTML;
       btnExport.innerHTML = '<span class="material-symbols-outlined text-body-lg animate-spin">progress_activity</span><span>Mengekspor...</span>';
@@ -559,7 +538,7 @@
         reportDataToExport.forEach(d => {
           const masuk = d.masuk ? formatTimeString(d.masuk) : "-";
           const pulang = d.pulang ? formatTimeString(d.pulang) : "-";
-          csvContent += `"${d.student.nis}","${d.student.nama}","${d.student.kelas}","${masuk}","${pulang}"\n`;
+          csvContent += `"${d.student.nis}","${d.student.name}","${d.student.class_name}","${masuk}","${pulang}"\n`;
         });
 
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
@@ -577,7 +556,7 @@
       }, 500);
     }
 
-    // Load Data
+    // Load Data saat halaman diakses
     window.onload = loadReports;
   </script>
 </body>
