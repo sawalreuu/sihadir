@@ -1,599 +1,693 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
-  <meta charset="utf-8" />
-  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <meta content="web_dashboard" name="shell-type" />
-  <title>SIHADIR - Data Siswa</title>
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-
-  <!-- Library Supabase & QRCode -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-
-  <!-- Tailwind CSS & Config -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    @layer base {
-      html, body { margin: 0; padding: 0; }
-      body { overscroll-behavior: none; }
-      main > :first-child { margin-top: 0 !important; }
-      main > :last-child { margin-bottom: 0 !important; }
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <meta content="web_dashboard" name="shell-type"/>
+    <title>SIHADIR - Data Siswa</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com"/>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin/>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+    
+    <!-- Library Supabase & QRCode -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
+    <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    
+    <!-- Tailwind CSS & Config -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+    html, body {
+        margin: 0;
+        padding: 0;
     }
-    ::-webkit-scrollbar { display: none; }
-  </style>
-  <script id="tailwind-config">
+    body {
+        overscroll-behavior: none;
+    }
+    main > :first-child {
+        margin-top: 0 !important;
+    }
+    main > :last-child {
+        margin-bottom: 0 !important;
+    }
+    ::-webkit-scrollbar {
+        display: none;
+    }
+    </style>
+    <script id="tailwind-config">
     tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            "surface-container-high": "#dce9ff", "on-primary-fixed-variant": "#003ea8",
-            "outline-variant": "#c3c6d7", "on-primary-container": "#eeefff",
-            "primary-container": "#2563eb", "inverse-primary": "#b4c5ff",
-            "secondary-fixed-dim": "#6bd8cb", "on-primary": "#ffffff",
-            "surface-container-lowest": "#ffffff", "on-error": "#ffffff",
-            "tertiary-fixed-dim": "#ffb95f", "primary-fixed-dim": "#b4c5ff",
-            "on-secondary-fixed": "#00201d", "inverse-on-surface": "#eaf1ff",
-            "surface": "#f8f9ff", "on-tertiary-fixed": "#2a1700",
-            "outline": "#737686", "surface-dim": "#cbdbf5",
-            "surface-container-low": "#eff4ff", "on-secondary-container": "#006f66",
-            "on-surface": "#0b1c30", "error-container": "#ffdad6",
-            "on-secondary": "#ffffff", "tertiary-container": "#996100",
-            "surface-container": "#e5eeff", "background": "#f8f9ff",
-            "secondary-container": "#86f2e4", "tertiary-fixed": "#ffddb8",
-            "on-surface-variant": "#434655", "primary-fixed": "#dbe1ff",
-            "on-primary-fixed": "#00174b", "secondary": "#006a61",
-            "tertiary": "#784b00", "on-tertiary-fixed-variant": "#653e00",
-            "inverse-surface": "#213145", "surface-variant": "#d3e4fe",
-            "surface-tint": "#0053db", "on-tertiary": "#ffffff",
-            "on-background": "#0b1c30", "on-secondary-fixed-variant": "#005049",
-            "surface-bright": "#f8f9ff", "error": "#ba1a1a",
-            "primary": "#004ac6", "on-tertiary-container": "#ffeedd",
-            "secondary-fixed": "#89f5e7", "surface-container-highest": "#d3e4fe",
-            "on-error-container": "#93000a"
-          },
-          spacing: {
-            "space-sm": "0.5rem", "margin": "2rem", "space-lg": "1.5rem",
-            "space-md": "1rem", "gutter-mobile": "1rem", "space-xs": "0.25rem",
-            "margin-mobile": "1rem", "space-xl": "2rem", "gutter": "1.5rem"
-          },
-          fontFamily: {
-            "label-sm": ["Inter"], "title-md": ["Plus Jakarta Sans"],
-            "body-md": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"],
-            "headline-xl-mobile": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"],
-            "headline-md": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"],
-            "title-lg": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"],
-            "label-md": ["Inter"], "body-sm": ["Plus Jakarta Sans"],
-            "label-lg": ["Inter"]
-          }
+        darkMode: "class",
+        theme: {
+            extend: {
+                colors: {
+                    "surface-container-high": "#dce9ff",
+                    "on-primary-fixed-variant": "#003ea8",
+                    "outline-variant": "#c3c6d7",
+                    "on-primary-container": "#eeefff",
+                    "primary-container": "#2563eb",
+                    "inverse-primary": "#b4c5ff",
+                    "secondary-fixed-dim": "#6bd8cb",
+                    "on-primary": "#ffffff",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb95f",
+                    "primary-fixed-dim": "#b4c5ff",
+                    "on-secondary-fixed": "#00201d",
+                    "inverse-on-surface": "#eaf1ff",
+                    "surface": "#f8f9ff",
+                    "on-tertiary-fixed": "#2a1700",
+                    "outline": "#737686",
+                    "surface-dim": "#cbdbf5",
+                    "surface-container-low": "#eff4ff",
+                    "on-secondary-container": "#006f66",
+                    "on-surface": "#0b1c30",
+                    "error-container": "#ffdad6",
+                    "on-secondary": "#ffffff",
+                    "tertiary-container": "#996100",
+                    "surface-container": "#e5eeff",
+                    "background": "#f8f9ff",
+                    "secondary-container": "#86f2e4",
+                    "tertiary-fixed": "#ffddb8",
+                    "on-surface-variant": "#434655",
+                    "primary-fixed": "#dbe1ff",
+                    "on-primary-fixed": "#00174b",
+                    "secondary": "#006a61",
+                    "tertiary": "#784b00",
+                    "on-tertiary-fixed-variant": "#653e00",
+                    "inverse-surface": "#213145",
+                    "surface-variant": "#d3e4fe",
+                    "surface-tint": "#0053db",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#0b1c30",
+                    "on-secondary-fixed-variant": "#005049",
+                    "surface-bright": "#f8f9ff",
+                    "error": "#ba1a1a",
+                    "primary": "#004ac6",
+                    "on-tertiary-container": "#ffeedd",
+                    "secondary-fixed": "#89f5e7",
+                    "surface-container-highest": "#d3e4fe",
+                    "on-error-container": "#93000a"
+                },
+                spacing: {
+                    "space-sm": "0.5rem",
+                    "margin": "2rem",
+                    "space-lg": "1.5rem",
+                    "space-md": "1rem",
+                    "gutter-mobile": "1rem",
+                    "space-xs": "0.25rem",
+                    "margin-mobile": "1rem",
+                    "space-xl": "2rem",
+                    "gutter": "1.5rem"
+                },
+                fontFamily: {
+                    "label-sm": ["Inter"],
+                    "title-md": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"],
+                    "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "headline-xl-mobile": ["Plus Jakarta Sans"],
+                    "body-lg": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"],
+                    "headline-xl": ["Plus Jakarta Sans"],
+                    "title-lg": ["Plus Jakarta Sans"],
+                    "headline-lg": ["Plus Jakarta Sans"],
+                    "label-md": ["Inter"],
+                    "body-sm": ["Plus Jakarta Sans"],
+                    "label-lg": ["Inter"]
+                }
+            }
         }
-      }
     };
-  </script>
+    </script>
 </head>
 <body class="bg-surface font-body-md text-on-surface min-h-screen">
-  
-  <!-- Sidebar -->
-  <aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col justify-between p-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-    <div class="flex flex-col gap-space-lg">
-      <div class="flex items-center gap-space-sm">
-        <img alt="SIHADIR Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1V5El7QWhUBII4Rgkk5BFx4y1tj4lmoEMBx0sTntd8-82mrVLzcCD_Zef17OJ8cp8cMnmvn57ObNAhEKbFozuOKw-btE3WU4gP1ev4q9apc4WuBS49xrBJS2MLFVKGd_MaDU_yVZV5pkUX4wsExl2ewV5cmMqDjGnnfH5W_vOIF0E0IcvrGp2R30JT2G_D-nLyj3hxD7XhEEg8q00ubCcbOjvdvTB3BvaWf3YaqpnFZX5A9ucjCad2uCck" />
-        <div>
-          <span class="font-title-lg text-title-lg text-primary tracking-tight block">SIHADIR</span>
-          <span class="font-body-sm text-body-sm text-on-surface-variant block">Sistem Presensi Siswa</span>
-        </div>
-      </div>
-      <nav class="flex flex-col gap-space-xs" data-active-classes="bg-primary-container text-on-primary-container font-label-lg rounded-xl shadow-[0_4px_12px_rgba(37,99,235,0.25)]">
-        <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="dashboard" href="index.html">
-          <span class="material-symbols-outlined text-title-lg">dashboard</span>Dashboard
-        </a>
-        <a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-all bg-primary-container text-on-primary-container font-label-lg rounded-xl shadow-[0_4px_12px_rgba(37,99,235,0.25)]" data-path="data-siswa" href="students.html">
-          <span class="material-symbols-outlined text-title-lg">school</span>Data Siswa
-        </a>
-        <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="rekapitulasi" href="reports.html">
-          <span class="material-symbols-outlined text-title-lg">description</span>Rekapitulasi
-        </a>
-        <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="buka-scanner" href="scanner.html">
-          <span class="material-symbols-outlined text-title-lg">qr_code_scanner</span>Buka Scanner
-        </a>
-      </nav>
-    </div>
-    <div class="flex flex-col gap-space-md pt-space-md">
-      <div class="bg-surface-container-low rounded-xl p-space-sm flex items-center justify-between">
-        <div class="flex items-center gap-space-xs">
-          <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
-          </span>
-          <span class="font-label-sm text-label-sm text-on-surface">Supabase Terhubung</span>
-        </div>
-        <span class="material-symbols-outlined text-secondary text-body-md">cloud_done</span>
-      </div>
-      <!-- Pengaturan (dipertahankan) -->
-      <a href="#" class="bg-surface-container-lowest hover:bg-surface-container-high transition-colors rounded-xl p-space-sm flex items-center gap-space-xs text-on-surface-variant">
-        <span class="material-symbols-outlined text-body-md text-primary">settings</span>
-        <div class="flex flex-col">
-          <span class="font-label-sm text-label-sm text-on-surface font-semibold">Pengaturan</span>
-          <span class="font-body-sm text-body-sm text-outline">Konfigurasi sistem</span>
-        </div>
-      </a>
-    </div>
-  </aside>
 
-  <!-- Main Content Area -->
-  <div class="pl-64">
-    <!-- Header -->
-    <header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 px-gutter flex items-center justify-between">
-      <div class="flex items-center gap-space-xs font-body-md text-body-md text-on-surface-variant">
-        <span class="material-symbols-outlined text-title-md">home</span>
-        <span>/</span>
-        <span class="font-title-md text-title-md text-on-surface">Portal Presensi</span>
-      </div>
-      <div class="flex items-center gap-space-lg">
-        <div class="hidden sm:flex items-center gap-space-xs bg-surface-container-low px-space-md py-space-xs rounded-full text-on-surface-variant font-label-md text-label-md">
-          <span class="material-symbols-outlined text-body-md text-primary">calendar_today</span>
-          <span>Kamis, 24 Oktober 2024</span>
-        </div>
-        <button aria-label="Notifikasi" class="relative p-space-xs rounded-full text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors">
-          <span class="material-symbols-outlined">notifications</span>
-          <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error"></span>
-        </button>
-        <div class="flex items-center gap-space-sm pl-space-sm">
-          <div class="text-right hidden md:block">
-            <span class="font-title-md text-title-md text-on-surface block leading-tight">Admin Sekolah</span>
-            <span class="font-body-sm text-body-sm text-on-surface-variant block">Petugas Piket</span>
-          </div>
-          <img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe3xWH7adnvgfkpb8Q1JnvJEczn3F2XVBqd9UcpwviPoyJwls-Mqa8JcEJY1JrN6OdKySG5K9YnI0jtUOfsnFYphc6ipvu7en74pqprhkeEqjqAS88ZY_c4sx-LF4TCGBXnpbAWdz5eOJi3NH8p3wTX0RjuyK2PyeTfgCiiN-SvZ5duPTwSTw01IPasVFR-pi-q0KjQRSi6xRqx0Coy78SAa7Z0kDRXghoKwDjbxcqCzV3GCmoQiVL" />
-        </div>
-      </div>
-    </header>
-
-    <main class="w-full pt-16 bg-surface min-h-screen">
-      <div class="flex flex-col w-full">
-        
-        <!-- Interactive Toast Notification -->
-        <div class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-space-sm px-space-md py-space-sm rounded-xl shadow-xl bg-surface-container-lowest text-on-surface" id="toastNotification">
-          <span class="material-symbols-outlined text-secondary" id="toastIcon">check_circle</span>
-          <div class="flex flex-col">
-            <span class="font-title-md text-title-md leading-snug" id="toastTitle">Berhasil</span>
-            <span class="font-body-sm text-body-sm text-on-surface-variant" id="toastMessage">Data siswa berhasil diperbarui</span>
-          </div>
-        </div>
-        
-        <!-- Modal Tambah / Edit Siswa -->
-        <div class="fixed inset-0 z-50 hidden bg-inverse-surface/40 backdrop-blur-sm flex items-center justify-center p-space-md" id="studentModal">
-          <div class="w-full max-w-lg bg-surface-container-lowest rounded-2xl shadow-xl p-space-lg flex flex-col gap-space-md transform scale-95 transition-transform duration-200" id="modalBox">
-            <div class="flex items-center justify-between pb-space-xs">
-              <div class="flex items-center gap-space-sm">
-                <div class="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-primary">
-                  <span class="material-symbols-outlined text-title-lg">person_add</span>
-                </div>
+    <aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col justify-between p-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+        <div class="flex flex-col gap-space-lg">
+            <div class="flex items-center gap-space-sm">
+                <img alt="SIHADIR Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1V5El7QWhUBII4Rgkk5BFx4y1tj4lmoEMBx0sTntd8-82mrVLzcCD_Zef17OJ8cp8cMnmvn57ObNAhEKbFozuOKw-btE3WU4gP1ev4q9apc4WuBS49xrBJS2MLFVKGd_MaDU_yVZV5pkUX4wsExl2ewV5cmMqDjGnnfH5W_vOIF0E0IcvrGp2R30JT2G_D-nLyj3hxD7XhEEg8q00ubCcbOjvdvTB3BvaWf3YaqpnFZX5A9ucjCad2uCck"/>
                 <div>
-                  <h3 class="font-title-lg text-title-lg text-on-surface" id="modalHeading">Tambah Siswa Baru</h3>
-                  <p class="font-body-sm text-body-sm text-on-surface-variant">Lengkapi kredensial siswa untuk registrasi presensi</p>
+                    <span class="font-title-lg text-title-lg text-primary tracking-tight block">SIHADIR</span>
+                    <span class="font-body-sm text-body-sm text-on-surface-variant block">Sistem Presensi Siswa</span>
                 </div>
-              </div>
-              <button class="p-space-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors" id="closeModalBtn">
-                <span class="material-symbols-outlined text-title-md">close</span>
-              </button>
             </div>
-            
-            <form class="flex flex-col gap-space-md mt-space-xs" id="add-student-form">
-              <div class="flex flex-col gap-1.5">
-                <label class="font-label-md text-label-md text-on-surface-variant">Nomor Induk Siswa (NIS)</label>
-                <div class="flex items-center gap-space-xs bg-surface-container-low px-space-md py-2.5 rounded-xl">
-                  <span class="material-symbols-outlined text-body-md text-outline">badge</span>
-                  <input class="bg-transparent w-full text-on-surface font-body-md text-body-md focus:outline-none" id="inputNis" placeholder="Contoh: 2024007" required type="text" />
-                </div>
-              </div>
-              <div class="flex flex-col gap-1.5">
-                <label class="font-label-md text-label-md text-on-surface-variant">Nama Lengkap</label>
-                <div class="flex items-center gap-space-xs bg-surface-container-low px-space-md py-2.5 rounded-xl">
-                  <span class="material-symbols-outlined text-body-md text-outline">account_circle</span>
-                  <input class="bg-transparent w-full text-on-surface font-body-md text-body-md focus:outline-none" id="inputNama" placeholder="Masukkan nama siswa" required type="text" />
-                </div>
-              </div>
-              <div class="flex flex-col gap-1.5">
-                <label class="font-label-md text-label-md text-on-surface-variant">Rombongan Belajar (Kelas)</label>
-                <div class="flex items-center gap-space-xs bg-surface-container-low px-space-md py-2 rounded-xl">
-                  <span class="material-symbols-outlined text-body-md text-outline">meeting_room</span>
-                  <select class="bg-transparent w-full text-on-surface font-body-md text-body-md focus:outline-none cursor-pointer" id="inputKelas" required>
-                    <optgroup label="Kelas VII">
-                      <option value="VII A">VII A</option>
-                      <option value="VII B">VII B</option>
-                      <option value="VII C">VII C</option>
-                      <option value="VII D">VII D</option>
-                    </optgroup>
-                    <optgroup label="Kelas VIII">
-                      <option value="VIII A">VIII A</option>
-                      <option value="VIII B">VIII B</option>
-                      <option value="VIII C">VIII C</option>
-                    </optgroup>
-                    <optgroup label="Kelas IX">
-                      <option value="IX A">IX A</option>
-                      <option value="IX B">IX B</option>
-                    </optgroup>
-                  </select>
-                </div>
-              </div>
-              <div class="flex items-center justify-end gap-space-sm pt-space-sm">
-                <button class="px-space-md py-2.5 rounded-xl font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" id="cancelModalBtn" type="button">
-                  Batal
-                </button>
-                <button class="px-space-lg py-2.5 rounded-xl bg-primary text-on-primary font-label-lg text-label-lg shadow-md hover:bg-on-primary-fixed-variant transition-all flex items-center gap-space-xs" type="submit">
-                  <span class="material-symbols-outlined text-title-md">check</span>
-                  Simpan Data
-                </button>
-              </div>
-            </form>
-          </div>
+            <nav class="flex flex-col gap-space-xs">
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" href="index.html">
+                    <span class="material-symbols-outlined text-title-lg">dashboard</span>
+                    Dashboard
+                </a>
+                <a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-all bg-primary-container text-on-primary-container font-label-lg rounded-xl shadow-[0_4px_12px_rgba(37,99,235,0.25)]" href="students.html">
+                    <span class="material-symbols-outlined text-title-lg">school</span>
+                    Data Siswa
+                </a>
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" href="reports.html">
+                    <span class="material-symbols-outlined text-title-lg">description</span>
+                    Rekapitulasi
+                </a>
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" href="scanner.html">
+                    <span class="material-symbols-outlined text-title-lg">qr_code_scanner</span>
+                    Buka Scanner
+                </a>
+            </nav>
         </div>
-
-        <!-- Main Canvas Content -->
-        <div class="p-gutter flex flex-col gap-space-lg max-w-7xl mx-auto w-full">
-          <!-- Top Action / Stat Banner -->
-          <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
-            <div class="lg:col-span-7 flex flex-col gap-1">
-              <div class="flex items-center gap-space-xs text-primary font-label-sm text-label-sm tracking-widest uppercase">
-                <span class="inline-block w-2 h-2 rounded-full bg-primary"></span>
-                Manajemen Kesiswaan
-              </div>
-              <h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Data Siswa</h1>
-              <p class="font-body-md text-body-md text-on-surface-variant">
-                Pusat pengelolaan informasi induk murid, registrasi kartu RFID/Barcode, dan pengaturan rombongan belajar aktif semester ini.
-              </p>
+        <div class="flex flex-col gap-space-md pt-space-md">
+            <div class="bg-surface-container-low rounded-xl p-space-sm flex items-center justify-between">
+                <div class="flex items-center gap-space-xs">
+                    <span class="relative flex h-2 w-2" id="supabaseStatusPing">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-outline opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-2 w-2 bg-outline"></span>
+                    </span>
+                    <span class="font-label-sm text-label-sm text-on-surface" id="supabaseStatusText">Mengecek Koneksi...</span>
+                </div>
+                <span class="material-symbols-outlined text-outline text-body-md" id="supabaseStatusIcon">sync</span>
             </div>
-            <!-- Quick Metrics Strip -->
-            <div class="lg:col-span-5 grid gap-space-sm flex justify-end">
-              <div class="bg-surface-container-lowest p-space-md rounded-2xl shadow-sm flex flex-col gap-0.5 w-64">
-                <span class="font-label-sm text-label-sm text-on-surface-variant">Total Siswa</span>
-                <span class="font-headline-md text-headline-md text-primary font-bold" id="totalStudentCount">0</span>
-                <span class="font-body-sm text-body-sm text-secondary flex items-center gap-0.5">
-                  <span class="material-symbols-outlined text-label-md">arrow_upward</span> Tersinkron Database
-                </span>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Filter & Toolbar Baris -->
-          <div class="bg-surface-container-lowest p-space-md rounded-2xl shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-md">
-            <!-- Search Input -->
-            <div class="flex-1 flex items-center gap-space-sm bg-surface-container-low px-space-md py-2.5 rounded-xl text-on-surface-variant focus-within:ring-2 focus-within:ring-primary/20 focus-within:bg-surface-container-lowest transition-all">
-              <span class="material-symbols-outlined text-title-md text-outline">search</span>
-              <input class="bg-transparent w-full text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none" id="searchStudent" oninput="handleSearch(this.value)" placeholder="Cari berdasarkan NIS atau Nama..." type="text" />
-              <button class="hidden text-outline hover:text-on-surface" id="clearSearchBtn" onclick="clearSearch()">
-                <span class="material-symbols-outlined text-title-md">cancel</span>
-              </button>
-            </div>
-            <!-- Action & Dropdown Controls -->
-            <div class="flex flex-wrap items-center gap-space-sm justify-end">
-              <!-- Filter Kelas Dropdown -->
-              <div class="relative inline-flex items-center bg-surface-container-low px-space-md py-2.5 rounded-xl text-on-surface">
-                <span class="material-symbols-outlined text-body-md text-outline mr-2">filter_alt</span>
-                <select class="bg-transparent font-label-lg text-label-lg text-on-surface focus:outline-none cursor-pointer pr-4" id="filterClassSelect" onchange="handleFilterClass(this.value)">
-                  <option value="ALL">Semua Kelas</option>
-                  <option value="VII A">Kelas VII A</option>
-                  <option value="VII B">Kelas VII B</option>
-                  <option value="VIII A">Kelas VIII A</option>
-                  <option value="VIII B">Kelas VIII B</option>
-                  <option value="IX A">Kelas IX A</option>
-                </select>
-              </div>
-              <!-- Tombol Import Excel -->
-              <button class="flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-label-lg text-label-lg transition-all" onclick="triggerImportNotification()">
-                <span class="material-symbols-outlined text-title-md text-secondary">upload_file</span>
-                <span>Import Excel</span>
-              </button>
-              <!-- Tombol Aksi Utama: Tambah Siswa -->
-              <button class="flex items-center gap-space-xs px-space-lg py-2.5 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-lg text-label-lg shadow-md hover:shadow-lg transition-all active:scale-95" onclick="openAddModal()">
-                <span class="material-symbols-outlined text-title-md">person_add</span>
-                <span>+ Tambah Siswa</span>
-              </button>
-            </div>
-          </div>
-          
-          <!-- Data Table Container -->
-          <div class="bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden flex flex-col">
-            <div class="overflow-x-auto">
-              <table class="w-full text-left border-collapse">
-                <thead>
-                  <tr class="bg-surface-container-low text-on-surface-variant font-label-md text-label-md uppercase tracking-wider h-12">
-                    <th class="py-space-sm px-space-lg font-semibold w-36" scope="col">NIS</th>
-                    <th class="py-space-sm px-space-lg font-semibold" scope="col">Nama Lengkap</th>
-                    <th class="py-space-sm px-space-lg font-semibold w-44" scope="col">Kelas</th>
-                    <th class="py-space-sm px-space-lg font-semibold text-right w-36" scope="col">Aksi</th>
-                  </tr>
-                </thead>
-                <tbody class="font-body-md text-body-md text-on-surface" id="studentTableBody">
-                  <!-- Data dari Supabase akan di-render di sini -->
-                  <tr>
-                    <td colspan="4" class="py-8 text-center text-on-surface-variant">Memuat data siswa dari Supabase...</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-            
-            <!-- State Kosong (Ketika Pencarian Tidak Ditemukan) -->
-            <div class="hidden py-space-xl flex flex-col items-center justify-center text-center px-space-md" id="noResultsState">
-              <div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-outline mb-space-sm">
-                <span class="material-symbols-outlined text-headline-xl">person_search</span>
-              </div>
-              <p class="font-title-lg text-title-lg text-on-surface">Data siswa tidak ditemukan</p>
-              <p class="font-body-sm text-body-sm text-on-surface-variant max-w-sm mt-1">Coba periksa ejaan NIS atau kata kunci nama siswa yang Anda masukkan.</p>
-            </div>
-          </div>
-          
-          <!-- Quick Info & Export Tip -->
-          <div class="p-space-lg rounded-2xl bg-surface-container-low flex flex-col md:flex-row items-center justify-between gap-space-md">
-            <div class="flex items-center gap-space-md">
-              <div class="w-12 h-12 rounded-xl bg-surface-container-lowest flex items-center justify-center text-primary shadow-xs">
-                <span class="material-symbols-outlined text-headline-md">info</span>
-              </div>
-              <div class="flex flex-col">
-                <h4 class="font-title-md text-title-md text-on-surface">Sinkronisasi Data Otomatis</h4>
-                <p class="font-body-sm text-body-sm text-on-surface-variant">
-                  Data siswa terhubung langsung ke mesin presensi tap dan kamera QR di gerbang utama sekolah secara real-time.
-                </p>
-              </div>
-            </div>
-            <div class="flex items-center gap-space-sm w-full md:w-auto">
-              <button class="w-full md:w-auto px-space-md py-2 bg-surface-container-lowest text-on-surface hover:bg-surface-container-high rounded-xl font-label-md text-label-md shadow-xs transition-colors flex items-center justify-center gap-space-xs" onclick="showToast('Mengunduh template data...', 'info')">
-                <span class="material-symbols-outlined text-body-md text-primary">download</span>
-                Template Excel
-              </button>
-            </div>
-          </div>
-
+            <a href="#" class="bg-surface-container-lowest hover:bg-surface-container-high transition-colors rounded-xl p-space-sm flex items-center gap-space-xs text-on-surface-variant">
+                <span class="material-symbols-outlined text-body-md text-primary">settings</span>
+                <div class="flex flex-col">
+                    <span class="font-label-sm text-label-sm text-on-surface font-semibold">Pengaturan</span>
+                    <span class="font-body-sm text-body-sm text-outline">Konfigurasi sistem</span>
+                </div>
+            </a>
         </div>
-      </div>
-    </main>
-  </div>
+    </aside>
 
-  <!-- Script Supabase (Pastikan file ini memiliki koneksi Supabase & fungsi getStudents()) -->
-<!-- Script Supabase -->
-  <script src="js/supabase.js"></script>
-  
-  <script>
-    // --- UI Variables & Modals ---
+    <div class="pl-64">
+        <header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 px-gutter flex items-center justify-between">
+            <div class="flex items-center gap-space-xs font-body-md text-body-md text-on-surface-variant">
+                <span class="material-symbols-outlined text-title-md">home</span>
+                <span>/</span>
+                <span class="font-title-md text-title-md text-on-surface">Portal Presensi</span>
+            </div>
+            <div class="flex items-center gap-space-lg">
+                <div class="hidden sm:flex items-center gap-space-xs bg-surface-container-low px-space-md py-space-xs rounded-full text-on-surface-variant font-label-md text-label-md">
+                    <span class="material-symbols-outlined text-body-md text-primary">calendar_today</span>
+                    <span id="currentDateDisplay">Memuat tanggal...</span>
+                </div>
+                <button aria-label="Notifikasi" class="relative p-space-xs rounded-full text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors">
+                    <span class="material-symbols-outlined">notifications</span>
+                    <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error"></span>
+                </button>
+                <div class="flex items-center gap-space-sm pl-space-sm">
+                    <div class="text-right hidden md:block">
+                        <span class="font-title-md text-title-md text-on-surface block leading-tight">Admin Sekolah</span>
+                        <span class="font-body-sm text-body-sm text-on-surface-variant block">Petugas Piket</span>
+                    </div>
+                    <img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe3xWH7adnvgfkpb8Q1JnvJEczn3F2XVBqd9UcpwviPoyJwls-Mqa8JcEJY1JrN6OdKySG5K9YnI0jtUOfsnFYphc6ipvu7en74pqprhkeEqjqAS88ZY_c4sx-LF4TCGBXnpbAWdz5eOJi3NH8p3wTX0RjuyK2PyeTfgCiiN-SvZ5duPTwSTw01IPasVFR-pi-q0KjQRSi6xRqx0Coy78SAa7Z0kDRXghoKwDjbxcqCzV3GCmoQiVL"/>
+                </div>
+            </div>
+        </header>
+
+        <main class="w-full pt-16 bg-surface min-h-screen">
+            <div class="flex flex-col w-full">
+
+                <div class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-space-sm px-space-md py-space-sm rounded-xl shadow-xl bg-surface-container-lowest text-on-surface" id="toastNotification">
+                    <span class="material-symbols-outlined text-secondary" id="toastIcon">check_circle</span>
+                    <div class="flex flex-col">
+                        <span class="font-title-md text-title-md leading-snug" id="toastTitle">Berhasil</span>
+                        <span class="font-body-sm text-body-sm text-on-surface-variant" id="toastMessage">Data siswa berhasil diperbarui</span>
+                    </div>
+                </div>
+
+                <div class="fixed inset-0 z-50 hidden bg-inverse-surface/40 backdrop-blur-sm flex items-center justify-center p-space-md" id="studentModal">
+                    <div class="w-full max-w-lg bg-surface-container-lowest rounded-2xl shadow-xl p-space-lg flex flex-col gap-space-md transform scale-95 transition-transform duration-200" id="modalBox">
+                        <div class="flex items-center justify-between pb-space-xs">
+                            <div class="flex items-center gap-space-sm">
+                                <div class="w-10 h-10 rounded-xl bg-surface-container-low flex items-center justify-center text-primary">
+                                    <span class="material-symbols-outlined text-title-lg">person_add</span>
+                                </div>
+                                <div>
+                                    <h3 class="font-title-lg text-title-lg text-on-surface" id="modalHeading">Tambah Siswa Baru</h3>
+                                    <p class="font-body-sm text-body-sm text-on-surface-variant">Lengkapi kredensial siswa untuk registrasi presensi</p>
+                                </div>
+                            </div>
+                            <button class="p-space-xs text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-lg transition-colors" id="closeModalBtn">
+                                <span class="material-symbols-outlined text-title-md">close</span>
+                            </button>
+                        </div>
+                        <form class="flex flex-col gap-space-md mt-space-xs" id="add-student-form">
+                            <input type="hidden" id="editStudentId" value=""/>
+                            <div class="flex flex-col gap-1.5">
+                                <label class="font-label-md text-label-md text-on-surface-variant">Nomor Induk Siswa (NIS)</label>
+                                <div class="flex items-center gap-space-xs bg-surface-container-low px-space-md py-2.5 rounded-xl">
+                                    <span class="material-symbols-outlined text-body-md text-outline">badge</span>
+                                    <input class="bg-transparent w-full text-on-surface font-body-md text-body-md focus:outline-none" id="inputNis" placeholder="Contoh: 2024007" required type="text"/>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-1.5">
+                                <label class="font-label-md text-label-md text-on-surface-variant">Nama Lengkap</label>
+                                <div class="flex items-center gap-space-xs bg-surface-container-low px-space-md py-2.5 rounded-xl">
+                                    <span class="material-symbols-outlined text-body-md text-outline">account_circle</span>
+                                    <input class="bg-transparent w-full text-on-surface font-body-md text-body-md focus:outline-none" id="inputNama" placeholder="Masukkan nama siswa" required type="text"/>
+                                </div>
+                            </div>
+                            <div class="flex flex-col gap-1.5">
+                                <label class="font-label-md text-label-md text-on-surface-variant">Rombongan Belajar (Kelas)</label>
+                                <div class="flex items-center gap-space-xs bg-surface-container-low px-space-md py-2 rounded-xl">
+                                    <span class="material-symbols-outlined text-body-md text-outline">meeting_room</span>
+                                    <select class="bg-transparent w-full text-on-surface font-body-md text-body-md focus:outline-none cursor-pointer" id="inputKelas" required>
+                                        <optgroup label="Kelas VII">
+                                            <option value="VII A">VII A</option>
+                                            <option value="VII B">VII B</option>
+                                            <option value="VII C">VII C</option>
+                                            <option value="VII D">VII D</option>
+                                        </optgroup>
+                                        <optgroup label="Kelas VIII">
+                                            <option value="VIII A">VIII A</option>
+                                            <option value="VIII B">VIII B</option>
+                                            <option value="VIII C">VIII C</option>
+                                        </optgroup>
+                                        <optgroup label="Kelas IX">
+                                            <option value="IX A">IX A</option>
+                                            <option value="IX B">IX B</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-end gap-space-sm pt-space-sm">
+                                <button class="px-space-md py-2.5 rounded-xl font-label-lg text-label-lg text-on-surface-variant hover:bg-surface-container-low transition-colors" id="cancelModalBtn" type="button">Batal</button>
+                                <button class="px-space-lg py-2.5 rounded-xl bg-primary text-on-primary font-label-lg text-label-lg shadow-md hover:bg-on-primary-fixed-variant transition-all flex items-center gap-space-xs" type="submit">
+                                    <span class="material-symbols-outlined text-title-md">check</span>
+                                    Simpan Data
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="p-gutter flex flex-col gap-space-lg max-w-7xl mx-auto w-full">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
+                        <div class="lg:col-span-7 flex flex-col gap-1">
+                            <div class="flex items-center gap-space-xs text-primary font-label-sm text-label-sm tracking-widest uppercase">
+                                <span class="inline-block w-2 h-2 rounded-full bg-primary"></span>
+                                Manajemen Kesiswaan
+                            </div>
+                            <h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Data Siswa</h1>
+                            <p class="font-body-md text-body-md text-on-surface-variant">Pusat pengelolaan informasi induk murid, registrasi kartu RFID/Barcode, dan pengaturan rombongan belajar aktif semester ini.</p>
+                        </div>
+                        <div class="lg:col-span-5 grid gap-space-sm flex justify-end">
+                            <div class="bg-surface-container-lowest p-space-md rounded-2xl shadow-sm flex flex-col gap-0.5 w-64">
+                                <span class="font-label-sm text-label-sm text-on-surface-variant">Total Siswa</span>
+                                <span class="font-headline-md text-headline-md text-primary font-bold" id="totalStudentCount">0</span>
+                                <span class="font-body-sm text-body-sm text-secondary flex items-center gap-0.5">
+                                    <span class="material-symbols-outlined text-label-md">arrow_upward</span>
+                                     Tersinkron Database
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-surface-container-lowest p-space-md rounded-2xl shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-md">
+                        <div class="flex-1 flex items-center gap-space-sm bg-surface-container-low px-space-md py-2.5 rounded-xl text-on-surface-variant focus-within:ring-2 focus-within:ring-primary/20 focus-within:bg-surface-container-lowest transition-all">
+                            <span class="material-symbols-outlined text-title-md text-outline">search</span>
+                            <input class="bg-transparent w-full text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none" id="searchStudent" oninput="handleSearch(this.value)" placeholder="Cari berdasarkan NIS atau Nama..." type="text"/>
+                            <button class="hidden text-outline hover:text-on-surface" id="clearSearchBtn" onclick="clearSearch()">
+                                <span class="material-symbols-outlined text-title-md">cancel</span>
+                            </button>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-space-sm justify-end">
+                            <div class="relative inline-flex items-center bg-surface-container-low px-space-md py-2.5 rounded-xl text-on-surface">
+                                <span class="material-symbols-outlined text-body-md text-outline mr-2">filter_alt</span>
+                                <select class="bg-transparent font-label-lg text-label-lg text-on-surface focus:outline-none cursor-pointer pr-4" id="filterClassSelect" onchange="applyFilter()">
+                                    <option value="ALL">Semua Kelas</option>
+                                    <option value="VII A">Kelas VII A</option>
+                                    <option value="VII B">Kelas VII B</option>
+                                    <option value="VIII A">Kelas VIII A</option>
+                                    <option value="VIII B">Kelas VIII B</option>
+                                    <option value="IX A">Kelas IX A</option>
+                                </select>
+                            </div>
+                            <button class="flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-label-lg text-label-lg transition-all" onclick="showToast('Silakan pilih berkas format .xlsx atau .csv untuk mengimpor', 'info', 'Impor Excel')">
+                                <span class="material-symbols-outlined text-title-md text-secondary">upload_file</span>
+                                <span>Import Excel</span>
+                            </button>
+                            <button class="flex items-center gap-space-xs px-space-lg py-2.5 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-lg text-label-lg shadow-md hover:shadow-lg transition-all active:scale-95" onclick="openAddModal()">
+                                <span class="material-symbols-outlined text-title-md">person_add</span>
+                                <span>+ Tambah Siswa</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden flex flex-col">
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-surface-container-low text-on-surface-variant font-label-md text-label-md uppercase tracking-wider h-12">
+                                        <th class="py-space-sm px-space-lg font-semibold w-36" scope="col">NIS</th>
+                                        <th class="py-space-sm px-space-lg font-semibold" scope="col">Nama Lengkap</th>
+                                        <th class="py-space-sm px-space-lg font-semibold w-44" scope="col">Kelas</th>
+                                        <th class="py-space-sm px-space-lg font-semibold text-right w-36" scope="col">Aksi</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="font-body-md text-body-md text-on-surface" id="studentTableBody">
+                                    <tr>
+                                        <td colspan="4" class="py-8 text-center text-on-surface-variant">Memuat data siswa dari Supabase...</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="hidden py-space-xl flex flex-col items-center justify-center text-center px-space-md" id="noResultsState">
+                            <div class="w-16 h-16 rounded-full bg-surface-container flex items-center justify-center text-outline mb-space-sm">
+                                <span class="material-symbols-outlined text-headline-xl">person_search</span>
+                            </div>
+                            <p class="font-title-lg text-title-lg text-on-surface">Data siswa tidak ditemukan</p>
+                            <p class="font-body-sm text-body-sm text-on-surface-variant max-w-sm mt-1">Coba periksa ejaan NIS atau kata kunci nama siswa yang Anda masukkan.</p>
+                        </div>
+                    </div>
+
+                    <div class="p-space-lg rounded-2xl bg-surface-container-low flex flex-col md:flex-row items-center justify-between gap-space-md">
+                        <div class="flex items-center gap-space-md">
+                            <div class="w-12 h-12 rounded-xl bg-surface-container-lowest flex items-center justify-center text-primary shadow-xs">
+                                <span class="material-symbols-outlined text-headline-md">info</span>
+                            </div>
+                            <div class="flex flex-col">
+                                <h4 class="font-title-md text-title-md text-on-surface">Sinkronisasi Data Otomatis</h4>
+                                <p class="font-body-sm text-body-sm text-on-surface-variant">Data siswa terhubung langsung ke mesin presensi tap dan kamera QR di gerbang utama sekolah secara real-time.</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-space-sm w-full md:w-auto">
+                            <button class="w-full md:w-auto px-space-md py-2 bg-surface-container-lowest text-on-surface hover:bg-surface-container-high rounded-xl font-label-md text-label-md shadow-xs transition-colors flex items-center justify-center gap-space-xs" onclick="showToast('Mengunduh template data...', 'info')">
+                                <span class="material-symbols-outlined text-body-md text-primary">download</span>
+                                Template Excel
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Tanggal Otomatis (Tetap Berjalan Terpisah) -->
+    <script>
+    function updateDate() {
+        var el = document.getElementById('currentDateDisplay');
+        if (!el) return;
+        el.textContent = new Intl.DateTimeFormat('id-ID', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            timeZone: 'Asia/Makassar'
+        }).format(new Date());
+    }
+    updateDate();
+    setInterval(updateDate, 60 * 1000);
+    </script>
+
+    <!-- File koneksi Supabase Anda -->
+    <script src="js/supabase.js"></script>
+
+    <script>
     let toastTimer = null;
     const modal = document.getElementById('studentModal');
     const modalBox = document.getElementById('modalBox');
-    const closeModalBtn = document.getElementById('closeModalBtn');
-    const cancelModalBtn = document.getElementById('cancelModalBtn');
     const tableBody = document.getElementById('studentTableBody');
     const totalStudentCount = document.getElementById('totalStudentCount');
 
-    // --- Toast Notification ---
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+    const getInitials = n => n ? n.split(' ').filter(Boolean).map(p => p[0].toUpperCase()).join('').substring(0, 2) : 'U';
+
+    function setConnectionStatus(ok) {
+        const text = document.getElementById('supabaseStatusText');
+        const icon = document.getElementById('supabaseStatusIcon');
+        const ping = document.getElementById('supabaseStatusPing');
+        text.textContent = ok ? 'Supabase Terhubung' : 'Tidak Terhubung';
+        icon.textContent = ok ? 'cloud_done' : 'cloud_off';
+        icon.className = 'material-symbols-outlined text-body-md ' + (ok ? 'text-secondary' : 'text-error');
+        ping.innerHTML = (ok ? `<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>` : '') +
+            `<span class="relative inline-flex rounded-full h-2 w-2 ${ok ? 'bg-secondary' : 'bg-error'}"></span>`;
+    }
+
     function showToast(message, type = 'success', title = 'Berhasil') {
-      const toast = document.getElementById('toastNotification');
-      const toastTitle = document.getElementById('toastTitle');
-      const toastMessage = document.getElementById('toastMessage');
-      const toastIcon = document.getElementById('toastIcon');
-
-      if (!toast) return;
-      clearTimeout(toastTimer);
-
-      toastTitle.innerText = title;
-      toastMessage.innerText = message;
-
-      if (type === 'error') {
-        toastIcon.innerText = 'error';
-        toastIcon.className = 'material-symbols-outlined text-error';
-      } else if (type === 'info') {
-        toastIcon.innerText = 'info';
-        toastIcon.className = 'material-symbols-outlined text-primary';
-      } else {
-        toastIcon.innerText = 'check_circle';
-        toastIcon.className = 'material-symbols-outlined text-secondary';
-      }
-
-      toast.classList.remove('translate-y-24', 'opacity-0');
-      toast.classList.add('translate-y-0', 'opacity-100');
-
-      toastTimer = setTimeout(() => {
-        toast.classList.remove('translate-y-0', 'opacity-100');
-        toast.classList.add('translate-y-24', 'opacity-0');
-      }, 3200);
-    }
-
-    // --- Modal Handlers ---
-    function openAddModal() {
-      document.getElementById('modalHeading').innerText = 'Tambah Siswa Baru';
-      document.getElementById('inputNis').value = '';
-      document.getElementById('inputNama').value = '';
-      document.getElementById('inputNis').readOnly = false;
-      modal.classList.remove('hidden');
-      setTimeout(() => {
-        modalBox.classList.remove('scale-95');
-        modalBox.classList.add('scale-100');
-      }, 10);
-    }
-
-    function hideModal() {
-      modalBox.classList.remove('scale-100');
-      modalBox.classList.add('scale-95');
-      setTimeout(() => {
-        modal.classList.add('hidden');
-      }, 150);
-    }
-
-    if (closeModalBtn) closeModalBtn.addEventListener('click', hideModal);
-    if (cancelModalBtn) cancelModalBtn.addEventListener('click', hideModal);
-
-    // --- Helper UI ---
-    const getInitials = (name) => {
-      if (!name) return 'U';
-      let parts = name.split(' ');
-      let initials = parts.map(p => p.charAt(0).toUpperCase()).join('');
-      return initials.substring(0, 2);
-    };
-
-    function triggerImportNotification() {
-      showToast('Silakan pilih berkas format .xlsx atau .csv untuk mengimpor', 'info', 'Impor Excel');
-    }
-
-    // --- Data Supabase Integration ---
-    async function loadData() {
-      try {
-        const students = await getStudents(); 
-        tableBody.innerHTML = '';
+        const toast = document.getElementById('toastNotification');
+        const icon = document.getElementById('toastIcon');
+        if (!toast) return;
+        clearTimeout(toastTimer);
+        document.getElementById('toastTitle').innerText = title;
+        document.getElementById('toastMessage').innerText = message;
         
-        if (!students || students.length === 0) {
-          tableBody.innerHTML = `<tr><td colspan="4" class="py-8 text-center font-body-sm text-on-surface-variant">Belum ada data siswa.</td></tr>`;
-          totalStudentCount.innerText = "0";
-          return;
-        }
-
-        totalStudentCount.innerText = students.length;
-        
-        // Render menggunakan kolom database yang benar: nama, kelas, qr_rfid_id
-        students.forEach(student => {
-          const avatarColors = ["bg-primary-fixed text-on-primary-fixed", "bg-secondary-fixed text-on-secondary-fixed", "bg-tertiary-fixed text-on-tertiary-fixed", "bg-surface-container-highest text-primary"];
-          const rndColor = avatarColors[Math.floor(Math.random() * avatarColors.length)];
-
-          tableBody.innerHTML += `
-            <tr class="student-row hover:bg-surface-container-low/60 transition-colors h-16 group" data-class="${student.kelas}" data-name="${student.nama}" data-nis="${student.nis}">
-              <td class="py-space-sm px-space-lg font-mono font-medium text-primary">${student.nis}</td>
-              <td class="py-space-sm px-space-lg">
-                <div class="flex items-center gap-space-md">
-                  <div class="w-10 h-10 rounded-full ${rndColor} flex items-center justify-center font-bold text-title-md shadow-xs">
-                    ${getInitials(student.nama)}
-                  </div>
-                  <div class="flex flex-col min-w-0">
-                    <span class="font-title-md text-title-md text-on-surface truncate">${student.nama}</span>
-                    <span class="font-body-sm text-body-sm text-outline">Terdaftar NIS ${student.nis}</span>
-                  </div>
-                </div>
-              </td>
-              <td class="py-space-sm px-space-lg">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-label-sm font-label-sm bg-surface-container-high text-primary font-semibold">
-                  <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
-                  ${student.kelas}
-                </span>
-              </td>
-              <td class="py-space-sm px-space-lg text-right">
-                <div class="flex items-center justify-end gap-space-xs">
-                  <button class="p-2 rounded-xl text-error/70 hover:text-error hover:bg-error-container/40 transition-colors" onclick="deleteStudentData('${student.id}', '${student.nama}')" title="Hapus Siswa">
-                    <span class="material-symbols-outlined text-title-md">delete</span>
-                  </button>
-                </div>
-              </td>
-            </tr>
-          `;
-        });
-        
-        applyFilter();
-      } catch (err) {
-        console.error(err);
-        tableBody.innerHTML = `<tr><td colspan="4" class="py-8 text-center font-body-sm text-error">Gagal mengambil data dari Supabase. Periksa konsol browser.</td></tr>`;
-      }
-    }
-
-    // Submit Tambah Siswa
-    document.getElementById('add-student-form').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const nis = document.getElementById('inputNis').value;
-      const name = document.getElementById('inputNama').value;
-      const kelas = document.getElementById('inputKelas').value;
-      const qrCodeId = "qr-" + Math.random().toString(36).substr(2, 9);
-
-      try {
-        // Gunakan window.db sesuai inisialisasi di supabase.js
-        const { error } = await window.db.from('students').insert([
-          { 
-            nis: nis, 
-            nama: name.toUpperCase(), 
-            kelas: kelas,              
-            qr_rfid_id: qrCodeId       
-          }
-        ]);
-
-        if (error) {
-          showToast('Gagal menambah data! Mungkin NIS sudah digunakan.', 'error', 'Error Database');
+        if (type === 'error') {
+            icon.innerText = 'error'; 
+            icon.className = 'material-symbols-outlined text-error';
+        } else if (type === 'info') {
+            icon.innerText = 'info'; 
+            icon.className = 'material-symbols-outlined text-primary';
         } else {
-          hideModal();
-          document.getElementById('add-student-form').reset();
-          showToast(`Data siswa "${name}" tersimpan ke database.`, 'success', 'Tersimpan');
-          loadData();
+            icon.innerText = 'check_circle'; 
+            icon.className = 'material-symbols-outlined text-secondary';
         }
-      } catch (err) {
-        showToast('Pastikan setup Supabase.js sudah terhubung.', 'error', 'Error Skrip');
-      }
+        
+        toast.classList.remove('translate-y-24', 'opacity-0');
+        toast.classList.add('translate-y-0', 'opacity-100');
+        toastTimer = setTimeout(() => {
+            toast.classList.remove('translate-y-0', 'opacity-100');
+            toast.classList.add('translate-y-24', 'opacity-0');
+        }, 3200);
+    }
+
+    function showModal() {
+        modal.classList.remove('hidden');
+        setTimeout(() => {
+            modalBox.classList.remove('scale-95');
+            modalBox.classList.add('scale-100');
+        }, 10);
+    }
+    
+    function hideModal() {
+        modalBox.classList.remove('scale-100');
+        modalBox.classList.add('scale-95');
+        setTimeout(() => modal.classList.add('hidden'), 150);
+    }
+    
+    function openAddModal() {
+        document.getElementById('modalHeading').innerText = 'Tambah Siswa Baru';
+        document.getElementById('editStudentId').value = '';
+        document.getElementById('inputNis').value = '';
+        document.getElementById('inputNama').value = '';
+        document.getElementById('inputNis').readOnly = false;
+        showModal();
+    }
+    
+    function openEditModal(id, nis, nama, kelas) {
+        document.getElementById('modalHeading').innerText = 'Edit Data Siswa';
+        document.getElementById('editStudentId').value = id;
+        document.getElementById('inputNis').value = nis;
+        document.getElementById('inputNama').value = nama;
+        document.getElementById('inputKelas').value = kelas;
+        document.getElementById('inputNis').readOnly = true;
+        showModal();
+    }
+    
+    document.getElementById('closeModalBtn').addEventListener('click', hideModal);
+    document.getElementById('cancelModalBtn').addEventListener('click', hideModal);
+
+    // --- FUNGSI CETAK QR YANG TELAH DIPERBAIKI ---
+    // MENGHAPUS SELURUH KODE LIVE SERVER AGAR TIDAK ERROR "UNEXPECTED EOF"
+    function printQR(nama, nis, qrId, kelas) {
+        const tempDiv = document.createElement('div');
+        new QRCode(tempDiv, { text: qrId, width: 150, height: 150 });
+        
+        setTimeout(() => {
+            const img = tempDiv.querySelector('img');
+            const canvas = tempDiv.querySelector('canvas');
+            const dataUrl = (img && img.src) || canvas.toDataURL();
+            const w = window.open('', '_blank');
+            
+            w.document.write(`
+                <html>
+                <head>
+                    <title>Cetak QR - ${esc(nama)}</title>
+                    <style>
+                        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; padding: 20px; margin: 0; }
+                        .card { width: 300px; padding: 20px; border: 2px solid #000; border-radius: 12px; text-align: center; }
+                        .card h2 { margin: 0 0 10px; font-size: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; }
+                        .card p { margin: 5px 0; font-size: 16px; }
+                        .qr-img { margin: 20px auto; width: 150px; height: 150px; }
+                        .footer { font-size: 12px; margin-top: 20px; }
+                        @media print { @page { size: auto; margin: 0mm; } body { padding: 2cm; } }
+                    </style>
+                </head>
+                <body>
+                    <div class="card">
+                        <h2>KARTU PELAJAR</h2>
+                        <p><strong>${esc(nama)}</strong></p>
+                        <p>NIS: ${esc(nis)} &nbsp;|&nbsp; ${esc(kelas)}</p>
+                        <img class="qr-img" src="${dataUrl}" />
+                        <div class="footer">Scan QR ini pada mesin SIHADIR</div>
+                    </div>
+                </body>
+                </html>
+            `);
+            w.document.close();
+            setTimeout(() => { w.focus(); w.print(); }, 500);
+        }, 100);
+    }
+
+    // --- Muat data siswa ---
+    const avatarColors = ['bg-primary-fixed text-on-primary-fixed', 'bg-secondary-fixed text-on-secondary-fixed', 'bg-tertiary-fixed text-on-tertiary-fixed', 'bg-surface-container-highest text-primary'];
+    let studentsById = new Map();
+
+    async function loadData() {
+        const ctrl = new AbortController();
+        const timer = setTimeout(() => ctrl.abort(), 15000); 
+        try {
+            if (typeof window.supabase === 'undefined') throw new Error("Supabase belum termuat");
+            
+            const { data: students, error } = await window.supabase
+                .from('students')
+                .select('id, nis, nama, kelas, qr_rfid_id')
+                .order('nama')
+                .abortSignal(ctrl.signal);
+                
+            if (error) throw error;
+
+            setConnectionStatus(true);
+            totalStudentCount.innerText = students.length;
+            studentsById = new Map(students.map(s => [String(s.id), s]));
+
+            if (students.length === 0) {
+                // Diperbaiki menggunakan backtick
+                tableBody.innerHTML = `<tr><td colspan="4" class="py-8 text-center font-body-sm text-on-surface-variant">Belum ada data siswa.</td></tr>`;
+                return;
+            }
+
+            // Semua baris dibangun sekali menggunakan Array map dan backtick
+            tableBody.innerHTML = students.map((s, i) => `
+            <tr class="student-row hover:bg-surface-container-low/60 transition-colors h-16 group" data-class="${esc(s.kelas)}" data-name="${esc(s.nama)}" data-nis="${esc(s.nis)}">
+                <td class="py-space-sm px-space-lg font-mono font-medium text-primary">${esc(s.nis)}</td>
+                <td class="py-space-sm px-space-lg">
+                    <div class="flex items-center gap-space-md">
+                        <div class="w-10 h-10 rounded-full ${avatarColors[i % avatarColors.length]} flex items-center justify-center font-bold text-title-md shadow-xs">${esc(getInitials(s.nama))}</div>
+                        <div class="flex flex-col min-w-0">
+                            <span class="font-title-md text-title-md text-on-surface truncate">${esc(s.nama)}</span>
+                            <span class="font-body-sm text-body-sm text-outline">Terdaftar NIS ${esc(s.nis)}</span>
+                        </div>
+                    </div>
+                </td>
+                <td class="py-space-sm px-space-lg">
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-label-sm font-label-sm bg-surface-container-high text-primary font-semibold">
+                        <span class="w-1.5 h-1.5 rounded-full bg-primary"></span>
+                        ${esc(s.kelas)}
+                    </span>
+                </td>
+                <td class="py-space-sm px-space-lg text-right">
+                    <div class="flex items-center justify-end gap-space-xs opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+                        <button data-action="qr" data-id="${esc(s.id)}" class="p-2 rounded-xl text-primary/70 hover:text-primary hover:bg-primary-container/40 transition-colors" title="Cetak QR">
+                            <span class="material-symbols-outlined text-title-md">qr_code_2</span>
+                        </button>
+                        <button data-action="edit" data-id="${esc(s.id)}" class="p-2 rounded-xl text-secondary/70 hover:text-secondary hover:bg-secondary-container/40 transition-colors" title="Edit Siswa">
+                            <span class="material-symbols-outlined text-title-md">edit</span>
+                        </button>
+                        <button data-action="delete" data-id="${esc(s.id)}" class="p-2 rounded-xl text-error/70 hover:text-error hover:bg-error-container/40 transition-colors" title="Hapus Siswa">
+                            <span class="material-symbols-outlined text-title-md">delete</span>
+                        </button>
+                    </div>
+                </td>
+            </tr>
+            `).join('');
+
+            applyFilter();
+        } catch(err) {
+            console.error('Gagal memuat data siswa:', err);
+            setConnectionStatus(false);
+            totalStudentCount.innerText = '0';
+            // Diperbaiki menggunakan backtick
+            tableBody.innerHTML = `<tr><td colspan="4" class="py-8 text-center font-body-sm text-error">Gagal mengambil data dari Supabase. <button class="underline ml-1" onclick="loadData()">Coba lagi</button></td></tr>`;
+        } finally {
+            clearTimeout(timer);
+        }
+    }
+
+    // Satu event listener untuk semua tombol di tabel (delegasi event)
+    tableBody.addEventListener('click', e => {
+        const btn = e.target.closest('button[data-action]');
+        if (!btn) return;
+        const s = studentsById.get(btn.dataset.id);
+        if (!s) return;
+        
+        if (btn.dataset.action === 'qr') printQR(s.nama, s.nis, s.qr_rfid_id, s.kelas);
+        else if (btn.dataset.action === 'edit') openEditModal(s.id, s.nis, s.nama, s.kelas);
+        else if (btn.dataset.action === 'delete') deleteStudentData(s.id, s.nama);
     });
 
-    // Hapus Siswa
-    async function deleteStudentData(id, nama) {
-      if(confirm(`Apakah Anda yakin ingin menghapus siswa ${nama}? Data absennya juga akan terhapus.`)) {
+    // --- Tambah / Edit ---
+    document.getElementById('add-student-form').addEventListener('submit', async e => {
+        e.preventDefault();
+        const editId = document.getElementById('editStudentId').value;
+        const nis = document.getElementById('inputNis').value;
+        const name = document.getElementById('inputNama').value;
+        const kelas = document.getElementById('inputKelas').value;
+        
         try {
-          const { error } = await window.supabase.from('students').delete().eq('id', id);
-          if (error) {
-            showToast('Gagal menghapus data.', 'error', 'Error');
-          } else {
-            showToast(`Data ${nama} berhasil dihapus dari sistem.`, 'error', 'Data Dihapus');
-            loadData();
-          }
-        } catch (err) {
-          showToast('Koneksi database bermasalah.', 'error', 'Gagal');
+            let res;
+            if (editId) {
+                res = await window.supabase.from('students').update({ nama: name.toUpperCase(), kelas: kelas }).eq('id', editId);
+            } else {
+                const qrCodeId = 'qr-' + Math.random().toString(36).substr(2, 9);
+                res = await window.supabase.from('students').insert([{ nis: nis, nama: name.toUpperCase(), kelas: kelas, qr_rfid_id: qrCodeId }]);
+            }
+            
+            if (res.error) {
+                showToast('Gagal menyimpan data! Mungkin NIS sudah digunakan atau terjadi kesalahan.', 'error', 'Error Database');
+            } else {
+                hideModal();
+                document.getElementById('add-student-form').reset();
+                document.getElementById('editStudentId').value = '';
+                showToast(`Data siswa "${name}" berhasil disimpan.`, 'success', 'Tersimpan');
+                loadData();
+            }
+        } catch(err) {
+            showToast('Pastikan setup Supabase.js sudah terhubung.', 'error', 'Error Skrip');
         }
-      }
+    });
+
+    // --- Hapus ---
+    async function deleteStudentData(id, nama) {
+        if (!confirm(`Apakah Anda yakin ingin menghapus siswa ${nama}? Data absennya juga akan terhapus.`)) return;
+        try {
+            const { error } = await window.supabase.from('students').delete().eq('id', id);
+            if (error) showToast('Gagal menghapus data.', 'error', 'Error');
+            else { 
+                showToast(`Data ${nama} berhasil dihapus dari sistem.`, 'error', 'Data Dihapus'); 
+                loadData(); 
+            }
+        } catch(err) {
+            showToast('Koneksi database bermasalah.', 'error', 'Gagal');
+        }
     }
 
-    // --- Search & Filter Logic ---
+    // --- Cari & Filter ---
     function handleSearch(val) {
-      const clearBtn = document.getElementById('clearSearchBtn');
-      if (val.length > 0) clearBtn.classList.remove('hidden');
-      else clearBtn.classList.add('hidden');
-      applyFilter();
+        document.getElementById('clearSearchBtn').classList.toggle('hidden', val.length === 0);
+        applyFilter();
     }
-
+    
     function clearSearch() {
-      const searchInput = document.getElementById('searchStudent');
-      searchInput.value = '';
-      document.getElementById('clearSearchBtn').classList.add('hidden');
-      applyFilter();
+        document.getElementById('searchStudent').value = '';
+        document.getElementById('clearSearchBtn').classList.add('hidden');
+        applyFilter();
     }
-
-    function handleFilterClass(selectedClass) {
-      applyFilter();
-    }
-
+    
     function applyFilter() {
-      const query = (document.getElementById('searchStudent').value || '').toLowerCase().trim();
-      const selectedClass = document.getElementById('filterClassSelect').value;
-      const rows = document.querySelectorAll('.student-row');
-      let visibleCount = 0;
-
-      rows.forEach(row => {
-        const nis = (row.getAttribute('data-nis') || '').toLowerCase();
-        const nama = (row.getAttribute('data-name') || '').toLowerCase();
-        const kelas = row.getAttribute('data-class') || '';
-
-        const matchSearch = nis.includes(query) || nama.includes(query);
-        const matchClass = (selectedClass === 'ALL' || kelas === selectedClass);
-
-        if (matchSearch && matchClass) {
-          row.classList.remove('hidden');
-          visibleCount++;
-        } else {
-          row.classList.add('hidden');
-        }
-      });
-
-      const noResults = document.getElementById('noResultsState');
-      if (visibleCount === 0 && rows.length > 0) {
-        noResults.classList.remove('hidden');
-      } else {
-        noResults.classList.add('hidden');
-      }
+        const query = (document.getElementById('searchStudent').value || '').toLowerCase().trim();
+        const selectedClass = document.getElementById('filterClassSelect').value;
+        const rows = document.querySelectorAll('.student-row');
+        let visible = 0;
+        
+        rows.forEach(row => {
+            const nis = (row.dataset.nis || '').toLowerCase();
+            const nama = (row.dataset.name || '').toLowerCase();
+            const show = (nis.includes(query) || nama.includes(query)) && (selectedClass === 'ALL' || row.dataset.class === selectedClass);
+            row.classList.toggle('hidden', !show);
+            if (show) visible++;
+        });
+        
+        document.getElementById('noResultsState').classList.toggle('hidden', !(visible === 0 && rows.length > 0));
     }
 
-    // Initialize Page
-    loadData();
-  </script>
+    // --- Memulai Inisialisasi ---
+    window.addEventListener('DOMContentLoaded', loadData);
+    </script>
 </body>
 </html>
