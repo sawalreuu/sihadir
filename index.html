@@ -3,28 +3,30 @@
 <head>
   <meta charset="utf-8" />
   <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-  <meta content="web_dashboard" name="shell-type" />
-  <title>SIHADIR - Dashboard</title>
-
-  <!-- Google Fonts -->
+  <title>Masuk - SIHADIR | UPTD SMP NEGERI 14 TANRALILI</title>
+  
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
-
+  
   <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
 
-  <!-- Tailwind CSS & Config -->
-  <script src="https://cdn.tailwindcss.com"></script>
   <style>
     @layer base {
-      html, body { margin: 0; padding: 0; }
-      body { overscroll-behavior: none; }
-      main > :first-child { margin-top: 0 !important; }
-      main > :last-child { margin-bottom: 0 !important; }
+      html, body {
+        margin: 0;
+        padding: 0;
+      }
+      body {
+        overscroll-behavior: none;
+      }
     }
-    ::-webkit-scrollbar { display: none; }
+    ::-webkit-scrollbar {
+      display: none;
+    }
   </style>
+  
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script id="tailwind-config">
     tailwind.config = {
       darkMode: "class",
@@ -56,6 +58,9 @@
             "secondary-fixed": "#89f5e7", "surface-container-highest": "#d3e4fe",
             "on-error-container": "#93000a"
           },
+          borderRadius: {
+            DEFAULT: "0.25rem", lg: "0.5rem", xl: "0.75rem", full: "9999px"
+          },
           spacing: {
             "space-sm": "0.5rem", "margin": "2rem", "space-lg": "1.5rem",
             "space-md": "1rem", "gutter-mobile": "1rem", "space-xs": "0.25rem",
@@ -67,406 +72,284 @@
             "headline-xl-mobile": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"],
             "headline-md": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"],
             "title-lg": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"],
-            "label-md": ["Inter"], "body-sm": ["Plus Jakarta Sans"],
-            "label-lg": ["Inter"]
+            "label-md": ["Inter"], "body-sm": ["Plus Jakarta Sans"], "label-lg": ["Inter"]
+          },
+          fontSize: {
+            "label-sm": ["11px", { lineHeight: "14px", letterSpacing: "0.03em", fontWeight: "600" }],
+            "title-md": ["16px", { lineHeight: "24px", fontWeight: "600" }],
+            "body-md": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+            "headline-lg-mobile": ["24px", { lineHeight: "32px", letterSpacing: "-0.01em", fontWeight: "700" }],
+            "headline-xl-mobile": ["28px", { lineHeight: "36px", letterSpacing: "-0.01em", fontWeight: "700" }],
+            "body-lg": ["16px", { lineHeight: "24px", fontWeight: "400" }],
+            "headline-md": ["20px", { lineHeight: "28px", letterSpacing: "-0.01em", fontWeight: "600" }],
+            "headline-xl": ["36px", { lineHeight: "44px", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "title-lg": ["18px", { lineHeight: "26px", fontWeight: "600" }],
+            "headline-lg": ["28px", { lineHeight: "36px", letterSpacing: "-0.02em", fontWeight: "700" }],
+            "label-md": ["12px", { lineHeight: "16px", letterSpacing: "0.02em", fontWeight: "600" }],
+            "body-sm": ["13px", { lineHeight: "18px", fontWeight: "400" }],
+            "label-lg": ["14px", { lineHeight: "20px", letterSpacing: "0.01em", fontWeight: "600" }]
           }
         }
       }
     };
   </script>
 </head>
-<body class="bg-surface font-body-md text-on-surface min-h-screen">
+<body class="bg-surface font-body-md text-on-surface min-h-screen flex flex-col justify-between selection:bg-primary-fixed selection:text-on-primary-fixed relative overflow-x-hidden">
   
-  <!-- Sidebar -->
-  <aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col justify-between p-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
-    <div class="flex flex-col gap-space-lg">
-      <div class="flex items-center gap-space-sm">
-        <img alt="SIHADIR Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1V5El7QWhUBII4Rgkk5BFx4y1tj4lmoEMBx0sTntd8-82mrVLzcCD_Zef17OJ8cp8cMnmvn57ObNAhEKbFozuOKw-btE3WU4gP1ev4q9apc4WuBS49xrBJS2MLFVKGd_MaDU_yVZV5pkUX4wsExl2ewV5cmMqDjGnnfH5W_vOIF0E0IcvrGp2R30JT2G_D-nLyj3hxD7XhEEg8q00ubCcbOjvdvTB3BvaWf3YaqpnFZX5A9ucjCad2uCck" />
-        <div>
-          <span class="font-title-lg text-title-lg text-primary tracking-tight block">SIHADIR</span>
-          <span class="font-body-sm text-body-sm text-on-surface-variant block">Sistem Presensi Siswa</span>
-        </div>
-      </div>
-      <nav class="flex flex-col gap-space-xs">
-        <a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-all bg-primary-container text-on-primary-container font-label-lg rounded-xl shadow-[0_4px_12px_rgba(37,99,235,0.25)]" href="dashboard.html">
-          <span class="material-symbols-outlined text-title-lg">dashboard</span>Dashboard
-        </a>
-        <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" href="students.html">
-          <span class="material-symbols-outlined text-title-lg">school</span>Data Siswa
-        </a>
-        <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" href="reports.html">
-          <span class="material-symbols-outlined text-title-lg">description</span>Rekapitulasi
-        </a>
-        <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" href="scanner.html">
-          <span class="material-symbols-outlined text-title-lg">qr_code_scanner</span>Buka Scanner
-        </a>
-      </nav>
-    </div>
-    <div class="flex flex-col gap-space-md pt-space-md">
-      <!-- Status Supabase Dinamis -->
-      <div class="bg-surface-container-low rounded-xl p-space-sm flex items-center justify-between">
-        <div class="flex items-center gap-space-xs">
-          <span class="relative flex h-2 w-2" id="supabaseStatusPing">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-outline opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-outline"></span>
-          </span>
-          <span class="font-label-sm text-label-sm text-on-surface" id="supabaseStatusText">Mengecek Koneksi...</span>
-        </div>
-        <span class="material-symbols-outlined text-outline text-body-md" id="supabaseStatusIcon">sync</span>
-      </div>
-      <a href="#" class="bg-surface-container-lowest hover:bg-surface-container-high transition-colors rounded-xl p-space-sm flex items-center gap-space-xs text-on-surface-variant">
-        <span class="material-symbols-outlined text-body-md text-primary">settings</span>
-        <div class="flex flex-col">
-          <span class="font-label-sm text-label-sm text-on-surface font-semibold">Pengaturan</span>
-          <span class="font-body-sm text-body-sm text-outline">Konfigurasi sistem</span>
-        </div>
-      </a>
-    </div>
-  </aside>
-
-  <!-- Main Content Area -->
-  <div class="pl-64">
-    <!-- Header -->
-    <header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 px-gutter flex items-center justify-between">
-      <div class="flex items-center gap-space-xs font-body-md text-body-md text-on-surface-variant">
-        <span class="material-symbols-outlined text-title-md">home</span>
-        <span>/</span>
-        <span class="font-title-md text-title-md text-on-surface">Portal Presensi</span>
-      </div>
-      <div class="flex items-center gap-space-lg">
-        <div class="hidden sm:flex items-center gap-space-xs bg-surface-container-low px-space-md py-space-xs rounded-full text-on-surface-variant font-label-md text-label-md">
-          <span class="material-symbols-outlined text-body-md text-primary">calendar_today</span>
-          <span id="currentDateDisplay">Memuat tanggal...</span>
-        </div>
-        <button aria-label="Notifikasi" class="relative p-space-xs rounded-full text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors">
-          <span class="material-symbols-outlined">notifications</span>
-          <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-error"></span>
-        </button>
-        <div class="flex items-center gap-space-sm pl-space-sm">
-          <div class="text-right hidden md:block">
-            <span class="font-title-md text-title-md text-on-surface block leading-tight">Admin Sekolah</span>
-            <span class="font-body-sm text-body-sm text-on-surface-variant block">Petugas Piket</span>
-          </div>
-          <img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe3xWH7adnvgfkpb8Q1JnvJEczn3F2XVBqd9UcpwviPoyJwls-Mqa8JcEJY1JrN6OdKySG5K9YnI0jtUOfsnFYphc6ipvu7en74pqprhkeEqjqAS88ZY_c4sx-LF4TCGBXnpbAWdz5eOJi3NH8p3wTX0RjuyK2PyeTfgCiiN-SvZ5duPTwSTw01IPasVFR-pi-q0KjQRSi6xRqx0Coy78SAa7Z0kDRXghoKwDjbxcqCzV3GCmoQiVL" />
-        </div>
-      </div>
-    </header>
-
-    <main class="w-full pt-16 bg-surface min-h-screen">
-      <div class="flex flex-col w-full">
-        <div class="p-space-lg md:p-space-xl flex flex-col gap-space-lg">
-          
-          <!-- Hero / Welcome Banner -->
-          <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-primary via-primary-container to-secondary p-space-xl text-on-primary shadow-xl">
-            <div class="absolute -right-16 -top-16 w-80 h-80 rounded-full bg-white/10 blur-3xl pointer-events-none"></div>
-            <div class="absolute right-32 bottom-0 w-60 h-60 rounded-full bg-secondary-container/20 blur-2xl pointer-events-none"></div>
-            <div class="relative z-10 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-space-lg">
-              <div class="max-w-2xl">
-                <h1 class="font-headline-xl text-headline-xl text-on-primary tracking-tight font-bold">
-                  Selamat Datang di SIHADIR
-                </h1>
-                <p class="font-body-lg text-body-lg text-on-primary/85 mt-space-xs">
-                  Sistem Presensi Siswa Real-Time. Pantau kehadiran harian siswa dengan mudah, tertib, dan cepat.
-                </p>
-              </div>
-              <div class="flex flex-wrap sm:flex-nowrap items-center gap-space-sm shrink-0">
-                <a class="flex items-center justify-center gap-space-xs px-space-lg py-space-sm bg-surface-container-lowest text-primary rounded-xl font-label-lg text-label-lg shadow-md hover:bg-surface-container-low transition-all" href="scanner.html">
-                  <span class="material-symbols-outlined text-title-lg">qr_code_scanner</span>
-                  Buka Scanner Sekarang
-                </a>
-                <a class="flex items-center justify-center gap-space-xs px-space-md py-space-sm bg-white/15 hover:bg-white/25 backdrop-blur-md text-on-primary rounded-xl font-label-lg text-label-lg transition-all" href="reports.html">
-                  <span class="material-symbols-outlined text-title-lg">description</span>
-                  Lihat Rekapitulasi
-                </a>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Quick Stats Grid -->
-          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md">
-            <!-- Total Siswa -->
-            <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
-              <div class="flex items-center justify-between">
-                <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Total Siswa Terdaftar</span>
-                <div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-primary">
-                  <span class="material-symbols-outlined">group</span>
-                </div>
-              </div>
-              <div class="mt-space-md">
-                <div class="flex items-baseline gap-space-xs">
-                  <span class="font-headline-xl text-headline-xl text-on-surface" id="statTotalSiswa">0</span>
-                  <span class="font-label-lg text-label-lg text-on-surface-variant">Siswa</span>
-                </div>
-                <div class="flex items-center gap-space-xs mt-space-xs font-body-sm text-body-sm text-secondary">
-                  <span class="material-symbols-outlined text-body-sm">check_circle</span>
-                  <span>Database Tersinkron</span>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Hadir Hari Ini -->
-            <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
-              <div class="flex items-center justify-between">
-                <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Hadir Hari Ini</span>
-                <div class="w-10 h-10 rounded-xl bg-secondary-fixed/40 flex items-center justify-center text-secondary">
-                  <span class="material-symbols-outlined">verified</span>
-                </div>
-              </div>
-              <div class="mt-space-md">
-                <div class="flex items-baseline gap-space-xs">
-                  <span class="font-headline-xl text-headline-xl text-secondary" id="statHadir">0</span>
-                  <span class="font-label-lg text-label-lg text-on-surface-variant">Siswa</span>
-                </div>
-                <div class="w-full bg-surface-container-high rounded-full h-1.5 mt-space-xs overflow-hidden">
-                  <div class="bg-secondary h-1.5 rounded-full" id="statHadirBar" style="width: 0%;"></div>
-                </div>
-                <div class="flex justify-between items-center mt-1 font-body-sm text-body-sm text-on-surface-variant">
-                  <span>Tingkat Hadir</span>
-                  <span class="font-semibold text-secondary" id="statHadirPersen">0%</span>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Izin / Sakit / Terlambat -->
-            <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
-              <div class="flex items-center justify-between">
-                <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Terlambat Masuk</span>
-                <div class="w-10 h-10 rounded-xl bg-tertiary-fixed flex items-center justify-center text-tertiary">
-                  <span class="material-symbols-outlined">alarm_on</span>
-                </div>
-              </div>
-              <div class="mt-space-md">
-                <div class="flex items-baseline gap-space-xs">
-                  <span class="font-headline-xl text-headline-xl text-tertiary" id="statTerlambat">0</span>
-                  <span class="font-label-lg text-label-lg text-on-surface-variant">Siswa</span>
-                </div>
-                <div class="flex items-center gap-space-sm mt-space-xs font-body-sm text-body-sm text-on-surface-variant">
-                  <span class="px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed-variant font-semibold">Tiba > 07:15 WIB</span>
-                </div>
-              </div>
-            </div>
-            
-            <!-- Belum Hadir / Alpa -->
-            <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
-              <div class="flex items-center justify-between">
-                <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Belum Hadir</span>
-                <div class="w-10 h-10 rounded-xl bg-error-container flex items-center justify-center text-error">
-                  <span class="material-symbols-outlined">pending_actions</span>
-                </div>
-              </div>
-              <div class="mt-space-md">
-                <div class="flex items-baseline gap-space-xs">
-                  <span class="font-headline-xl text-headline-xl text-error" id="statBelumHadir">0</span>
-                  <span class="font-label-lg text-label-lg text-on-surface-variant">Siswa</span>
-                </div>
-                <div class="flex items-center gap-space-xs mt-space-xs font-body-sm text-body-sm text-error">
-                  <span class="material-symbols-outlined text-body-sm">schedule</span>
-                  <span>Menunggu scan gerbang</span>
-                </div>
-              </div>
-            </div>
-          </div>
-          
-          <!-- Main Section: Live Preview Layout -->
-          <div class="grid grid-cols-1 gap-space-lg">
-            <!-- Kolom Utama: Aktivitas Presensi Hari Ini (Full Width) -->
-            <div class="flex flex-col gap-space-md">
-              <div class="bg-surface-container-lowest rounded-2xl p-space-xl shadow-sm flex flex-col gap-space-md">
-                <div class="flex items-center justify-between pb-space-xs border-b border-surface-container-high">
-                  <div class="flex flex-col gap-0.5">
-                    <div class="flex items-center gap-space-xs">
-                      <span class="material-symbols-outlined text-primary text-title-lg">history</span>
-                      <h3 class="font-title-lg text-title-lg text-on-surface">Aktivitas Presensi Terkini Hari Ini</h3>
-                    </div>
-                    <p class="font-body-sm text-body-sm text-on-surface-variant">Pencatatan kehadiran siswa langsung dari gerbang utama secara real-time</p>
-                  </div>
-                  <a class="font-label-md text-label-md text-primary hover:underline flex items-center gap-1 shrink-0" href="reports.html">
-                    <span>Lihat Semua Presensi</span>
-                    <span class="material-symbols-outlined text-body-md">arrow_forward</span>
-                  </a>
-                </div>
-                
-                <div class="overflow-x-auto">
-                  <table class="w-full text-left">
-                    <thead>
-                      <tr class="bg-surface-container-low text-on-surface-variant font-label-sm text-label-sm uppercase">
-                        <th class="py-3 px-space-md rounded-l-lg">Waktu</th>
-                        <th class="py-3 px-space-md">NIS</th>
-                        <th class="py-3 px-space-md">Nama Lengkap</th>
-                        <th class="py-3 px-space-md">Kelas</th>
-                        <th class="py-3 px-space-md rounded-r-lg">Keterangan</th>
-                      </tr>
-                    </thead>
-                    <tbody class="divide-y-0" id="recentActivitiesBody">
-                      <tr><td colspan="5" class="py-6 text-center text-on-surface-variant">Memuat data aktivitas...</td></tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
-    </main>
-  </div>
+  <!-- Subtle Ambient Background Decorators -->
+  <div class="fixed -top-40 -left-40 w-[32rem] h-[32rem] bg-primary-container/10 rounded-full blur-3xl pointer-events-none -z-10"></div>
+  <div class="fixed -bottom-40 -right-40 w-[30rem] h-[30rem] bg-secondary-container/20 rounded-full blur-3xl pointer-events-none -z-10"></div>
+  <div class="fixed inset-0 opacity-[0.025] pointer-events-none -z-10" style="background-image: radial-gradient(#004ac6 1px, transparent 1px); background-size: 24px 24px;"></div>
   
-  <!-- Script Utama Aplikasi -->
+  <!-- Top Simple Brand Accent -->
+  <header class="w-full px-6 py-4 flex items-center justify-between max-w-6xl mx-auto">
+    <div class="flex items-center gap-2.5">
+      <div class="w-9 h-9 rounded-xl bg-primary flex items-center justify-center text-on-primary shadow-sm shadow-primary/20">
+        <span class="material-symbols-outlined text-[20px]">school</span>
+      </div>
+      <div>
+        <span class="font-title-lg text-title-lg text-primary tracking-tight font-bold leading-none block">SIHADIR</span>
+        <span class="text-[11px] font-medium text-outline block mt-0.5">Sistem Presensi Digital</span>
+      </div>
+    </div>
+    <div class="hidden sm:flex items-center gap-2 bg-surface-container-lowest px-3 py-1.5 rounded-full border border-surface-container-high/60 shadow-xs" id="dbStatus">
+      <span class="relative flex h-2 w-2">
+        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-outline opacity-75" id="dbPing"></span>
+        <span class="relative inline-flex rounded-full h-2 w-2 bg-outline" id="dbIndicator"></span>
+      </span>
+      <span class="font-label-sm text-label-sm text-on-surface-variant font-medium" id="dbText">Mengecek Koneksi...</span>
+    </div>
+  </header>
+  
+  <!-- Main Centered Login Section -->
+  <main class="flex-1 flex items-center justify-center px-4 py-8 sm:py-12">
+    <div class="w-full max-w-[440px]">
+      <!-- Central Authentication Card -->
+      <div class="bg-surface-container-lowest rounded-3xl p-7 sm:p-9 shadow-[0_16px_40px_-12px_rgba(11,28,48,0.08)] border border-surface-container-high/50 relative">
+        
+        <!-- School & App Header Inside Card -->
+        <div class="text-center mb-8">
+          <div class="inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-primary-fixed text-primary mb-4 shadow-xs">
+            <span class="material-symbols-outlined text-[32px]">lock</span>
+          </div>
+          <div class="inline-block px-3 py-1 rounded-full bg-surface-container-low text-primary text-[11px] font-semibold tracking-wider uppercase mb-2.5">
+            UPTD SMP NEGERI 14 TANRALILI
+          </div>
+          <h1 class="font-headline-md text-headline-md text-on-surface tracking-tight font-bold mb-2">
+            Masuk ke SIHADIR
+          </h1>
+          <p class="font-body-sm text-body-sm text-on-surface-variant max-w-[320px] mx-auto leading-relaxed">
+            Silakan masuk untuk mengelola data presensi dan sistem kehadiran siswa.
+          </p>
+        </div>
+        
+        <!-- Single Admin Login Form -->
+        <form class="flex flex-col gap-4" id="loginForm">
+          <!-- Email / Username Field -->
+          <div class="flex flex-col gap-1.5">
+            <label class="font-label-md text-label-md text-on-surface font-semibold" for="emailInput">
+              Email Administrator
+            </label>
+            <div class="relative flex items-center">
+              <span class="material-symbols-outlined absolute left-3.5 text-outline pointer-events-none text-[20px]">mail</span>
+              <input autocomplete="email" class="w-full h-11 pl-11 pr-4 rounded-xl bg-surface-container-low/60 border border-outline-variant/50 text-on-surface placeholder:text-outline font-body-md text-body-md transition-all focus:bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none" id="emailInput" name="email" placeholder="admin@sekolah.id" required="" type="email" />
+            </div>
+          </div>
+          
+          <!-- Password Field -->
+          <div class="flex flex-col gap-1.5">
+            <div class="flex items-center justify-between">
+              <label class="font-label-md text-label-md text-on-surface font-semibold" for="passwordInput">
+                Kata Sandi
+              </label>
+              <a class="font-label-sm text-label-sm text-primary hover:text-on-primary-fixed-variant transition-colors" href="#" onclick="event.preventDefault(); alert('Silakan hubungi Administrator IT atau Reset Password di konsol Supabase Anda.');">
+                Lupa Kata Sandi?
+              </a>
+            </div>
+            <div class="relative flex items-center">
+              <span class="material-symbols-outlined absolute left-3.5 text-outline pointer-events-none text-[20px]">key</span>
+              <input autocomplete="current-password" class="w-full h-11 pl-11 pr-11 rounded-xl bg-surface-container-low/60 border border-outline-variant/50 text-on-surface placeholder:text-outline font-body-md text-body-md transition-all focus:bg-surface-container-lowest focus:border-primary focus:ring-2 focus:ring-primary/20 focus:outline-none" id="passwordInput" name="password" placeholder="••••••••" required="" type="password" />
+              <button aria-label="Tampilkan atau sembunyikan kata sandi" class="absolute right-3 text-outline hover:text-on-surface transition-colors p-1 flex items-center justify-center rounded-lg" id="togglePasswordBtn" type="button">
+                <span class="material-symbols-outlined text-[20px]" id="eyeIcon">visibility</span>
+              </button>
+            </div>
+          </div>
+          
+          <!-- Submit Button -->
+          <div class="pt-2">
+            <button class="w-full h-12 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-lg text-label-lg font-semibold shadow-md shadow-primary/20 flex items-center justify-center gap-2 transition-all active:scale-[0.99] cursor-pointer" id="submitBtn" type="submit">
+              <span>Masuk ke Sistem</span>
+              <span class="material-symbols-outlined text-[20px]">login</span>
+            </button>
+          </div>
+        </form>
+        
+        <!-- Feedback Alert Status -->
+        <div class="hidden mt-4 p-3 rounded-xl flex items-center gap-2.5 font-body-sm text-body-sm transition-all" id="loginFeedback">
+          <span class="material-symbols-outlined text-[20px]" id="feedbackIcon">info</span>
+          <span id="feedbackText"></span>
+        </div>
+      </div>
+      
+      <!-- Mobile Database Status Indicator -->
+      <div class="flex sm:hidden items-center justify-center gap-2 mt-4 text-on-surface-variant font-label-sm text-label-sm">
+        <span class="relative flex h-2 w-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-outline opacity-75" id="mobileDbPing"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-outline" id="mobileDbIndicator"></span>
+        </span>
+        <span id="mobileDbText">Mengecek Koneksi...</span>
+      </div>
+    </div>
+  </main>
+  
+  <!-- Clean Minimalist Footer -->
+  <footer class="w-full py-6 px-4 text-center">
+    <p class="font-body-sm text-body-sm text-outline">
+      © 2024 SIHADIR • UPTD SMP NEGERI 14 TANRALILI. All rights reserved.
+    </p>
+  </footer>
+
+  <!-- Script Konfigurasi Supabase -->
   <script src="js/supabase.js"></script>
+
+  <!-- Script Logika UI & Autentikasi -->
   <script>
-    // --- UI Dinamis Supabase Status ---
-    function setConnectionStatus(ok) {
-        const text = document.getElementById('supabaseStatusText');
-        const icon = document.getElementById('supabaseStatusIcon');
-        const ping = document.getElementById('supabaseStatusPing');
-        
-        text.textContent = ok ? 'Supabase Terhubung' : 'Tidak Terhubung';
-        icon.textContent = ok ? 'cloud_done' : 'cloud_off';
-        icon.className = 'material-symbols-outlined text-body-md ' + (ok ? 'text-secondary' : 'text-error');
-        
-        ping.innerHTML = (ok ? `<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>` : '') +
-            `<span class="relative inline-flex rounded-full h-2 w-2 ${ok ? 'bg-secondary' : 'bg-error'}"></span>`;
-    }
+    document.addEventListener("DOMContentLoaded", () => {
+      const togglePasswordBtn = document.getElementById('togglePasswordBtn');
+      const passwordInput = document.getElementById('passwordInput');
+      const eyeIcon = document.getElementById('eyeIcon');
+      const emailInput = document.getElementById('emailInput');
+      const submitBtn = document.getElementById('submitBtn');
+      const loginFeedback = document.getElementById('loginFeedback');
+      const feedbackText = document.getElementById('feedbackText');
+      const feedbackIcon = document.getElementById('feedbackIcon');
+      const loginForm = document.getElementById('loginForm');
 
-    // Inisialisasi Tanggal
-    function updateDate() {
-        var el = document.getElementById('currentDateDisplay');
-        if (!el) return;
-        el.textContent = new Intl.DateTimeFormat('id-ID', {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-            timeZone: 'Asia/Makassar'
-        }).format(new Date());
-    }
-    updateDate();
-    setInterval(updateDate, 60 * 1000);
-
-    const getInitials = n => n ? n.split(' ').filter(Boolean).map(p => p[0].toUpperCase()).join('').substring(0, 2) : 'U';
-    const avatarColors = ['bg-primary/10 text-primary', 'bg-secondary/10 text-secondary', 'bg-tertiary-fixed text-tertiary', 'bg-error-container text-error'];
-
-    // Helper formatter waktu "HH:MM:SS"
-    function formatTimeString(isoString) {
-      if (!isoString) return "-";
-      const d = new Date(isoString);
-      return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0') + ':' + String(d.getSeconds()).padStart(2, '0');
-    }
-
-    // Cek Keterlambatan (> 07:15)
-    function isLate(isoString) {
-      if (!isoString) return false;
-      const d = new Date(isoString);
-      if (d.getHours() > 7 || (d.getHours() === 7 && d.getMinutes() > 15)) {
-        return true;
+      // UI: Toggle Password Visibility
+      if (togglePasswordBtn && passwordInput && eyeIcon) {
+        togglePasswordBtn.addEventListener('click', () => {
+          const isPassword = passwordInput.getAttribute('type') === 'password';
+          passwordInput.setAttribute('type', isPassword ? 'text' : 'password');
+          eyeIcon.textContent = isPassword ? 'visibility_off' : 'visibility';
+        });
       }
-      return false;
-    }
 
-    async function loadDashboardData() {
-        try {
-            if (typeof window.supabase === 'undefined') throw new Error("Supabase belum termuat");
+      // UI: Feedback Alert Helper
+      function showFeedback(message, type) {
+        loginFeedback.classList.remove('hidden', 'bg-secondary-container/50', 'text-on-secondary-container', 'border-secondary/20', 'bg-error-container/50', 'text-on-error-container', 'border-error/20');
+        
+        if (type === 'success') {
+          loginFeedback.classList.add('bg-secondary-container/50', 'text-on-secondary-container', 'border-secondary/20');
+          feedbackIcon.textContent = 'check_circle';
+          feedbackIcon.classList.add('text-secondary');
+          feedbackIcon.classList.remove('text-error');
+        } else if (type === 'error') {
+          loginFeedback.classList.add('bg-error-container/50', 'text-on-error-container', 'border-error/20');
+          feedbackIcon.textContent = 'error';
+          feedbackIcon.classList.add('text-error');
+          feedbackIcon.classList.remove('text-secondary');
+        }
+        
+        feedbackText.textContent = message;
+      }
 
-            // Ambil Total Siswa Terdaftar
-            const { count: totalStudents, error: errTotal } = await window.supabase
-                .from('students')
-                .select('*', { count: 'exact', head: true });
-            if (errTotal) throw errTotal;
+      // Cek Status Koneksi DB UI
+      function setConnectionStatus(ok) {
+        const pingDesk = document.getElementById('dbPing');
+        const indDesk = document.getElementById('dbIndicator');
+        const textDesk = document.getElementById('dbText');
+        const pingMob = document.getElementById('mobileDbPing');
+        const indMob = document.getElementById('mobileDbIndicator');
+        const textMob = document.getElementById('mobileDbText');
+        
+        const textStr = ok ? 'Database Terhubung' : 'Gagal Terhubung';
+        const colorClass = ok ? 'bg-secondary' : 'bg-error';
 
-            // Ambil Data Presensi Hari Ini
-            const today = new Date();
-            today.setHours(0,0,0,0);
-            const tomorrow = new Date(today);
-            tomorrow.setDate(tomorrow.getDate() + 1);
+        textDesk.textContent = textStr;
+        textMob.textContent = textStr;
 
-            const { data: attendances, error: errAtt } = await window.supabase
-                .from('attendance')
-                .select(`status, created_at, students (nis, nama, kelas)`)
-                .gte('created_at', today.toISOString())
-                .lt('created_at', tomorrow.toISOString())
-                .order('created_at', { ascending: false }); // Yang terbaru di atas
-            if (errAtt) throw errAtt;
+        [pingDesk, indDesk, pingMob, indMob].forEach(el => {
+            el.className = el.className.replace(/bg-\w+(-\w+)?/g, ''); // Hapus class bg lama
+            el.classList.add(colorClass); // Tambah class bg baru
+        });
+      }
 
+      // Test koneksi ke Supabase saat halaman dimuat
+      async function testConnection() {
+         try {
+            if (typeof window.supabase === 'undefined') throw new Error();
+            const { error } = await window.supabase.from('students').select('id').limit(1);
+            if (error && error.code !== 'PGRST116') throw error; // Abaikan error data kosong
             setConnectionStatus(true);
+         } catch(e) {
+            setConnectionStatus(false);
+         }
+      }
+      testConnection();
 
-            // Olah Data untuk Dashboard
-            let totalHadirMasuk = 0;
-            let totalTerlambat = 0;
-            const uniqueStudents = new Set(); // Hitung siswa yang hadir agar tidak double hitung (Masuk & Pulang)
 
-            attendances.forEach(att => {
-                if(att.status === 'MASUK') {
-                    totalHadirMasuk++;
-                    uniqueStudents.add(att.students.nis);
-                    if(isLate(att.created_at)) {
-                        totalTerlambat++;
-                    }
-                } else {
-                    uniqueStudents.add(att.students.nis);
-                }
-            });
-            
-            const totalHadirUnik = uniqueStudents.size;
-            const belumHadir = totalStudents - totalHadirUnik;
-            const persentaseHadir = totalStudents > 0 ? Math.round((totalHadirUnik / totalStudents) * 100) : 0;
+      // Handle Login Submission (Supabase Auth)
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        if (!window.supabase) {
+           showFeedback("Sistem belum terhubung ke database. Periksa koneksi Anda.", "error");
+           return;
+        }
 
-            // Render Statistik
-            document.getElementById('statTotalSiswa').innerText = totalStudents || 0;
-            document.getElementById('statHadir').innerText = totalHadirUnik;
-            document.getElementById('statTerlambat').innerText = totalTerlambat;
-            document.getElementById('statBelumHadir').innerText = belumHadir >= 0 ? belumHadir : 0;
-            
-            document.getElementById('statHadirPersen').innerText = `${persentaseHadir}%`;
-            document.getElementById('statHadirBar').style.width = `${persentaseHadir}%`;
+        const email = emailInput.value;
+        const password = passwordInput.value;
 
-            // Render Log Aktivitas Terakhir (Maksimal 6)
-            const tbody = document.getElementById('recentActivitiesBody');
-            tbody.innerHTML = '';
+        // UI Loading State
+        submitBtn.disabled = true;
+        submitBtn.innerHTML = `
+          <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+          <span>Memverifikasi...</span>
+        `;
+        
+        try {
+          // Proses masuk menggunakan Supabase Auth
+          const { data, error } = await window.supabase.auth.signInWithPassword({
+            email: email,
+            password: password,
+          });
 
-            if (attendances.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="5" class="py-6 text-center text-on-surface-variant">Belum ada aktivitas presensi hari ini.</td></tr>`;
-            } else {
-                const limitedAtt = attendances.slice(0, 6);
-                limitedAtt.forEach((att, idx) => {
-                    const timeStr = formatTimeString(att.created_at);
-                    const colorClass = avatarColors[idx % avatarColors.length];
-                    const late = att.status === 'MASUK' && isLate(att.created_at);
-                    
-                    let badgeHTML = '';
-                    if (att.status === 'PULANG') {
-                        badgeHTML = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-label-sm bg-surface-container-high text-on-surface-variant font-semibold"><span class="w-2 h-2 rounded-full bg-outline"></span>Tap Pulang</span>`;
-                    } else if (late) {
-                        badgeHTML = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-label-sm bg-error-container text-error font-semibold"><span class="w-2 h-2 rounded-full bg-error"></span>Terlambat Masuk</span>`;
-                    } else {
-                        badgeHTML = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-label-sm bg-surface-container-high text-primary font-semibold"><span class="w-2 h-2 rounded-full bg-primary"></span>Hadir Tepat Waktu</span>`;
-                    }
+          if (error) {
+            throw error;
+          }
 
-                    tbody.innerHTML += `
-                    <tr class="hover:bg-surface-container-low transition-colors">
-                        <td class="py-3.5 px-space-md font-body-sm text-body-sm text-on-surface-variant">${timeStr}</td>
-                        <td class="py-3.5 px-space-md font-mono text-body-sm text-on-surface font-medium">${att.students.nis}</td>
-                        <td class="py-3.5 px-space-md">
-                          <div class="flex items-center gap-space-sm">
-                            <div class="w-8 h-8 rounded-full ${colorClass} flex items-center justify-center font-bold text-label-sm">${getInitials(att.students.nama)}</div>
-                            <span class="font-title-md text-title-md text-on-surface">${att.students.nama}</span>
-                          </div>
-                        </td>
-                        <td class="py-3.5 px-space-md font-body-sm text-body-sm text-on-surface-variant">${att.students.kelas}</td>
-                        <td class="py-3.5 px-space-md">${badgeHTML}</td>
-                    </tr>`;
-                });
-            }
+          // Jika berhasil
+          showFeedback("Otentikasi Berhasil! Mengalihkan ke Dashboard...", "success");
+          
+          setTimeout(() => {
+            // Redirect ke halaman index (Dashboard)
+            window.location.href = "dashboard.html"; 
+          }, 1500);
 
         } catch (error) {
-            console.error("Dashboard Load Error:", error);
-            setConnectionStatus(false);
-            document.getElementById('recentActivitiesBody').innerHTML = `<tr><td colspan="5" class="py-6 text-center text-error">Gagal memuat data dashboard.</td></tr>`;
+          console.error("Login error:", error.message);
+          let errorMsg = "Terjadi kesalahan saat masuk.";
+          
+          if (error.message.includes("Invalid login credentials")) {
+             errorMsg = "Email atau kata sandi salah.";
+          } else if (error.message.includes("Email not confirmed")) {
+             errorMsg = "Email belum dikonfirmasi.";
+          }
+          
+          showFeedback(errorMsg, "error");
+          
+          // Reset Button State
+          submitBtn.disabled = false;
+          submitBtn.innerHTML = `
+            <span>Masuk ke Sistem</span>
+            <span class="material-symbols-outlined text-[20px]">login</span>
+          `;
         }
-    }
-
-    // Eksekusi load data
-    window.addEventListener('DOMContentLoaded', loadDashboardData);
-
+      });
+    });
   </script>
 </body>
 </html>
