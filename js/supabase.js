@@ -1,10 +1,12 @@
 // --- KONFIGURASI SUPABASE ---
-const SUPABASE_URL = 'https://iaosgzutbgemmtqdsui.supabase.co';
+const SUPABASE_URL = 'https://iaosgzutbgemmtqdisui.supabase.co';
 const SUPABASE_ANON_KEY = 'sb_publishable_5V_WJSAroz4Fddr5SQkZgw_FhXzL-2Y';
 
 // Inisialisasi Klien Supabase
 if (window.supabase && typeof window.supabase.createClient === 'function') {
-  window.db = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  const client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+  window.supabase = client; // agar pemanggilan supabase.from() di file HTML berhasil
+  window.db = client;       // untuk kompatibilitas fungsi di bawah
 }
 
 // Fungsi Ambil Data Siswa (Sesuai dengan nama kolom tabel di Supabase: 'nama', 'kelas')
