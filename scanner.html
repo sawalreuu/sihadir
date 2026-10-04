@@ -12,7 +12,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
   <!-- Library Supabase & HTML5 QR Code -->
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
   <script src="https://unpkg.com/html5-qrcode"></script>
 
   <!-- Tailwind CSS & Config -->
@@ -112,15 +112,16 @@
       </nav>
     </div>
     <div class="flex flex-col gap-space-md pt-space-md">
+      <!-- Status Supabase Dinamis -->
       <div class="bg-surface-container-low rounded-xl p-space-sm flex items-center justify-between">
         <div class="flex items-center gap-space-xs">
-          <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+          <span class="relative flex h-2 w-2" id="supabaseStatusPing">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-outline opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-outline"></span>
           </span>
-          <span class="font-label-sm text-label-sm text-on-surface">Supabase Terhubung</span>
+          <span class="font-label-sm text-label-sm text-on-surface" id="supabaseStatusText">Mengecek Koneksi...</span>
         </div>
-        <span class="material-symbols-outlined text-secondary text-body-md">cloud_done</span>
+        <span class="material-symbols-outlined text-outline text-body-md" id="supabaseStatusIcon">sync</span>
       </div>
       <a href="#" class="bg-surface-container-lowest hover:bg-surface-container-high transition-colors rounded-xl p-space-sm flex items-center gap-space-xs text-on-surface-variant">
         <span class="material-symbols-outlined text-body-md text-primary">settings</span>
@@ -144,7 +145,7 @@
       <div class="flex items-center gap-space-lg">
         <div class="hidden sm:flex items-center gap-space-xs bg-surface-container-low px-space-md py-space-xs rounded-full text-on-surface-variant font-label-md text-label-md">
           <span class="material-symbols-outlined text-body-md text-primary">calendar_today</span>
-          <span>Kamis, 24 Oktober 2024</span>
+          <span id="currentDateDisplay">Memuat tanggal...</span>
         </div>
         <button aria-label="Notifikasi" class="relative p-space-xs rounded-full text-on-surface-variant hover:bg-surface-container-high hover:text-on-surface transition-colors">
           <span class="material-symbols-outlined">notifications</span>
@@ -257,6 +258,47 @@
     const physicalBanner = document.getElementById('physical-banner');
     const cameraContainer = document.getElementById('camera-container');
 
+    // --- UI Dinamis Supabase Status ---
+    function setConnectionStatus(ok) {
+        const text = document.getElementById('supabaseStatusText');
+        const icon = document.getElementById('supabaseStatusIcon');
+        const ping = document.getElementById('supabaseStatusPing');
+        
+        text.textContent = ok ? 'Supabase Terhubung' : 'Tidak Terhubung';
+        icon.textContent = ok ? 'cloud_done' : 'cloud_off';
+        icon.className = 'material-symbols-outlined text-body-md ' + (ok ? 'text-secondary' : 'text-error');
+        
+        ping.innerHTML = (ok ? `<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>` : '') +
+            `<span class="relative inline-flex rounded-full h-2 w-2 ${ok ? 'bg-secondary' : 'bg-error'}"></span>`;
+    }
+
+    // Inisialisasi Tanggal 
+    function updateDate() {
+        var el = document.getElementById('currentDateDisplay');
+        if (!el) return;
+        el.textContent = new Intl.DateTimeFormat('id-ID', {
+            weekday: 'long',
+            day: 'numeric',
+            month: 'long',
+            year: 'numeric',
+            timeZone: 'Asia/Makassar'
+        }).format(new Date());
+    }
+    updateDate();
+    setInterval(updateDate, 60 * 1000);
+
+    // Mengecek Koneksi (Sama seperti halaman lain)
+    async function checkConnection() {
+      try {
+        if (typeof window.supabase === 'undefined') throw new Error("Supabase belum termuat");
+        const { error } = await window.supabase.from('students').select('id').limit(1);
+        if (error) throw error;
+        setConnectionStatus(true);
+      } catch (err) {
+        setConnectionStatus(false);
+      }
+    }
+    
     // --- Toast & Sound Feedback ---
     let toastTimer = null;
     function showToast(message, type = 'success', title = 'Berhasil') {
@@ -274,6 +316,9 @@
       if (type === 'error') {
         toastIcon.innerText = 'error';
         toastIcon.className = 'material-symbols-outlined text-error';
+      } else if (type === 'info') {
+        toastIcon.innerText = 'info';
+        toastIcon.className = 'material-symbols-outlined text-primary';
       } else {
         toastIcon.innerText = 'check_circle';
         toastIcon.className = 'material-symbols-outlined text-secondary';
@@ -334,11 +379,13 @@
       isProcessing = true;
       
       try {
-        // 1. Cari Siswa
-        const { data: students, error: studentError } = await supabase
+        if (typeof window.supabase === 'undefined') throw new Error("Supabase belum termuat");
+
+        // 1. Cari Siswa (PERBAIKAN: Menggunakan nama kolom qr_rfid_id dan window.supabase)
+        const { data: students, error: studentError } = await window.supabase
           .from('students')
           .select('*')
-          .eq('qr_code_id', qrCodeId)
+          .eq('qr_rfid_id', qrCodeId) // Diubah dari qr_code_id
           .single();
 
         if (studentError || !students) {
@@ -352,7 +399,7 @@
         const tomorrow = new Date(today);
         tomorrow.setDate(tomorrow.getDate() + 1);
 
-        const { data: attendances } = await supabase
+        const { data: attendances } = await window.supabase
           .from('attendance')
           .select('*')
           .eq('student_id', students.id)
@@ -366,19 +413,21 @@
         } else if (attendances.length === 1) {
           status = "PULANG";
         } else {
-          showStatus(`${students.name} sudah absen MASUK dan PULANG hari ini.`, true);
+          // PERBAIKAN: Menggunakan students.nama (bukan .name)
+          showStatus(`${students.nama} sudah absen MASUK dan PULANG hari ini.`, true);
           return;
         }
 
         // 3. Simpan absen
-        const { error: insertError } = await supabase
+        const { error: insertError } = await window.supabase
           .from('attendance')
           .insert([{ student_id: students.id, status: status }]);
 
         if (insertError) {
           showStatus("Gagal menyimpan ke database cloud.", true);
         } else {
-          showStatus(`Berhasil absen ${status} - ${students.name}`, false);
+          // PERBAIKAN: Menggunakan students.nama (bukan .name)
+          showStatus(`Berhasil absen ${status} - ${students.nama}`, false);
         }
 
       } catch (e) {
@@ -457,6 +506,7 @@
 
     // Mulai kamera saat pertama kali muat
     window.onload = () => {
+      checkConnection();
       setupWebScanner();
     };
   </script>

@@ -103,16 +103,19 @@
       </nav>
     </div>
     <div class="flex flex-col gap-space-md pt-space-md">
+      
+      <!-- PERUBAHAN: Status Supabase Menjadi Dinamis -->
       <div class="bg-surface-container-low rounded-xl p-space-sm flex items-center justify-between">
         <div class="flex items-center gap-space-xs">
-          <span class="relative flex h-2 w-2">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+          <span class="relative flex h-2 w-2" id="supabaseStatusPing">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-outline opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-outline"></span>
           </span>
-          <span class="font-label-sm text-label-sm text-on-surface">Supabase Terhubung</span>
+          <span class="font-label-sm text-label-sm text-on-surface" id="supabaseStatusText">Mengecek Koneksi...</span>
         </div>
-        <span class="material-symbols-outlined text-secondary text-body-md">cloud_done</span>
+        <span class="material-symbols-outlined text-outline text-body-md" id="supabaseStatusIcon">sync</span>
       </div>
+
       <a href="#" class="bg-surface-container-lowest hover:bg-surface-container-high transition-colors rounded-xl p-space-sm flex items-center gap-space-xs text-on-surface-variant">
         <span class="material-symbols-outlined text-body-md text-primary">settings</span>
         <div class="flex flex-col">
@@ -325,6 +328,20 @@
   <!-- Script Supabase & Logika Aplikasi -->
   <script src="js/supabase.js"></script>
   <script>
+    // --- UI Dinamis Supabase Status ---
+    function setConnectionStatus(ok) {
+        const text = document.getElementById('supabaseStatusText');
+        const icon = document.getElementById('supabaseStatusIcon');
+        const ping = document.getElementById('supabaseStatusPing');
+        
+        text.textContent = ok ? 'Supabase Terhubung' : 'Tidak Terhubung';
+        icon.textContent = ok ? 'cloud_done' : 'cloud_off';
+        icon.className = 'material-symbols-outlined text-body-md ' + (ok ? 'text-secondary' : 'text-error');
+        
+        ping.innerHTML = (ok ? `<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>` : '') +
+            `<span class="relative inline-flex rounded-full h-2 w-2 ${ok ? 'bg-secondary' : 'bg-error'}"></span>`;
+    }
+
     // Inisialisasi Tanggal & Waktu di Header
     const now = new Date();
     const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
@@ -362,7 +379,6 @@
     function isLate(isoString) {
       if (!isoString) return false;
       const d = new Date(isoString);
-      // Jika absen di atas jam 7:15 pagi hari ini
       if (d.getHours() > 7 || (d.getHours() === 7 && d.getMinutes() > 15)) {
         return true;
       }
@@ -382,18 +398,30 @@
       tomorrow.setDate(tomorrow.getDate() + 1);
 
       try {
-// Ambil Data Presensi Hari Ini (Gunakan window.db & sesuaikan relasi kolom: nama, kelas)
-        const { data: attendances, error: errAtt } = await window.db
+        // Pengecekan inisialisasi object supabase
+        if (typeof window.supabase === 'undefined') {
+            throw new Error("Supabase belum termuat");
+        }
+
+        // Ambil Data Presensi Hari Ini (window.supabase)
+        const { data: attendances, error: errAtt } = await window.supabase
           .from('attendance')
           .select(`status, created_at, students (id, nis, nama, kelas)`)
           .gte('created_at', today.toISOString())
           .lt('created_at', tomorrow.toISOString())
           .order('created_at', { ascending: true });
 
+        if (errAtt) throw errAtt;
+
         // Ambil Total Siswa Terdaftar (Untuk Statistik)
-        const { count, error: errTotal } = await window.db
+        const { count, error: errTotal } = await window.supabase
           .from('students')
           .select('*', { count: 'exact', head: true });
+        
+        if (errTotal) throw errTotal;
+
+        // Jika kode sampai sini artinya koneksi lancar
+        setConnectionStatus(true);
 
         // Kelompokkan data by Siswa
         const grouped = {};
@@ -407,13 +435,20 @@
           if (a.status === 'PULANG') grouped[s.id].pulang = a.created_at;
         });
 
-const reportData = Object.values(grouped).sort((a,b) => a.student.nama.localeCompare(b.student.nama));
+        // Urutkan berdasarkan Abjad Nama (Perbaikan pemanggilan variabel)
+        const reportData = Object.values(grouped).sort((a,b) => a.student.nama.localeCompare(b.student.nama));
         reportDataToExport = reportData;
 
         // Variabel Statistik
         let totalHadir = 0;
         let totalTerlambat = 0;
         let totalPulang = 0;
+
+        tableBody.innerHTML = '';
+
+        if (reportData.length === 0) {
+            tableBody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-on-surface-variant font-body-sm">Belum ada data presensi hari ini.</td></tr>';
+        }
 
         // Render Baris Tabel
         reportData.forEach((d, index) => {
@@ -466,6 +501,7 @@ const reportData = Object.values(grouped).sort((a,b) => a.student.nama.localeCom
               </div>`;
           }
 
+          // Perbaikan: d.student.nama dan d.student.kelas (bukan .name dan .class_name)
           tableBody.innerHTML += `
             <tr class="attendance-row ${bgClass} transition-colors group">
               <td class="py-4 px-space-lg font-label-md text-label-md text-on-surface">
@@ -474,15 +510,15 @@ const reportData = Object.values(grouped).sort((a,b) => a.student.nama.localeCom
               <td class="py-4 px-space-lg">
                 <div class="flex items-center gap-space-sm">
                   <div class="w-8 h-8 rounded-full bg-primary/10 text-primary flex items-center justify-center font-title-md text-title-md font-bold">
-                    ${getInitials(d.student.name)}
+                    ${getInitials(d.student.nama)}
                   </div>
                   <div class="flex flex-col">
-                    <span class="font-title-md text-title-md text-on-surface student-name">${d.student.name}</span>
+                    <span class="font-title-md text-title-md text-on-surface student-name">${d.student.nama}</span>
                   </div>
                 </div>
               </td>
               <td class="py-4 px-space-lg font-label-md text-label-md text-on-surface">
-                <span class="px-2.5 py-1 rounded-lg bg-surface-container text-on-surface font-medium">${d.student.class_name}</span>
+                <span class="px-2.5 py-1 rounded-lg bg-surface-container text-on-surface font-medium">${d.student.kelas}</span>
               </td>
               <td class="py-4 px-space-lg">${masukUI}</td>
               <td class="py-4 px-space-lg">${pulangUI}</td>
@@ -493,11 +529,14 @@ const reportData = Object.values(grouped).sort((a,b) => a.student.nama.localeCom
         // Update Statistik UI
         document.getElementById('statHadir').innerText = totalHadir;
         document.getElementById('statTerlambat').innerText = totalTerlambat;
+        document.getElementById('statTotal').innerText = count || 0; // Menggunakan variabel count dari DB
         document.getElementById('statPulang').innerText = totalPulang;
         document.getElementById('visibleCount').innerText = reportData.length;
 
       } catch (err) {
-        tableBody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-error">Gagal memuat data dari database. Pastikan konfigurasi supabase.js benar.</td></tr>';
+        console.error(err);
+        setConnectionStatus(false);
+        tableBody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-error font-body-sm">Gagal memuat data dari database. Pastikan koneksi Supabase Anda berjalan dengan baik.</td></tr>';
       } finally {
         if (reloadIcon) {
           setTimeout(() => reloadIcon.classList.remove('rotate-180'), 500);
@@ -521,7 +560,7 @@ const reportData = Object.values(grouped).sort((a,b) => a.student.nama.localeCom
       });
     });
 
-    // --- Logika Export CSV (Dipertahankan dari aslinya) ---
+    // --- Logika Export CSV (Diperbaiki referensi objek) ---
     function exportToCSV() {
       if(reportDataToExport.length === 0) {
         alert("Tidak ada data untuk diexport hari ini!");
@@ -538,7 +577,9 @@ const reportData = Object.values(grouped).sort((a,b) => a.student.nama.localeCom
         reportDataToExport.forEach(d => {
           const masuk = d.masuk ? formatTimeString(d.masuk) : "-";
           const pulang = d.pulang ? formatTimeString(d.pulang) : "-";
-          csvContent += `"${d.student.nis}","${d.student.name}","${d.student.class_name}","${masuk}","${pulang}"\n`;
+          
+          // Perbaikan: d.student.nama dan d.student.kelas (bukan .name dan .class_name)
+          csvContent += `"${d.student.nis}","${d.student.nama}","${d.student.kelas}","${masuk}","${pulang}"\n`;
         });
 
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
