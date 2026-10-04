@@ -13,29 +13,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
     
-    <!-- Library Supabase & QRCode -->
+    <!-- Library Supabase, QRCode, & SheetJS (Untuk Excel) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <!-- Tailwind CSS & Config -->
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-    html, body {
-        margin: 0;
-        padding: 0;
-    }
-    body {
-        overscroll-behavior: none;
-    }
-    main > :first-child {
-        margin-top: 0 !important;
-    }
-    main > :last-child {
-        margin-bottom: 0 !important;
-    }
-    ::-webkit-scrollbar {
-        display: none;
-    }
+    html, body { margin: 0; padding: 0; }
+    body { overscroll-behavior: none; }
+    main > :first-child { margin-top: 0 !important; }
+    main > :last-child { margin-bottom: 0 !important; }
+    ::-webkit-scrollbar { display: none; }
     </style>
     <script id="tailwind-config">
     tailwind.config = {
@@ -43,78 +33,43 @@
         theme: {
             extend: {
                 colors: {
-                    "surface-container-high": "#dce9ff",
-                    "on-primary-fixed-variant": "#003ea8",
-                    "outline-variant": "#c3c6d7",
-                    "on-primary-container": "#eeefff",
-                    "primary-container": "#2563eb",
-                    "inverse-primary": "#b4c5ff",
-                    "secondary-fixed-dim": "#6bd8cb",
-                    "on-primary": "#ffffff",
-                    "surface-container-lowest": "#ffffff",
-                    "on-error": "#ffffff",
-                    "tertiary-fixed-dim": "#ffb95f",
-                    "primary-fixed-dim": "#b4c5ff",
-                    "on-secondary-fixed": "#00201d",
-                    "inverse-on-surface": "#eaf1ff",
-                    "surface": "#f8f9ff",
-                    "on-tertiary-fixed": "#2a1700",
-                    "outline": "#737686",
-                    "surface-dim": "#cbdbf5",
-                    "surface-container-low": "#eff4ff",
-                    "on-secondary-container": "#006f66",
-                    "on-surface": "#0b1c30",
-                    "error-container": "#ffdad6",
-                    "on-secondary": "#ffffff",
-                    "tertiary-container": "#996100",
-                    "surface-container": "#e5eeff",
-                    "background": "#f8f9ff",
-                    "secondary-container": "#86f2e4",
-                    "tertiary-fixed": "#ffddb8",
-                    "on-surface-variant": "#434655",
-                    "primary-fixed": "#dbe1ff",
-                    "on-primary-fixed": "#00174b",
-                    "secondary": "#006a61",
-                    "tertiary": "#784b00",
-                    "on-tertiary-fixed-variant": "#653e00",
-                    "inverse-surface": "#213145",
-                    "surface-variant": "#d3e4fe",
-                    "surface-tint": "#0053db",
-                    "on-tertiary": "#ffffff",
-                    "on-background": "#0b1c30",
-                    "on-secondary-fixed-variant": "#005049",
-                    "surface-bright": "#f8f9ff",
-                    "error": "#ba1a1a",
-                    "primary": "#004ac6",
-                    "on-tertiary-container": "#ffeedd",
-                    "secondary-fixed": "#89f5e7",
-                    "surface-container-highest": "#d3e4fe",
+                    "surface-container-high": "#dce9ff", "on-primary-fixed-variant": "#003ea8",
+                    "outline-variant": "#c3c6d7", "on-primary-container": "#eeefff",
+                    "primary-container": "#2563eb", "inverse-primary": "#b4c5ff",
+                    "secondary-fixed-dim": "#6bd8cb", "on-primary": "#ffffff",
+                    "surface-container-lowest": "#ffffff", "on-error": "#ffffff",
+                    "tertiary-fixed-dim": "#ffb95f", "primary-fixed-dim": "#b4c5ff",
+                    "on-secondary-fixed": "#00201d", "inverse-on-surface": "#eaf1ff",
+                    "surface": "#f8f9ff", "on-tertiary-fixed": "#2a1700",
+                    "outline": "#737686", "surface-dim": "#cbdbf5",
+                    "surface-container-low": "#eff4ff", "on-secondary-container": "#006f66",
+                    "on-surface": "#0b1c30", "error-container": "#ffdad6",
+                    "on-secondary": "#ffffff", "tertiary-container": "#996100",
+                    "surface-container": "#e5eeff", "background": "#f8f9ff",
+                    "secondary-container": "#86f2e4", "tertiary-fixed": "#ffddb8",
+                    "on-surface-variant": "#434655", "primary-fixed": "#dbe1ff",
+                    "on-primary-fixed": "#00174b", "secondary": "#006a61",
+                    "tertiary": "#784b00", "on-tertiary-fixed-variant": "#653e00",
+                    "inverse-surface": "#213145", "surface-variant": "#d3e4fe",
+                    "surface-tint": "#0053db", "on-tertiary": "#ffffff",
+                    "on-background": "#0b1c30", "on-secondary-fixed-variant": "#005049",
+                    "surface-bright": "#f8f9ff", "error": "#ba1a1a",
+                    "primary": "#004ac6", "on-tertiary-container": "#ffeedd",
+                    "secondary-fixed": "#89f5e7", "surface-container-highest": "#d3e4fe",
                     "on-error-container": "#93000a"
                 },
                 spacing: {
-                    "space-sm": "0.5rem",
-                    "margin": "2rem",
-                    "space-lg": "1.5rem",
-                    "space-md": "1rem",
-                    "gutter-mobile": "1rem",
-                    "space-xs": "0.25rem",
-                    "margin-mobile": "1rem",
-                    "space-xl": "2rem",
-                    "gutter": "1.5rem"
+                    "space-sm": "0.5rem", "margin": "2rem", "space-lg": "1.5rem",
+                    "space-md": "1rem", "gutter-mobile": "1rem", "space-xs": "0.25rem",
+                    "margin-mobile": "1rem", "space-xl": "2rem", "gutter": "1.5rem"
                 },
                 fontFamily: {
-                    "label-sm": ["Inter"],
-                    "title-md": ["Plus Jakarta Sans"],
-                    "body-md": ["Plus Jakarta Sans"],
-                    "headline-lg-mobile": ["Plus Jakarta Sans"],
-                    "headline-xl-mobile": ["Plus Jakarta Sans"],
-                    "body-lg": ["Plus Jakarta Sans"],
-                    "headline-md": ["Plus Jakarta Sans"],
-                    "headline-xl": ["Plus Jakarta Sans"],
-                    "title-lg": ["Plus Jakarta Sans"],
-                    "headline-lg": ["Plus Jakarta Sans"],
-                    "label-md": ["Inter"],
-                    "body-sm": ["Plus Jakarta Sans"],
+                    "label-sm": ["Inter"], "title-md": ["Plus Jakarta Sans"],
+                    "body-md": ["Plus Jakarta Sans"], "headline-lg-mobile": ["Plus Jakarta Sans"],
+                    "headline-xl-mobile": ["Plus Jakarta Sans"], "body-lg": ["Plus Jakarta Sans"],
+                    "headline-md": ["Plus Jakarta Sans"], "headline-xl": ["Plus Jakarta Sans"],
+                    "title-lg": ["Plus Jakarta Sans"], "headline-lg": ["Plus Jakarta Sans"],
+                    "label-md": ["Inter"], "body-sm": ["Plus Jakarta Sans"],
                     "label-lg": ["Inter"]
                 }
             }
@@ -124,31 +79,33 @@
 </head>
 <body class="bg-surface font-body-md text-on-surface min-h-screen">
 
+    <!-- Komponen Input File Tersembunyi untuk Excel -->
+    <input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" class="hidden" />
+
     <aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col justify-between p-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
         <div class="flex flex-col gap-space-lg">
             <div class="flex items-center gap-space-sm">
-                <img alt="SIHADIR Logo" class="h-8 w-auto object-contain" src="assets/logo sekolah.png"/>
+                <img alt="SIHADIR Logo" class="h-8 w-auto object-contain" src="https://lh3.googleusercontent.com/aida/AEtjO1V5El7QWhUBII4Rgkk5BFx4y1tj4lmoEMBx0sTntd8-82mrVLzcCD_Zef17OJ8cp8cMnmvn57ObNAhEKbFozuOKw-btE3WU4gP1ev4q9apc4WuBS49xrBJS2MLFVKGd_MaDU_yVZV5pkUX4wsExl2ewV5cmMqDjGnnfH5W_vOIF0E0IcvrGp2R30JT2G_D-nLyj3hxD7XhEEg8q00ubCcbOjvdvTB3BvaWf3YaqpnFZX5A9ucjCad2uCck"/>
                 <div>
                     <span class="font-title-lg text-title-lg text-primary tracking-tight block">SIHADIR</span>
                     <span class="font-body-sm text-body-sm text-on-surface-variant block">Sistem Presensi Siswa</span>
                 </div>
             </div>
             <nav class="flex flex-col gap-space-xs">
-                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" href="index.html">
-                    <span class="material-symbols-outlined text-title-lg">dashboard</span>
-                    Dashboard
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" href="dashboard.html">
+                    <span class="material-symbols-outlined text-title-lg">dashboard</span> Dashboard
                 </a>
                 <a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-all bg-primary-container text-on-primary-container font-label-lg rounded-xl shadow-[0_4px_12px_rgba(37,99,235,0.25)]" href="students.html">
-                    <span class="material-symbols-outlined text-title-lg">school</span>
-                    Data Siswa
+                    <span class="material-symbols-outlined text-title-lg">school</span> Data Siswa
                 </a>
                 <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" href="reports.html">
-                    <span class="material-symbols-outlined text-title-lg">description</span>
-                    Rekapitulasi
+                    <span class="material-symbols-outlined text-title-lg">description</span> Rekapitulasi
                 </a>
                 <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" href="scanner.html">
-                    <span class="material-symbols-outlined text-title-lg">qr_code_scanner</span>
-                    Buka Scanner
+                    <span class="material-symbols-outlined text-title-lg">qr_code_scanner</span> Buka Scanner
+                </a>
+                <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" href="settings.html">
+                    <span class="material-symbols-outlined text-title-lg">settings</span> Pengaturan
                 </a>
             </nav>
         </div>
@@ -163,12 +120,12 @@
                 </div>
                 <span class="material-symbols-outlined text-outline text-body-md" id="supabaseStatusIcon">sync</span>
             </div>
-            <a href="#" class="bg-surface-container-lowest hover:bg-surface-container-high transition-colors rounded-xl p-space-sm flex items-center gap-space-xs text-on-surface-variant">
-                <span class="material-symbols-outlined text-body-md text-primary">settings</span>
-                <div class="flex flex-col">
-                    <span class="font-label-sm text-label-sm text-on-surface font-semibold">Pengaturan</span>
-                    <span class="font-body-sm text-body-sm text-outline">Konfigurasi sistem</span>
-                </div>
+            <a href="#" id="btnLogout" class="bg-error-container/50 hover:bg-error-container transition-colors rounded-xl p-space-sm flex items-center gap-space-xs text-error hover:text-on-error-container cursor-pointer mt-1">
+              <span class="material-symbols-outlined text-body-md">logout</span>
+              <div class="flex flex-col">
+                <span class="font-label-sm text-label-sm font-semibold">Keluar Sistem</span>
+                <span class="font-body-sm text-body-sm opacity-80">Akhiri sesi aktif</span>
+              </div>
             </a>
         </div>
     </aside>
@@ -251,27 +208,17 @@
                                             <option value="VII A">VII A</option>
                                             <option value="VII B">VII B</option>
                                             <option value="VII C">VII C</option>
-                                            <option value="VII D">VII D</option>
-                                            <option value="VII E">VII E</option>
-                                            <option value="VII F">VII F</option>
-                                            <option value="VII G">VII G</option>
                                         </optgroup>
                                         <optgroup label="Kelas VIII">
                                             <option value="VIII A">VIII A</option>
                                             <option value="VIII B">VIII B</option>
                                             <option value="VIII C">VIII C</option>
                                             <option value="VIII D">VIII D</option>
-                                            <option value="VIII E">VIII E</option>
-                                            <option value="VIII F">VIII F</option>
-                                            <option value="VIII G">VIII G</option>
                                         </optgroup>
                                         <optgroup label="Kelas IX">
                                             <option value="IX A">IX A</option>
                                             <option value="IX B">IX B</option>
                                             <option value="IX C">IX C</option>
-                                            <option value="IX D">IX D</option>
-                                            <option value="IX E">IX E</option>
-                                            <option value="IX F">IX F</option>
                                         </optgroup>
                                     </select>
                                 </div>
@@ -329,10 +276,13 @@
                                     <option value="IX A">Kelas IX A</option>
                                 </select>
                             </div>
-                            <button class="flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-label-lg text-label-lg transition-all" onclick="showToast('Silakan pilih berkas format .xlsx atau .csv untuk mengimpor', 'info', 'Impor Excel')">
+                            
+                            <!-- Tombol Import Excel Diperbarui -->
+                            <button class="flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-label-lg text-label-lg transition-all" onclick="document.getElementById('excelFileInput').click()">
                                 <span class="material-symbols-outlined text-title-md text-secondary">upload_file</span>
                                 <span>Import Excel</span>
                             </button>
+                            
                             <button class="flex items-center gap-space-xs px-space-lg py-2.5 rounded-xl bg-primary hover:bg-on-primary-fixed-variant text-on-primary font-label-lg text-label-lg shadow-md hover:shadow-lg transition-all active:scale-95" onclick="openAddModal()">
                                 <span class="material-symbols-outlined text-title-md">person_add</span>
                                 <span>+ Tambah Siswa</span>
@@ -378,7 +328,8 @@
                             </div>
                         </div>
                         <div class="flex items-center gap-space-sm w-full md:w-auto">
-                            <button class="w-full md:w-auto px-space-md py-2 bg-surface-container-lowest text-on-surface hover:bg-surface-container-high rounded-xl font-label-md text-label-md shadow-xs transition-colors flex items-center justify-center gap-space-xs" onclick="showToast('Mengunduh template data...', 'info')">
+                            <!-- Tombol Download Template Excel Diperbarui -->
+                            <button class="w-full md:w-auto px-space-md py-2 bg-surface-container-lowest text-on-surface hover:bg-surface-container-high rounded-xl font-label-md text-label-md shadow-xs transition-colors flex items-center justify-center gap-space-xs" onclick="downloadTemplate()">
                                 <span class="material-symbols-outlined text-body-md text-primary">download</span>
                                 Template Excel
                             </button>
@@ -389,27 +340,34 @@
         </main>
     </div>
 
-    <!-- Tanggal Otomatis (Tetap Berjalan Terpisah) -->
+    <script src="js/supabase.js"></script>
     <script>
+    // --- AUTH GUARD & TANGGAL ---
+    window.addEventListener('DOMContentLoaded', async () => {
+      if (typeof window.supabase !== 'undefined') {
+        const { data: { session } } = await window.supabase.auth.getSession();
+        if (!session) window.location.replace('index.html');
+      }
+      loadData();
+    });
+
+    document.getElementById('btnLogout').addEventListener('click', async (e) => {
+        e.preventDefault();
+        await window.supabase.auth.signOut();
+        window.location.replace('index.html');
+    });
+
     function updateDate() {
         var el = document.getElementById('currentDateDisplay');
         if (!el) return;
         el.textContent = new Intl.DateTimeFormat('id-ID', {
-            weekday: 'long',
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-            timeZone: 'Asia/Makassar'
+            weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Makassar'
         }).format(new Date());
     }
     updateDate();
     setInterval(updateDate, 60 * 1000);
-    </script>
 
-    <!-- File koneksi Supabase Anda -->
-    <script src="js/supabase.js"></script>
-
-    <script>
+    // --- VARIABEL & HELPER ---
     let toastTimer = null;
     const modal = document.getElementById('studentModal');
     const modalBox = document.getElementById('modalBox');
@@ -493,8 +451,6 @@
     document.getElementById('closeModalBtn').addEventListener('click', hideModal);
     document.getElementById('cancelModalBtn').addEventListener('click', hideModal);
 
-    // --- FUNGSI CETAK QR YANG TELAH DIPERBAIKI ---
-    // MENGHAPUS SELURUH KODE LIVE SERVER AGAR TIDAK ERROR "UNEXPECTED EOF"
     function printQR(nama, nis, qrId, kelas) {
         const tempDiv = document.createElement('div');
         new QRCode(tempDiv, { text: qrId, width: 150, height: 150 });
@@ -535,22 +491,14 @@
         }, 100);
     }
 
-    // --- Muat data siswa ---
+    // --- MUAT DATA ---
     const avatarColors = ['bg-primary-fixed text-on-primary-fixed', 'bg-secondary-fixed text-on-secondary-fixed', 'bg-tertiary-fixed text-on-tertiary-fixed', 'bg-surface-container-highest text-primary'];
     let studentsById = new Map();
 
     async function loadData() {
-        const ctrl = new AbortController();
-        const timer = setTimeout(() => ctrl.abort(), 15000); 
         try {
             if (typeof window.supabase === 'undefined') throw new Error("Supabase belum termuat");
-            
-            const { data: students, error } = await window.supabase
-                .from('students')
-                .select('id, nis, nama, kelas, qr_rfid_id')
-                .order('nama')
-                .abortSignal(ctrl.signal);
-                
+            const { data: students, error } = await window.supabase.from('students').select('id, nis, nama, kelas, qr_rfid_id').order('nama');
             if (error) throw error;
 
             setConnectionStatus(true);
@@ -558,12 +506,11 @@
             studentsById = new Map(students.map(s => [String(s.id), s]));
 
             if (students.length === 0) {
-                // Diperbaiki menggunakan backtick
                 tableBody.innerHTML = `<tr><td colspan="4" class="py-8 text-center font-body-sm text-on-surface-variant">Belum ada data siswa.</td></tr>`;
                 return;
             }
 
-            // Semua baris dibangun sekali menggunakan Array map dan backtick
+            // PERBAIKAN: Menghapus subtitle NIS di bawah Nama Lengkap
             tableBody.innerHTML = students.map((s, i) => `
             <tr class="student-row hover:bg-surface-container-low/60 transition-colors h-16 group" data-class="${esc(s.kelas)}" data-name="${esc(s.nama)}" data-nis="${esc(s.nis)}">
                 <td class="py-space-sm px-space-lg font-mono font-medium text-primary">${esc(s.nis)}</td>
@@ -572,7 +519,6 @@
                         <div class="w-10 h-10 rounded-full ${avatarColors[i % avatarColors.length]} flex items-center justify-center font-bold text-title-md shadow-xs">${esc(getInitials(s.nama))}</div>
                         <div class="flex flex-col min-w-0">
                             <span class="font-title-md text-title-md text-on-surface truncate">${esc(s.nama)}</span>
-                            <span class="font-body-sm text-body-sm text-outline">Terdaftar NIS ${esc(s.nis)}</span>
                         </div>
                     </div>
                 </td>
@@ -600,36 +546,29 @@
 
             applyFilter();
         } catch(err) {
-            console.error('Gagal memuat data siswa:', err);
+            console.error(err);
             setConnectionStatus(false);
             totalStudentCount.innerText = '0';
-            // Diperbaiki menggunakan backtick
             tableBody.innerHTML = `<tr><td colspan="4" class="py-8 text-center font-body-sm text-error">Gagal mengambil data dari Supabase. <button class="underline ml-1" onclick="loadData()">Coba lagi</button></td></tr>`;
-        } finally {
-            clearTimeout(timer);
         }
     }
 
-    // Satu event listener untuk semua tombol di tabel (delegasi event)
     tableBody.addEventListener('click', e => {
         const btn = e.target.closest('button[data-action]');
         if (!btn) return;
         const s = studentsById.get(btn.dataset.id);
         if (!s) return;
-        
         if (btn.dataset.action === 'qr') printQR(s.nama, s.nis, s.qr_rfid_id, s.kelas);
         else if (btn.dataset.action === 'edit') openEditModal(s.id, s.nis, s.nama, s.kelas);
         else if (btn.dataset.action === 'delete') deleteStudentData(s.id, s.nama);
     });
 
-    // --- Tambah / Edit ---
     document.getElementById('add-student-form').addEventListener('submit', async e => {
         e.preventDefault();
         const editId = document.getElementById('editStudentId').value;
         const nis = document.getElementById('inputNis').value;
         const name = document.getElementById('inputNama').value;
         const kelas = document.getElementById('inputKelas').value;
-        
         try {
             let res;
             if (editId) {
@@ -638,67 +577,132 @@
                 const qrCodeId = 'qr-' + Math.random().toString(36).substr(2, 9);
                 res = await window.supabase.from('students').insert([{ nis: nis, nama: name.toUpperCase(), kelas: kelas, qr_rfid_id: qrCodeId }]);
             }
-            
-            if (res.error) {
-                showToast('Gagal menyimpan data! Mungkin NIS sudah digunakan atau terjadi kesalahan.', 'error', 'Error Database');
-            } else {
-                hideModal();
-                document.getElementById('add-student-form').reset();
-                document.getElementById('editStudentId').value = '';
-                showToast(`Data siswa "${name}" berhasil disimpan.`, 'success', 'Tersimpan');
+            if (res.error) showToast('Gagal menyimpan! NIS mungkin duplikat.', 'error', 'Error');
+            else {
+                hideModal(); document.getElementById('add-student-form').reset(); document.getElementById('editStudentId').value = '';
+                showToast(`Data siswa berhasil disimpan.`, 'success', 'Tersimpan');
                 loadData();
             }
-        } catch(err) {
-            showToast('Pastikan setup Supabase.js sudah terhubung.', 'error', 'Error Skrip');
-        }
+        } catch(err) { showToast('Koneksi terputus.', 'error', 'Gagal'); }
     });
 
-    // --- Hapus ---
     async function deleteStudentData(id, nama) {
         if (!confirm(`Apakah Anda yakin ingin menghapus siswa ${nama}? Data absennya juga akan terhapus.`)) return;
         try {
             const { error } = await window.supabase.from('students').delete().eq('id', id);
             if (error) showToast('Gagal menghapus data.', 'error', 'Error');
-            else { 
-                showToast(`Data ${nama} berhasil dihapus dari sistem.`, 'error', 'Data Dihapus'); 
-                loadData(); 
-            }
-        } catch(err) {
-            showToast('Koneksi database bermasalah.', 'error', 'Gagal');
-        }
+            else { showToast(`Data ${nama} berhasil dihapus.`, 'error', 'Terhapus'); loadData(); }
+        } catch(err) { showToast('Koneksi database bermasalah.', 'error', 'Gagal'); }
     }
 
-    // --- Cari & Filter ---
-    function handleSearch(val) {
-        document.getElementById('clearSearchBtn').classList.toggle('hidden', val.length === 0);
-        applyFilter();
-    }
-    
-    function clearSearch() {
-        document.getElementById('searchStudent').value = '';
-        document.getElementById('clearSearchBtn').classList.add('hidden');
-        applyFilter();
-    }
-    
+    function handleSearch(val) { document.getElementById('clearSearchBtn').classList.toggle('hidden', val.length === 0); applyFilter(); }
+    function clearSearch() { document.getElementById('searchStudent').value = ''; document.getElementById('clearSearchBtn').classList.add('hidden'); applyFilter(); }
     function applyFilter() {
         const query = (document.getElementById('searchStudent').value || '').toLowerCase().trim();
         const selectedClass = document.getElementById('filterClassSelect').value;
         const rows = document.querySelectorAll('.student-row');
         let visible = 0;
-        
         rows.forEach(row => {
-            const nis = (row.dataset.nis || '').toLowerCase();
-            const nama = (row.dataset.name || '').toLowerCase();
-            const show = (nis.includes(query) || nama.includes(query)) && (selectedClass === 'ALL' || row.dataset.class === selectedClass);
+            const show = ((row.dataset.nis || '').toLowerCase().includes(query) || (row.dataset.name || '').toLowerCase().includes(query)) && (selectedClass === 'ALL' || row.dataset.class === selectedClass);
             row.classList.toggle('hidden', !show);
             if (show) visible++;
         });
-        
         document.getElementById('noResultsState').classList.toggle('hidden', !(visible === 0 && rows.length > 0));
     }
 
-    // --- Memulai Inisialisasi ---
-    window.addEventListener('DOMContentLoaded', loadData);
+    // --- LOGIKA EXCEL (DOWNLOAD TEMPLATE & IMPORT) ---
+    
+    // 1. Download Template Excel
+    function downloadTemplate() {
+        if (typeof XLSX === 'undefined') {
+            showToast("Library Excel sedang memuat, coba lagi.", "error");
+            return;
+        }
+        // Data format percontohan
+        const ws_data = [
+            ["NIS", "Nama Lengkap", "Kelas"],
+            ["230209501049", "Syawal Saputra S.", "VIII C"],
+            ["230209501050", "Ahmad Farhan", "VIII D"]
+        ];
+        
+        const ws = XLSX.utils.aoa_to_sheet(ws_data);
+        // Mengatur lebar kolom agar rapi
+        ws['!cols'] = [{ wch: 15 }, { wch: 30 }, { wch: 10 }];
+        
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Template Siswa");
+        
+        XLSX.writeFile(wb, "Template_Data_Siswa_SIHADIR.xlsx");
+        showToast("Template berhasil diunduh. Silakan isi dan import kembali.", "success", "Unduh Selesai");
+    }
+
+    // 2. Import Excel ke Supabase
+    document.getElementById('excelFileInput').addEventListener('change', function(e) {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        showToast("Sedang memproses file excel...", "info", "Membaca Data");
+
+        const reader = new FileReader();
+        reader.onload = async function(event) {
+            try {
+                const data = new Uint8Array(event.target.result);
+                const workbook = XLSX.read(data, {type: 'array'});
+                const firstSheetName = workbook.SheetNames[0];
+                const worksheet = workbook.Sheets[firstSheetName];
+                
+                // Konversi sheet ke JSON array
+                const json = XLSX.utils.sheet_to_json(worksheet);
+
+                if (json.length === 0) {
+                    showToast("File excel kosong atau format salah.", "error", "Gagal Impor");
+                    return;
+                }
+
+                // Memetakan data dari Excel ke skema Supabase
+                const dataToInsert = json.map(row => {
+                    // Deteksi nama kolom yang mungkin sedikit berbeda dari template
+                    const nis = String(row['NIS'] || row['nis'] || '').trim();
+                    const nama = String(row['Nama Lengkap'] || row['nama'] || row['NAMA'] || '').trim().toUpperCase();
+                    const kelas = String(row['Kelas'] || row['kelas'] || row['KELAS'] || '').trim();
+
+                    // Lewati baris jika data kosong
+                    if(!nis || !nama || !kelas) return null;
+
+                    return {
+                        nis: nis,
+                        nama: nama,
+                        kelas: kelas,
+                        // Buatkan ID Barcode/QR otomatis untuk setiap siswa
+                        qr_rfid_id: 'qr-' + Math.random().toString(36).substr(2, 9)
+                    };
+                }).filter(item => item !== null);
+
+                if(dataToInsert.length === 0) {
+                     showToast("Tidak ada data yang valid. Pastikan header sesuai template.", "error", "Gagal Impor");
+                     return;
+                }
+
+                // Eksekusi Bulk Insert (masukkan semua data sekaligus) ke Supabase
+                const { error } = await window.supabase.from('students').insert(dataToInsert);
+                
+                if (error) {
+                    console.error("Kesalahan Import:", error);
+                    showToast("Gagal menyimpan ke database. Mungkin ada NIS yang duplikat.", "error", "Gagal Impor");
+                } else {
+                    showToast(`Berhasil mengimpor ${dataToInsert.length} data siswa baru.`, "success", "Impor Sukses");
+                    loadData(); // Memuat ulang tabel
+                }
+            } catch (err) {
+                console.error("Kesalahan parsing:", err);
+                showToast("Gagal memproses file. Pastikan format file Excel benar.", "error", "Error");
+            } finally {
+                // Reset input agar file yang sama bisa diupload ulang jika perlu
+                e.target.value = '';
+            }
+        };
+        reader.readAsArrayBuffer(file);
+    });
     </script>
 </body>
 </html>
