@@ -373,7 +373,7 @@
       }, 3000); 
     }
 
-    // --- Fungsi Utama Supabase: Handle Scan ---
+ // --- Fungsi Utama Supabase: Handle Scan ---
     async function handleScan(qrCodeId) {
       if (isProcessing) return;
       isProcessing = true;
@@ -381,15 +381,15 @@
       try {
         if (typeof window.supabase === 'undefined') throw new Error("Supabase belum termuat");
 
-        // 1. Cari Siswa (PERBAIKAN: Menggunakan nama kolom qr_rfid_id dan window.supabase)
-        const { data: students, error: studentError } = await window.supabase
+        // 1. Cari Siswa
+        const { data: studentData, error: studentError } = await window.supabase
           .from('students')
-          .select('*')
-          .eq('qr_rfid_id', qrCodeId) // Diubah dari qr_code_id
+          .select('id, nama')
+          .eq('qr_rfid_id', qrCodeId)
           .single();
 
-        if (studentError || !students) {
-          showStatus("Data siswa / QR Code tidak dikenali!", true);
+        if (studentError || !studentData) {
+          showStatus("Data siswa tidak ditemukan / QR Code tidak dikenali!", true);
           return;
         }
 
@@ -399,13 +399,15 @@
         const tomorrow = new Date(today);
         tomorrow.setDate(tomorrow.getDate() + 1);
 
-        const { data: attendances } = await window.supabase
+        const { data: attendances, error: attError } = await window.supabase
           .from('attendance')
-          .select('*')
-          .eq('student_id', students.id)
+          .select('status')
+          .eq('student_id', studentData.id)
           .gte('created_at', today.toISOString())
           .lt('created_at', tomorrow.toISOString())
           .order('created_at', { ascending: true });
+
+        if (attError) throw attError;
 
         let status = "";
         if (!attendances || attendances.length === 0) {
@@ -413,28 +415,32 @@
         } else if (attendances.length === 1) {
           status = "PULANG";
         } else {
-          // PERBAIKAN: Menggunakan students.nama (bukan .name)
-          showStatus(`${students.nama} sudah absen MASUK dan PULANG hari ini.`, true);
+          showStatus(`${studentData.nama} sudah absen MASUK dan PULANG hari ini.`, true);
           return;
         }
 
-        // 3. Simpan absen
+        // 3. Simpan absen ke tabel 'attendance'
         const { error: insertError } = await window.supabase
           .from('attendance')
-          .insert([{ student_id: students.id, status: status }]);
+          .insert([
+            { 
+              student_id: studentData.id, 
+              status: status 
+            }
+          ]);
 
         if (insertError) {
-          showStatus("Gagal menyimpan ke database cloud.", true);
+          console.error("Supabase Insert Error:", insertError);
+          showStatus("Gagal menyimpan data! Cek pengaturan RLS Supabase.", true);
         } else {
-          // PERBAIKAN: Menggunakan students.nama (bukan .name)
-          showStatus(`Berhasil absen ${status} - ${students.nama}`, false);
+          showStatus(`Berhasil absen ${status} - ${studentData.nama}`, false);
         }
 
       } catch (e) {
-        showStatus("Terjadi kesalahan koneksi sistem.", true);
+        console.error("System Error:", e);
+        showStatus("Terjadi kesalahan koneksi sistem. Lihat console browser.", true);
       }
     }
-
     // --- Inisialisasi html5-qrcode ---
     function setupWebScanner() {
       html5QrcodeScanner = new Html5QrcodeScanner(
