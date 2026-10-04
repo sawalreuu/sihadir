@@ -342,29 +342,16 @@
 
     <script src="js/supabase.js"></script>
     <script>
-        
+
 // --- AUTH GUARD & TANGGAL ---
     window.addEventListener('DOMContentLoaded', async () => {
-      try {
-        // Cek apakah Supabase berhasil dimuat dari js/supabase.js
-        if (window.supabase && window.supabase.auth) {
-          const { data: { session }, error } = await window.supabase.auth.getSession();
-          
-          // Jika belum login, paksa kembali ke index.html (Login)
-          if (error || !session) {
-            window.location.replace('index.html');
-            return; // Hentikan proses pemuatan data
-          }
-        } else {
-            console.warn("Library Supabase Auth belum siap.");
-        }
+      if (typeof window.supabase !== 'undefined') {
+        const { data: { session } } = await window.supabase.auth.getSession();
         
-        // Jika aman, muat data siswa
-        loadData();
-      } catch (err) {
-        console.error("Gagal memvalidasi sesi:", err);
-        loadData(); // Tetap coba muat UI tabel agar halaman tidak macet
+        // TAMBAHKAN // DI DEPANNYA UNTUK MEMATIKAN SEMENTARA
+        // if (!session) window.location.replace('index.html'); 
       }
+      loadData();
     });
 
     document.getElementById('btnLogout').addEventListener('click', async (e) => {
