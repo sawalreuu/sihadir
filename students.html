@@ -357,7 +357,7 @@
     document.getElementById('btnLogout').addEventListener('click', async (e) => {
         e.preventDefault();
         await window.supabase.auth.signOut();
-        window.location.replace('index.html');
+        window.location.replace('dashboard.html');
     });
 
     function updateDate() {
