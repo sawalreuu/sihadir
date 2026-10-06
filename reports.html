@@ -12,6 +12,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
   <!-- Supabase CDN -->
+   <!-- jsPDF & AutoTable CDN untuk Export PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <!-- Tailwind CSS & Config -->
@@ -187,10 +190,11 @@
                 <span id="dateFilterDisplay">Hari Ini</span>
                 <span class="material-symbols-outlined text-body-sm text-outline">arrow_drop_down</span>
               </button>
-              <button class="flex items-center gap-space-xs px-space-lg py-2.5 rounded-xl bg-secondary text-on-secondary hover:bg-on-secondary-container transition-all shadow-[0_4px_14px_rgba(0,106,97,0.28)] hover:shadow-lg font-label-lg text-label-lg cursor-pointer" id="btnExport" onclick="exportToCSV()">
-                <span class="material-symbols-outlined text-body-lg">download</span>
-                <span>Export CSV</span>
-              </button>
+              <!-- Ganti bagian tombol ini -->
+<button class="flex items-center gap-space-xs px-space-lg py-2.5 rounded-xl bg-secondary text-on-secondary hover:bg-on-secondary-container transition-all shadow-[0_4px_14px_rgba(0,106,97,0.28)] hover:shadow-lg font-label-lg text-label-lg cursor-pointer" id="btnExport" onclick="exportToPDF()">
+  <span class="material-symbols-outlined text-body-lg">picture_as_pdf</span>
+  <span>Export PDF</span>
+</button>
             </div>
           </div>
           
@@ -563,43 +567,94 @@
       });
     });
 
-    // --- Logika Export CSV (Diperbaiki referensi objek) ---
-    function exportToCSV() {
+// --- Logika Export PDF ---
+    function exportToPDF() {
       if(reportDataToExport.length === 0) {
-        alert("Tidak ada data untuk diexport hari ini!");
+        alert("Tidak ada data untuk diekspor hari ini!");
         return;
       }
       
       // UX Button Effect
       const btnExport = document.getElementById('btnExport');
       const originalText = btnExport.innerHTML;
-      btnExport.innerHTML = '<span class="material-symbols-outlined text-body-lg animate-spin">progress_activity</span><span>Mengekspor...</span>';
+      btnExport.innerHTML = '<span class="material-symbols-outlined text-body-lg animate-spin">progress_activity</span><span>Menyiapkan PDF...</span>';
       
       setTimeout(() => {
-        let csvContent = "NIS,Nama Lengkap,Kelas,Jam Masuk,Jam Pulang\n";
-        reportDataToExport.forEach(d => {
+        // Inisialisasi jsPDF
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('p', 'mm', 'a4'); // Potrait, milimeter, ukuran A4
+
+        // Setup Variabel Waktu
+        const now = new Date();
+        const opsiTanggal = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        
+        // Hari yang dipilih (Saat ini sistem membaca hari ini)
+        const tanggalDipilih = document.getElementById('currentDateDisplay').innerText;
+        
+        // Waktu Ekspor
+        const tanggalEkspor = now.toLocaleDateString('id-ID', opsiTanggal);
+        const waktuEkspor = now.toLocaleTimeString('id-ID'); // Format jam:menit:detik
+
+        // === HEADER DOKUMEN PDF ===
+        doc.setFont("helvetica", "bold");
+        doc.setFontSize(16);
+        doc.text("Rekapitulasi Kehadiran Siswa - SIHADIR", 14, 20);
+        
+        // === SUB-HEADER (Info Tanggal & Waktu) ===
+        doc.setFontSize(10);
+        doc.setFont("helvetica", "normal");
+        doc.text(`Tanggal Presensi : ${tanggalDipilih}`, 14, 28);
+        doc.text(`Waktu Ekspor     : ${tanggalEkspor}, Pukul ${waktuEkspor} WITA`, 14, 34);
+
+        // === DATA TABEL ===
+        const tableColumn = ["No", "NIS", "Nama Lengkap", "Kelas", "Jam Masuk", "Jam Pulang"];
+        const tableRows = [];
+
+        reportDataToExport.forEach((d, index) => {
           const masuk = d.masuk ? formatTimeString(d.masuk) : "-";
           const pulang = d.pulang ? formatTimeString(d.pulang) : "-";
           
-          // Perbaikan: d.student.nama dan d.student.kelas (bukan .name dan .class_name)
-          csvContent += `"${d.student.nis}","${d.student.nama}","${d.student.kelas}","${masuk}","${pulang}"\n`;
+          const rowData = [
+            index + 1,
+            d.student.nis,
+            d.student.nama,
+            d.student.kelas,
+            masuk,
+            pulang
+          ];
+          tableRows.push(rowData);
         });
 
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const link = document.createElement("a");
-        const url = URL.createObjectURL(blob);
-        link.setAttribute("href", url);
-        link.setAttribute("download", `Rekap_SIHADIR_${new Date().toISOString().split('T')[0]}.csv`);
-        
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
+        // === GENERATE TABEL KE PDF ===
+        doc.autoTable({
+          startY: 40,
+          head: [tableColumn],
+          body: tableRows,
+          theme: 'striped',
+          headStyles: { 
+            fillColor: [0, 74, 198], // Warna biru primary SIHADIR (#004ac6)
+            textColor: 255,
+            fontStyle: 'bold'
+          },
+          styles: { 
+            fontSize: 9,
+            cellPadding: 4
+          },
+          alternateRowStyles: {
+            fillColor: [248, 249, 255] // Warna background surface
+          }
+        });
 
-        btnExport.innerHTML = '<span class="material-symbols-outlined text-body-lg">check</span><span>Tersimpan (CSV)</span>';
+        // === SIMPAN FILE ===
+        const namaFile = `Rekap_SIHADIR_${now.toISOString().split('T')[0]}.pdf`;
+        doc.save(namaFile);
+
+        // Kembalikan status tombol
+        btnExport.innerHTML = '<span class="material-symbols-outlined text-body-lg">check</span><span>Tersimpan (PDF)</span>';
         setTimeout(() => { btnExport.innerHTML = originalText; }, 1500);
       }, 500);
     }
-
+    
     // Load Data saat halaman diakses
     window.onload = loadReports;
   </script>
