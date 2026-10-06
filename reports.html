@@ -11,10 +11,11 @@
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
 
-  <!-- Supabase CDN -->
-   <!-- jsPDF & AutoTable CDN untuk Export PDF -->
+  <!-- jsPDF & AutoTable CDN untuk Export PDF -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+  
+  <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
   <!-- Tailwind CSS & Config -->
@@ -27,6 +28,20 @@
       main > :last-child { margin-bottom: 0 !important; }
     }
     ::-webkit-scrollbar { display: none; }
+    
+    /* Styling khusus agar input date terlihat seperti tombol */
+    input[type="date"]::-webkit-calendar-picker-indicator {
+        background: transparent;
+        bottom: 0;
+        color: transparent;
+        cursor: pointer;
+        height: auto;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+        width: auto;
+    }
   </style>
   <script id="tailwind-config">
     tailwind.config = {
@@ -104,13 +119,12 @@
           <span class="material-symbols-outlined text-title-lg">qr_code_scanner</span>Buka Scanner
         </a>
         <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" href="settings.html">
-                    <span class="material-symbols-outlined text-title-lg">settings</span> Pengaturan
-                </a>
+          <span class="material-symbols-outlined text-title-lg">settings</span> Pengaturan
+        </a>
       </nav>
     </div>
     <div class="flex flex-col gap-space-md pt-space-md">
-      
-      <!-- PERUBAHAN: Status Supabase Menjadi Dinamis -->
+      <!-- Status Supabase Menjadi Dinamis -->
       <div class="bg-surface-container-low rounded-xl p-space-sm flex items-center justify-between">
         <div class="flex items-center gap-space-xs">
           <span class="relative flex h-2 w-2" id="supabaseStatusPing">
@@ -134,7 +148,7 @@
 
   <!-- Main Content Area -->
   <div class="pl-64">
-    <!-- Header -->
+    <!-- Header Navbar -->
     <header class="fixed top-0 left-64 right-0 h-16 bg-surface-container-lowest/90 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] z-40 px-gutter flex items-center justify-between">
       <div class="flex items-center gap-space-xs font-body-md text-body-md text-on-surface-variant">
         <span class="material-symbols-outlined text-title-md">home</span>
@@ -164,37 +178,21 @@
       <div class="flex flex-col w-full">
         <div class="p-space-lg lg:p-space-xl flex flex-col gap-space-lg max-w-7xl mx-auto w-full">
           
-          <!-- Top Action Header & Title -->
-          <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md">
-            <div class="flex flex-col gap-space-xs">
-              <div class="flex items-center gap-space-sm flex-wrap">
-                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-secondary-container/50 text-on-secondary-container font-label-sm text-label-sm">
-                  <span class="w-2 h-2 rounded-full bg-secondary animate-pulse"></span>
-                  Live Sinkronisasi
-                </span>
-                <span class="font-body-sm text-body-sm text-on-surface-variant flex items-center gap-1">
-                  <span class="material-symbols-outlined text-body-md text-primary">schedule</span>
-                  Diperbarui: <span id="lastUpdated">Memuat...</span>
-                </span>
-              </div>
-              <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">
-                Rekapitulasi Kehadiran Hari Ini
-              </h1>
-              <p class="font-body-md text-body-md text-on-surface-variant">
-                Monitoring presensi gerbang tap RFID &amp; scanner QR otomatis jenjang SMP/SMA
-              </p>
-            </div>
+          <!-- Top Action Header (Sudah Disederhanakan) -->
+          <div class="flex flex-col lg:flex-row lg:items-center justify-end gap-space-md">
             <div class="flex items-center gap-space-sm flex-wrap">
-              <button class="flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-surface-container-low text-on-surface hover:bg-surface-container hover:shadow-sm transition-all font-label-lg text-label-lg cursor-pointer">
-                <span class="material-symbols-outlined text-body-lg text-primary">calendar_month</span>
-                <span id="dateFilterDisplay">Hari Ini</span>
-                <span class="material-symbols-outlined text-body-sm text-outline">arrow_drop_down</span>
+              
+              <!-- Filter Tanggal Dinamis -->
+              <div class="relative flex items-center bg-surface-container-lowest border border-outline-variant/30 rounded-xl hover:shadow-sm transition-all overflow-hidden">
+                <span class="material-symbols-outlined absolute left-3 text-body-lg text-primary pointer-events-none">calendar_month</span>
+                <input type="date" id="dateFilter" class="w-40 pl-10 pr-3 py-2.5 bg-transparent text-on-surface font-label-lg text-label-lg focus:outline-none focus:bg-surface-container-low transition-all cursor-pointer" onchange="loadReports()">
+              </div>
+
+              <!-- Export PDF Button -->
+              <button class="flex items-center gap-space-xs px-space-lg py-2.5 rounded-xl bg-secondary text-on-secondary hover:bg-on-secondary-container transition-all shadow-[0_4px_14px_rgba(0,106,97,0.28)] hover:shadow-lg font-label-lg text-label-lg cursor-pointer" id="btnExport" onclick="exportToPDF()">
+                <span class="material-symbols-outlined text-body-lg">picture_as_pdf</span>
+                <span>Export PDF</span>
               </button>
-              <!-- Ganti bagian tombol ini -->
-<button class="flex items-center gap-space-xs px-space-lg py-2.5 rounded-xl bg-secondary text-on-secondary hover:bg-on-secondary-container transition-all shadow-[0_4px_14px_rgba(0,106,97,0.28)] hover:shadow-lg font-label-lg text-label-lg cursor-pointer" id="btnExport" onclick="exportToPDF()">
-  <span class="material-symbols-outlined text-body-lg">picture_as_pdf</span>
-  <span>Export PDF</span>
-</button>
             </div>
           </div>
           
@@ -267,12 +265,6 @@
               <span class="material-symbols-outlined absolute left-3 text-outline pointer-events-none">search</span>
               <input class="w-full pl-10 pr-space-md py-2.5 bg-surface-container-low rounded-xl text-on-surface placeholder:text-outline font-body-md text-body-md focus:outline-none focus:bg-surface-container-lowest transition-all" id="studentSearch" placeholder="Cari siswa berdasarkan NIS atau Nama..." type="text"/>
             </div>
-            <div class="flex items-center gap-space-sm flex-wrap">
-              <!-- Action Print / Refresh -->
-              <button class="w-10 h-10 rounded-xl bg-surface-container-low hover:bg-surface-container text-on-surface-variant flex items-center justify-center transition-colors cursor-pointer" title="Cetak Ringkasan" onclick="window.print()">
-                <span class="material-symbols-outlined text-body-lg">print</span>
-              </button>
-            </div>
           </div>
           
           <!-- Main Attendance Table Container -->
@@ -299,7 +291,7 @@
             <!-- Table Footer Summary & Reload Action -->
             <div class="p-space-md bg-surface-container-low/50 flex flex-col sm:flex-row items-center justify-between gap-space-md">
               <div class="flex items-center gap-space-sm font-body-sm text-body-sm text-on-surface-variant">
-                <span>Menampilkan <strong class="text-on-surface" id="visibleCount">0</strong> rekaman hadir hari ini</span>
+                <span>Menampilkan <strong class="text-on-surface" id="visibleCount">0</strong> rekaman hadir</span>
               </div>
               <div class="flex items-center gap-space-xs">
                 <button class="flex items-center gap-space-xs px-space-md py-2 rounded-xl bg-surface-container hover:bg-surface-container-high text-on-surface font-label-md text-label-md transition-all cursor-pointer" id="btnReload" onclick="loadReports()">
@@ -349,16 +341,17 @@
             `<span class="relative inline-flex rounded-full h-2 w-2 ${ok ? 'bg-secondary' : 'bg-error'}"></span>`;
     }
 
-    // Inisialisasi Tanggal & Waktu di Header
-    const now = new Date();
-    const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-    document.getElementById('currentDateDisplay').innerText = now.toLocaleDateString('id-ID', options);
-    
-    function updateTimestamp() {
-      const t = new Date();
-      document.getElementById('lastUpdated').innerText = 
-        String(t.getHours()).padStart(2, '0') + ':' + 
-        String(t.getMinutes()).padStart(2, '0') + ' WIB';
+    // Inisialisasi Tanggal di Header Navbar (Jam real-time)
+    const optionsTanggalInfo = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+    document.getElementById('currentDateDisplay').innerText = new Date().toLocaleDateString('id-ID', optionsTanggalInfo);
+
+    // Set Default Filter Tanggal ke Hari Ini
+    const dateInputEl = document.getElementById('dateFilter');
+    if (!dateInputEl.value) {
+        // Mendapatkan string YYYY-MM-DD menyesuaikan zona waktu lokal
+        const tzOffset = (new Date()).getTimezoneOffset() * 60000;
+        const localISOTime = (new Date(Date.now() - tzOffset)).toISOString().split('T')[0];
+        dateInputEl.value = localISOTime;
     }
 
     // --- State Management ---
@@ -394,28 +387,28 @@
 
     // --- Core Data Loader ---
     async function loadReports() {
-      // UX Animasi Refresh
       const reloadIcon = document.getElementById('reloadIcon');
       if (reloadIcon) reloadIcon.classList.add('rotate-180');
-      updateTimestamp();
 
-      const today = new Date();
-      today.setHours(0,0,0,0);
-      const tomorrow = new Date(today);
-      tomorrow.setDate(tomorrow.getDate() + 1);
+      // Ambil tanggal dari input dan atur rentang waktu 1 hari penuh
+      const dateString = document.getElementById('dateFilter').value;
+      const dateParts = dateString.split('-');
+      
+      const startDate = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+      const endDate = new Date(startDate);
+      endDate.setDate(endDate.getDate() + 1);
 
       try {
-        // Pengecekan inisialisasi object supabase
         if (typeof window.supabase === 'undefined') {
             throw new Error("Supabase belum termuat");
         }
 
-        // Ambil Data Presensi Hari Ini (window.supabase)
+        // Ambil Data Presensi Berdasarkan Tanggal yang Dipilih
         const { data: attendances, error: errAtt } = await window.supabase
           .from('attendance')
           .select(`status, created_at, students (id, nis, nama, kelas)`)
-          .gte('created_at', today.toISOString())
-          .lt('created_at', tomorrow.toISOString())
+          .gte('created_at', startDate.toISOString())
+          .lt('created_at', endDate.toISOString())
           .order('created_at', { ascending: true });
 
         if (errAtt) throw errAtt;
@@ -427,13 +420,12 @@
         
         if (errTotal) throw errTotal;
 
-        // Jika kode sampai sini artinya koneksi lancar
         setConnectionStatus(true);
 
         // Kelompokkan data by Siswa
         const grouped = {};
         attendances.forEach(a => {
-          if (!a.students) return; // safeguard jika relasi null
+          if (!a.students) return; 
           const s = a.students;
           if (!grouped[s.id]) {
             grouped[s.id] = { student: s, masuk: null, pulang: null };
@@ -442,7 +434,7 @@
           if (a.status === 'PULANG') grouped[s.id].pulang = a.created_at;
         });
 
-        // Urutkan berdasarkan Abjad Nama (Perbaikan pemanggilan variabel)
+        // Urutkan berdasarkan Abjad Nama
         const reportData = Object.values(grouped).sort((a,b) => a.student.nama.localeCompare(b.student.nama));
         reportDataToExport = reportData;
 
@@ -454,7 +446,7 @@
         tableBody.innerHTML = '';
 
         if (reportData.length === 0) {
-            tableBody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-on-surface-variant font-body-sm">Belum ada data presensi hari ini.</td></tr>';
+            tableBody.innerHTML = '<tr><td colspan="5" class="py-8 text-center text-on-surface-variant font-body-sm">Belum ada data presensi pada tanggal ini.</td></tr>';
         }
 
         // Render Baris Tabel
@@ -464,10 +456,8 @@
           if (late) totalTerlambat++;
           if (d.pulang) totalPulang++;
 
-          // Alternating row color style
           const bgClass = index % 2 === 0 ? "hover:bg-surface-container-low/40" : "bg-surface-container-lowest hover:bg-surface-container-low/40";
           
-          // Badge Waktu Masuk
           let masukUI = `<span class="font-label-lg text-label-lg font-mono text-outline">-</span>`;
           if (d.masuk) {
             if (late) {
@@ -489,7 +479,6 @@
             }
           }
 
-          // Badge Waktu Pulang
           let pulangUI = `
             <div class="flex flex-col gap-1 items-start">
               <span class="font-label-lg text-label-lg font-mono text-outline">-</span>
@@ -508,7 +497,6 @@
               </div>`;
           }
 
-          // Perbaikan: d.student.nama dan d.student.kelas (bukan .name dan .class_name)
           tableBody.innerHTML += `
             <tr class="attendance-row ${bgClass} transition-colors group">
               <td class="py-4 px-space-lg font-label-md text-label-md text-on-surface">
@@ -536,7 +524,7 @@
         // Update Statistik UI
         document.getElementById('statHadir').innerText = totalHadir;
         document.getElementById('statTerlambat').innerText = totalTerlambat;
-        document.getElementById('statTotal').innerText = count || 0; // Menggunakan variabel count dari DB
+        document.getElementById('statTotal').innerText = count || 0; 
         document.getElementById('statPulang').innerText = totalPulang;
         document.getElementById('visibleCount').innerText = reportData.length;
 
@@ -567,33 +555,33 @@
       });
     });
 
-// --- Logika Export PDF ---
+    // --- Logika Export PDF ---
     function exportToPDF() {
       if(reportDataToExport.length === 0) {
-        alert("Tidak ada data untuk diekspor hari ini!");
+        alert("Tidak ada data untuk diekspor pada tanggal ini!");
         return;
       }
       
-      // UX Button Effect
       const btnExport = document.getElementById('btnExport');
       const originalText = btnExport.innerHTML;
       btnExport.innerHTML = '<span class="material-symbols-outlined text-body-lg animate-spin">progress_activity</span><span>Menyiapkan PDF...</span>';
       
       setTimeout(() => {
-        // Inisialisasi jsPDF
         const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('p', 'mm', 'a4'); // Potrait, milimeter, ukuran A4
+        const doc = new jsPDF('p', 'mm', 'a4'); 
 
-        // Setup Variabel Waktu
-        const now = new Date();
+        // Setup Variabel Waktu berdasarkan filter tanggal
+        const dateString = document.getElementById('dateFilter').value;
+        const dateParts = dateString.split('-');
+        const selectedDateObj = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+        
         const opsiTanggal = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+        const tanggalDipilihFormated = selectedDateObj.toLocaleDateString('id-ID', opsiTanggal);
         
-        // Hari yang dipilih (Saat ini sistem membaca hari ini)
-        const tanggalDipilih = document.getElementById('currentDateDisplay').innerText;
-        
-        // Waktu Ekspor
+        // Waktu Ekspor Real-time
+        const now = new Date();
         const tanggalEkspor = now.toLocaleDateString('id-ID', opsiTanggal);
-        const waktuEkspor = now.toLocaleTimeString('id-ID'); // Format jam:menit:detik
+        const waktuEkspor = now.toLocaleTimeString('id-ID'); 
 
         // === HEADER DOKUMEN PDF ===
         doc.setFont("helvetica", "bold");
@@ -603,7 +591,7 @@
         // === SUB-HEADER (Info Tanggal & Waktu) ===
         doc.setFontSize(10);
         doc.setFont("helvetica", "normal");
-        doc.text(`Tanggal Presensi : ${tanggalDipilih}`, 14, 28);
+        doc.text(`Tanggal Presensi : ${tanggalDipilihFormated}`, 14, 28);
         doc.text(`Waktu Ekspor     : ${tanggalEkspor}, Pukul ${waktuEkspor} WITA`, 14, 34);
 
         // === DATA TABEL ===
@@ -632,7 +620,7 @@
           body: tableRows,
           theme: 'striped',
           headStyles: { 
-            fillColor: [0, 74, 198], // Warna biru primary SIHADIR (#004ac6)
+            fillColor: [0, 74, 198], 
             textColor: 255,
             fontStyle: 'bold'
           },
@@ -641,21 +629,20 @@
             cellPadding: 4
           },
           alternateRowStyles: {
-            fillColor: [248, 249, 255] // Warna background surface
+            fillColor: [248, 249, 255] 
           }
         });
 
         // === SIMPAN FILE ===
-        const namaFile = `Rekap_SIHADIR_${now.toISOString().split('T')[0]}.pdf`;
+        const namaFile = `Rekap_SIHADIR_${dateString}.pdf`;
         doc.save(namaFile);
 
-        // Kembalikan status tombol
         btnExport.innerHTML = '<span class="material-symbols-outlined text-body-lg">check</span><span>Tersimpan (PDF)</span>';
         setTimeout(() => { btnExport.innerHTML = originalText; }, 1500);
       }, 500);
     }
     
-    // Load Data saat halaman diakses
+    // Load Data saat halaman diakses pertama kali
     window.onload = loadReports;
   </script>
 </body>
