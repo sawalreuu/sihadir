@@ -16,6 +16,7 @@
     <!-- Library Supabase, QRCode, & SheetJS (Untuk Excel) -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
     <script defer src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+    <!-- Pastikan Library SheetJS Termuat untuk Fitur Excel -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     
     <!-- Tailwind CSS & Config -->
@@ -79,7 +80,7 @@
 </head>
 <body class="bg-surface font-body-md text-on-surface min-h-screen">
 
-    <!-- Komponen Input File Tersembunyi untuk Excel -->
+    <!-- Komponen Input File Tersembunyi untuk Menerima File Excel (.xlsx) atau CSV -->
     <input type="file" id="excelFileInput" accept=".xlsx, .xls, .csv" class="hidden" />
 
     <aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col justify-between p-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
@@ -159,6 +160,7 @@
         <main class="w-full pt-16 bg-surface min-h-screen">
             <div class="flex flex-col w-full">
 
+                <!-- Toast Notifikasi Global -->
                 <div class="fixed bottom-6 right-6 z-50 transform translate-y-24 opacity-0 transition-all duration-300 pointer-events-none flex items-center gap-space-sm px-space-md py-space-sm rounded-xl shadow-xl bg-surface-container-lowest text-on-surface" id="toastNotification">
                     <span class="material-symbols-outlined text-secondary" id="toastIcon">check_circle</span>
                     <div class="flex flex-col">
@@ -167,6 +169,7 @@
                     </div>
                 </div>
 
+                <!-- Modal Input / Edit Siswa -->
                 <div class="fixed inset-0 z-50 hidden bg-inverse-surface/40 backdrop-blur-sm flex items-center justify-center p-space-md" id="studentModal">
                     <div class="w-full max-w-lg bg-surface-container-lowest rounded-2xl shadow-xl p-space-lg flex flex-col gap-space-md transform scale-95 transition-transform duration-200" id="modalBox">
                         <div class="flex items-center justify-between pb-space-xs">
@@ -234,29 +237,9 @@
                     </div>
                 </div>
 
-                <div class="p-gutter flex flex-col gap-space-lg max-w-7xl mx-auto w-full">
-                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
-                        <div class="lg:col-span-7 flex flex-col gap-1">
-                            <div class="flex items-center gap-space-xs text-primary font-label-sm text-label-sm tracking-widest uppercase">
-                                <span class="inline-block w-2 h-2 rounded-full bg-primary"></span>
-                                Manajemen Kesiswaan
-                            </div>
-                            <h1 class="font-headline-xl text-headline-xl text-on-surface tracking-tight">Data Siswa</h1>
-                            <p class="font-body-md text-body-md text-on-surface-variant">Pusat pengelolaan informasi induk murid, registrasi kartu RFID/Barcode, dan pengaturan rombongan belajar aktif semester ini.</p>
-                        </div>
-                        <div class="lg:col-span-5 grid gap-space-sm flex justify-end">
-                            <div class="bg-surface-container-lowest p-space-md rounded-2xl shadow-sm flex flex-col gap-0.5 w-64">
-                                <span class="font-label-sm text-label-sm text-on-surface-variant">Total Siswa</span>
-                                <span class="font-headline-md text-headline-md text-primary font-bold" id="totalStudentCount">0</span>
-                                <span class="font-body-sm text-body-sm text-secondary flex items-center gap-0.5">
-                                    <span class="material-symbols-outlined text-label-md">arrow_upward</span>
-                                     Tersinkron Database
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="bg-surface-container-lowest p-space-md rounded-2xl shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-md">
+                <div class="p-gutter flex flex-col gap-space-lg max-w-7xl mx-auto w-full pt-4">
+                    <!-- ACTION BAR: Pencarian, Filter Kelas, dan Tombol-tombol -->
+                    <div class="bg-surface-container-lowest p-space-md rounded-2xl shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-md mt-2">
                         <div class="flex-1 flex items-center gap-space-sm bg-surface-container-low px-space-md py-2.5 rounded-xl text-on-surface-variant focus-within:ring-2 focus-within:ring-primary/20 focus-within:bg-surface-container-lowest transition-all">
                             <span class="material-symbols-outlined text-title-md text-outline">search</span>
                             <input class="bg-transparent w-full text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none" id="searchStudent" oninput="handleSearch(this.value)" placeholder="Cari berdasarkan NIS atau Nama..." type="text"/>
@@ -277,7 +260,7 @@
                                 </select>
                             </div>
                             
-                            <!-- Tombol Import Excel Diperbarui -->
+                            <!-- Tombol Upload File Excel -->
                             <button class="flex items-center gap-space-xs px-space-md py-2.5 rounded-xl bg-surface-container-low hover:bg-surface-container text-primary font-label-lg text-label-lg transition-all" onclick="document.getElementById('excelFileInput').click()">
                                 <span class="material-symbols-outlined text-title-md text-secondary">upload_file</span>
                                 <span>Import Excel</span>
@@ -290,6 +273,7 @@
                         </div>
                     </div>
 
+                    <!-- TABEL DATA SISWA -->
                     <div class="bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden flex flex-col">
                         <div class="overflow-x-auto">
                             <table class="w-full text-left border-collapse">
@@ -328,7 +312,7 @@
                             </div>
                         </div>
                         <div class="flex items-center gap-space-sm w-full md:w-auto">
-                            <!-- Tombol Download Template Excel Diperbarui -->
+                            <!-- Tombol Download Template Excel  -->
                             <button class="w-full md:w-auto px-space-md py-2 bg-surface-container-lowest text-on-surface hover:bg-surface-container-high rounded-xl font-label-md text-label-md shadow-xs transition-colors flex items-center justify-center gap-space-xs" onclick="downloadTemplate()">
                                 <span class="material-symbols-outlined text-body-md text-primary">download</span>
                                 Template Excel
@@ -342,8 +326,7 @@
 
     <script src="js/supabase.js"></script>
     <script>
-
-// --- AUTH GUARD & TANGGAL ---
+    // --- AUTH GUARD & TANGGAL ---
     window.addEventListener('DOMContentLoaded', async () => {
       if (typeof window.supabase !== 'undefined') {
         const { data: { session } } = await window.supabase.auth.getSession();
@@ -375,7 +358,7 @@
     const modal = document.getElementById('studentModal');
     const modalBox = document.getElementById('modalBox');
     const tableBody = document.getElementById('studentTableBody');
-    const totalStudentCount = document.getElementById('totalStudentCount');
+    // totalStudentCount tidak digunakan di UI baru, namun dipertahankan untuk kompatibilitas fungsi
 
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     const getInitials = n => n ? n.split(' ').filter(Boolean).map(p => p[0].toUpperCase()).join('').substring(0, 2) : 'U';
@@ -505,7 +488,6 @@
             if (error) throw error;
 
             setConnectionStatus(true);
-            totalStudentCount.innerText = students.length;
             studentsById = new Map(students.map(s => [String(s.id), s]));
 
             if (students.length === 0) {
@@ -513,7 +495,6 @@
                 return;
             }
 
-            // PERBAIKAN: Menghapus subtitle NIS di bawah Nama Lengkap
             tableBody.innerHTML = students.map((s, i) => `
             <tr class="student-row hover:bg-surface-container-low/60 transition-colors h-16 group" data-class="${esc(s.kelas)}" data-name="${esc(s.nama)}" data-nis="${esc(s.nis)}">
                 <td class="py-space-sm px-space-lg font-mono font-medium text-primary">${esc(s.nis)}</td>
@@ -551,7 +532,6 @@
         } catch(err) {
             console.error(err);
             setConnectionStatus(false);
-            totalStudentCount.innerText = '0';
             tableBody.innerHTML = `<tr><td colspan="4" class="py-8 text-center font-body-sm text-error">Gagal mengambil data dari Supabase. <button class="underline ml-1" onclick="loadData()">Coba lagi</button></td></tr>`;
         }
     }
@@ -621,21 +601,25 @@
             showToast("Library Excel sedang memuat, coba lagi.", "error");
             return;
         }
-        // Data format percontohan
+        
+        // Data template kosong dengan header yang benar
         const ws_data = [
-            ["NIS", "Nama Lengkap", "Kelas"],
-            ["230209501049", "Syawal Saputra S.", "VIII C"],
-            ["230209501050", "Ahmad Farhan", "VIII D"]
+            ["NIS", "Nama Lengkap", "Kelas"]
         ];
         
         const ws = XLSX.utils.aoa_to_sheet(ws_data);
-        // Mengatur lebar kolom agar rapi
-        ws['!cols'] = [{ wch: 15 }, { wch: 30 }, { wch: 10 }];
+        
+        // Mengatur lebar kolom agar rapi saat dibuka
+        ws['!cols'] = [
+            { wch: 15 }, // NIS
+            { wch: 35 }, // Nama Lengkap
+            { wch: 12 }  // Kelas
+        ];
         
         const wb = XLSX.utils.book_new();
-        XLSX.utils.book_append_sheet(wb, ws, "Template Siswa");
+        XLSX.utils.book_append_sheet(wb, ws, "Data Siswa");
         
-        XLSX.writeFile(wb, "Template_Data_Siswa_SIHADIR.xlsx");
+        XLSX.writeFile(wb, "Template_Data_Siswa.xlsx");
         showToast("Template berhasil diunduh. Silakan isi dan import kembali.", "success", "Unduh Selesai");
     }
 
@@ -654,7 +638,7 @@
                 const firstSheetName = workbook.SheetNames[0];
                 const worksheet = workbook.Sheets[firstSheetName];
                 
-                // Konversi sheet ke JSON array
+                // Konversi sheet ke array object
                 const json = XLSX.utils.sheet_to_json(worksheet);
 
                 if (json.length === 0) {
@@ -664,19 +648,18 @@
 
                 // Memetakan data dari Excel ke skema Supabase
                 const dataToInsert = json.map(row => {
-                    // Deteksi nama kolom yang mungkin sedikit berbeda dari template
+                    // Penyesuaian nama kolom (huruf besar/kecil)
                     const nis = String(row['NIS'] || row['nis'] || '').trim();
                     const nama = String(row['Nama Lengkap'] || row['nama'] || row['NAMA'] || '').trim().toUpperCase();
                     const kelas = String(row['Kelas'] || row['kelas'] || row['KELAS'] || '').trim();
 
-                    // Lewati baris jika data kosong
+                    // Lewati baris jika data tidak lengkap
                     if(!nis || !nama || !kelas) return null;
 
                     return {
                         nis: nis,
                         nama: nama,
                         kelas: kelas,
-                        // Buatkan ID Barcode/QR otomatis untuk setiap siswa
                         qr_rfid_id: 'qr-' + Math.random().toString(36).substr(2, 9)
                     };
                 }).filter(item => item !== null);
@@ -686,21 +669,21 @@
                      return;
                 }
 
-                // Eksekusi Bulk Insert (masukkan semua data sekaligus) ke Supabase
+                // Eksekusi Bulk Insert (masukkan semua data)
                 const { error } = await window.supabase.from('students').insert(dataToInsert);
                 
                 if (error) {
                     console.error("Kesalahan Import:", error);
-                    showToast("Gagal menyimpan ke database. Mungkin ada NIS yang duplikat.", "error", "Gagal Impor");
+                    showToast("Gagal menyimpan. Pastikan tidak ada NIS duplikat.", "error", "Gagal Impor");
                 } else {
-                    showToast(`Berhasil mengimpor ${dataToInsert.length} data siswa baru.`, "success", "Impor Sukses");
+                    showToast(`Berhasil mengimpor ${dataToInsert.length} data siswa.`, "success", "Impor Sukses");
                     loadData(); // Memuat ulang tabel
                 }
             } catch (err) {
                 console.error("Kesalahan parsing:", err);
-                showToast("Gagal memproses file. Pastikan format file Excel benar.", "error", "Error");
+                showToast("Gagal memproses file. Pastikan format Excel benar (.xlsx/.csv).", "error", "Error");
             } finally {
-                // Reset input agar file yang sama bisa diupload ulang jika perlu
+                // Reset input
                 e.target.value = '';
             }
         };
