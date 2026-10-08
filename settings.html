@@ -328,6 +328,7 @@
     // Set interval to check every minute, so it changes dynamically without refresh
     setInterval(updateDate, 60 * 1000);
 
+    // INI YANG DIPERBAIKI UNTUK IKON
     async function checkConnection() {
       try {
         if (typeof window.supabase === 'undefined') throw new Error();
@@ -335,11 +336,19 @@
         if (error && error.code !== 'PGRST116') throw error;
         document.getElementById('supabaseStatusText').innerText = 'Database Terhubung';
         document.getElementById('supabaseStatusPing').innerHTML = `<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>`;
+        
+        // Ubah warna ikon
         document.getElementById('supabaseStatusIcon').classList.replace('text-outline', 'text-secondary');
+        // Ubah bentuk ikon menjadi centang awan (cloud_done)
+        document.getElementById('supabaseStatusIcon').innerText = 'cloud_done';
+        
       } catch(e) {
         document.getElementById('supabaseStatusText').innerText = 'Gagal Terhubung';
         document.getElementById('supabaseStatusPing').innerHTML = `<span class="relative inline-flex rounded-full h-2 w-2 bg-error"></span>`;
+        
+        // Ubah warna ikon
         document.getElementById('supabaseStatusIcon').classList.replace('text-secondary', 'text-error');
+        // Ubah bentuk ikon menjadi awan coret (cloud_off)
         document.getElementById('supabaseStatusIcon').innerText = 'cloud_off';
       }
     }
@@ -356,20 +365,20 @@
 
       document.getElementById('currentEmail').value = session.user.email;
 
-// Cek dulu apakah tombol btnLogout ada di halaman ini
-const btnLogout = document.getElementById('btnLogout');
+      // Cek dulu apakah tombol btnLogout ada di halaman ini
+      const btnLogout = document.getElementById('btnLogout');
 
-if (btnLogout) {
-  btnLogout.addEventListener('click', async (e) => {
-    e.preventDefault(); // Mencegah pindah halaman sebelum proses logout selesai
-    
-    // Proses logout Supabase
-    await window.supabase.auth.signOut();
-    
-    // Lempar kembali ke halaman index (login)
-    window.location.replace('index.html');
-  });
-}
+      if (btnLogout) {
+        btnLogout.addEventListener('click', async (e) => {
+          e.preventDefault(); // Mencegah pindah halaman sebelum proses logout selesai
+          
+          // Proses logout Supabase
+          await window.supabase.auth.signOut();
+          
+          // Lempar kembali ke halaman index (login)
+          window.location.replace('index.html');
+        });
+      }
 
       // Logika Gabungan: Simpan Email & Sandi sekaligus
       document.getElementById('btnSaveChanges').addEventListener('click', async () => {
