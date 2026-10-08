@@ -148,8 +148,15 @@
       <div class="flex items-center gap-space-lg">
         <div class="hidden sm:flex items-center gap-space-xs bg-surface-container-low px-space-md py-space-xs rounded-full text-on-surface-variant font-label-md text-label-md">
           <span class="material-symbols-outlined text-body-md text-primary">calendar_today</span>
-          <span id="currentDateDisplay">Memuat tanggal...</span>
+          <span id="currentDateDisplay"></span>
+          <!-- Inline script to display date immediately -->
+          <script>
+            document.getElementById('currentDateDisplay').textContent = new Intl.DateTimeFormat('id-ID', {
+                weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Makassar'
+            }).format(new Date());
+          </script>
         </div>
+
         <div class="flex items-center gap-space-sm pl-space-sm">
           <div class="text-right hidden md:block">
             <span class="font-title-md text-title-md text-on-surface block leading-tight">Admin Sekolah</span>
