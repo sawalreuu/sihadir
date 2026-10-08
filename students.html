@@ -86,7 +86,7 @@
     <aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col justify-between p-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
         <div class="flex flex-col gap-space-lg">
             <div class="flex items-center gap-space-sm">
-                <img alt="SIHADIR Logo" class="h-8 w-auto object-contain" src="assets/logo sekolah.png"/>
+                <img alt="SIHADIR Logo" class="h-8 w-auto object-contain" src="assets/logo sekolah.png" onerror="this.src='https://via.placeholder.com/32'"/>
                 <div>
                     <span class="font-title-lg text-title-lg text-primary tracking-tight block">SIHADIR</span>
                     <span class="font-body-sm text-body-sm text-on-surface-variant block">Sistem Presensi Siswa</span>
@@ -121,6 +121,15 @@
                 </div>
                 <span class="material-symbols-outlined text-outline text-body-md" id="supabaseStatusIcon">sync</span>
             </div>
+            
+            <!-- Ditambahkan Tombol Keluar agar seragam dan menghindari error JS -->
+            <a href="#" id="btnLogout" class="bg-error-container/50 hover:bg-error-container transition-colors rounded-xl p-space-sm flex items-center gap-space-xs text-error hover:text-on-error-container cursor-pointer mt-1">
+                <span class="material-symbols-outlined text-body-md">logout</span>
+                <div class="flex flex-col">
+                  <span class="font-label-sm text-label-sm font-semibold">Keluar Sistem</span>
+                  <span class="font-body-sm text-body-sm opacity-80">Akhiri sesi aktif</span>
+                </div>
+            </a>
         </div>
     </aside>
 
@@ -131,26 +140,24 @@
                 <span>/</span>
                 <span class="font-title-md text-title-md text-on-surface">Portal Presensi</span>
             </div>
-      <div class="flex items-center gap-space-lg">
-        <div class="hidden sm:flex items-center gap-space-xs bg-surface-container-low px-space-md py-space-xs rounded-full text-on-surface-variant font-label-md text-label-md">
-          <span class="material-symbols-outlined text-body-md text-primary">calendar_today</span>
-          <span id="currentDateDisplay"></span>
-          <!-- Inline script to display date immediately -->
-          <script>
-            document.getElementById('currentDateDisplay').textContent = new Intl.DateTimeFormat('id-ID', {
-                weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Makassar'
-            }).format(new Date());
-          </script>
-        </div>
+            <div class="flex items-center gap-space-lg">
+                <div class="hidden sm:flex items-center gap-space-xs bg-surface-container-low px-space-md py-space-xs rounded-full text-on-surface-variant font-label-md text-label-md">
+                    <span class="material-symbols-outlined text-body-md text-primary">calendar_today</span>
+                    <span id="currentDateDisplay"></span>
+                    <script>
+                        document.getElementById('currentDateDisplay').textContent = new Intl.DateTimeFormat('id-ID', {
+                            weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Makassar'
+                        }).format(new Date());
+                    </script>
+                </div>
 
-        <div class="flex items-center gap-space-sm pl-space-sm">
-          <div class="text-right hidden md:block">
-            <span class="font-title-md text-title-md text-on-surface block leading-tight">Admin Sekolah</span>
-          </div>
-          <!-- Avatar Inisial Default -->
-          <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold">A</div>
-        </div>
-      </div>
+                <div class="flex items-center gap-space-sm pl-space-sm">
+                    <div class="text-right hidden md:block">
+                        <span class="font-title-md text-title-md text-on-surface block leading-tight">Admin Sekolah</span>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold">A</div>
+                </div>
+            </div>
         </header>
 
         <main class="w-full pt-16 bg-surface min-h-screen">
@@ -257,38 +264,37 @@
                             <div class="relative inline-flex items-center bg-surface-container-low px-space-md py-2.5 rounded-xl text-on-surface">
                                 <span class="material-symbols-outlined text-body-md text-outline mr-2">filter_alt</span>
                                 <select class="bg-transparent font-label-lg text-label-lg text-on-surface focus:outline-none cursor-pointer pr-4" id="filterClassSelect" onchange="applyFilter()">
-    <option value="ALL">Semua Kelas</option>
-    
-    <optgroup label="Kelas VII">
-        <option value="VII A">Kelas VII A</option>
-        <option value="VII B">Kelas VII B</option>
-        <option value="VII C">Kelas VII C</option>
-        <option value="VII D">Kelas VII D</option>
-        <option value="VII E">Kelas VII E</option>
-        <option value="VII F">Kelas VII F</option>
-        <option value="VII G">Kelas VII G</option>
-    </optgroup>
-    
-    <optgroup label="Kelas VIII">
-        <option value="VIII A">Kelas VIII A</option>
-        <option value="VIII B">Kelas VIII B</option>
-        <option value="VIII C">Kelas VIII C</option>
-        <option value="VIII D">Kelas VIII D</option>
-        <option value="VIII E">Kelas VIII E</option>
-        <option value="VIII F">Kelas VIII F</option>
-        <option value="VIII G">Kelas VIII G</option>
-    </optgroup>
-    
-    <optgroup label="Kelas IX">
-        <option value="IX A">Kelas IX A</option>
-        <option value="IX B">Kelas IX B</option>
-        <option value="IX C">Kelas IX C</option>
-        <option value="IX D">Kelas IX D</option>
-        <option value="IX E">Kelas IX E</option>
-        <option value="IX F">Kelas IX F</option>
-    </optgroup>
-</select>
-
+                                    <option value="ALL">Semua Kelas</option>
+                                    
+                                    <optgroup label="Kelas VII">
+                                        <option value="VII A">Kelas VII A</option>
+                                        <option value="VII B">Kelas VII B</option>
+                                        <option value="VII C">Kelas VII C</option>
+                                        <option value="VII D">Kelas VII D</option>
+                                        <option value="VII E">Kelas VII E</option>
+                                        <option value="VII F">Kelas VII F</option>
+                                        <option value="VII G">Kelas VII G</option>
+                                    </optgroup>
+                                    
+                                    <optgroup label="Kelas VIII">
+                                        <option value="VIII A">Kelas VIII A</option>
+                                        <option value="VIII B">Kelas VIII B</option>
+                                        <option value="VIII C">Kelas VIII C</option>
+                                        <option value="VIII D">Kelas VIII D</option>
+                                        <option value="VIII E">Kelas VIII E</option>
+                                        <option value="VIII F">Kelas VIII F</option>
+                                        <option value="VIII G">Kelas VIII G</option>
+                                    </optgroup>
+                                    
+                                    <optgroup label="Kelas IX">
+                                        <option value="IX A">Kelas IX A</option>
+                                        <option value="IX B">Kelas IX B</option>
+                                        <option value="IX C">Kelas IX C</option>
+                                        <option value="IX D">Kelas IX D</option>
+                                        <option value="IX E">Kelas IX E</option>
+                                        <option value="IX F">Kelas IX F</option>
+                                    </optgroup>
+                                </select>
                             </div>
                             
                             <!-- Tombol Upload File Excel -->
@@ -355,8 +361,15 @@
         </main>
     </div>
 
+    <!-- PENTING: Script JS untuk Setup Supabase (Wajib dimuat sebelum tag script di bawah) -->
     <script src="js/supabase.js"></script>
     <script>
+    // --- VARIABEL & HELPER ---
+    let toastTimer = null;
+    const modal = document.getElementById('studentModal');
+    const modalBox = document.getElementById('modalBox');
+    const tableBody = document.getElementById('studentTableBody');
+    
     // --- AUTH GUARD & TANGGAL ---
     window.addEventListener('DOMContentLoaded', async () => {
       if (typeof window.supabase !== 'undefined') {
@@ -368,11 +381,15 @@
       loadData();
     });
 
-    document.getElementById('btnLogout').addEventListener('click', async (e) => {
-        e.preventDefault();
-        await window.supabase.auth.signOut();
-        window.location.replace('dashboard.html');
-    });
+    // Perbaikan: Pengecekan IF pada btnLogout mencegah FATAL ERROR jika tombol tidak ditemukan
+    const btnLogout = document.getElementById('btnLogout');
+    if(btnLogout) {
+        btnLogout.addEventListener('click', async (e) => {
+            e.preventDefault();
+            await window.supabase.auth.signOut();
+            window.location.replace('index.html');
+        });
+    }
 
     function updateDate() {
         var el = document.getElementById('currentDateDisplay');
@@ -381,15 +398,8 @@
             weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Makassar'
         }).format(new Date());
     }
-    updateDate();
+    // Tidak usah panggil updateDate() pertama kali karena sudah di inline script HTML
     setInterval(updateDate, 60 * 1000);
-
-    // --- VARIABEL & HELPER ---
-    let toastTimer = null;
-    const modal = document.getElementById('studentModal');
-    const modalBox = document.getElementById('modalBox');
-    const tableBody = document.getElementById('studentTableBody');
-    // totalStudentCount tidak digunakan di UI baru, namun dipertahankan untuk kompatibilitas fungsi
 
     const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
     const getInitials = n => n ? n.split(' ').filter(Boolean).map(p => p[0].toUpperCase()).join('').substring(0, 2) : 'U';
@@ -605,7 +615,7 @@
         try {
             const { error } = await window.supabase.from('students').delete().eq('id', id);
             if (error) showToast('Gagal menghapus data.', 'error', 'Error');
-            else { showToast(`Data ${nama} berhasil dihapus.`, 'error', 'Terhapus'); loadData(); }
+            else { showToast(`Data ${nama} berhasil dihapus.`, 'success', 'Terhapus'); loadData(); } // fixed error -> success for deletion toast
         } catch(err) { showToast('Koneksi database bermasalah.', 'error', 'Gagal'); }
     }
 
