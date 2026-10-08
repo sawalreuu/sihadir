@@ -81,32 +81,31 @@
   <aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col justify-between p-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
     <div class="flex flex-col gap-space-lg">
       <div class="flex items-center gap-space-sm">
-        <img alt="SIHADIR Logo" class="h-8 w-auto object-contain" src="assets/logo sekolah.png" />
+        <img alt="SIHADIR Logo" class="h-8 w-auto object-contain" src="assets/logo sekolah.png" onerror="this.src='https://via.placeholder.com/32'" />
         <div>
           <span class="font-title-lg text-title-lg text-primary tracking-tight block">SIHADIR</span>
           <span class="font-body-sm text-body-sm text-on-surface-variant block">Sistem Presensi Siswa</span>
         </div>
       </div>
-      <nav class="flex flex-col gap-space-xs" data-active-classes="bg-primary-container text-on-primary-container font-label-lg rounded-xl shadow-[0_4px_12px_rgba(37,99,235,0.25)]">
-        <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="dashboard" href="dashboard.html">
+      <nav class="flex flex-col gap-space-xs">
+        <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" href="dashboard.html">
           <span class="material-symbols-outlined text-title-lg">dashboard</span>Dashboard
         </a>
-        <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="data-siswa" href="students.html">
+        <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" href="students.html">
           <span class="material-symbols-outlined text-title-lg">school</span>Data Siswa
         </a>
-        <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="rekapitulasi" href="reports.html">
+        <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" href="reports.html">
           <span class="material-symbols-outlined text-title-lg">description</span>Rekapitulasi
         </a>
-        <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" data-path="buka-scanner" href="scanner.html">
+        <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" href="scanner.html">
           <span class="material-symbols-outlined text-title-lg">qr_code_scanner</span>Buka Scanner
         </a>
-        <a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-all bg-primary-container text-on-primary-container font-label-lg rounded-xl shadow-[0_4px_12px_rgba(37,99,235,0.25)]" data-path="pengaturan" href="settings.html">
+        <a aria-current="page" class="flex items-center gap-space-sm px-space-md py-space-sm transition-all bg-primary-container text-on-primary-container font-label-lg rounded-xl shadow-[0_4px_12px_rgba(37,99,235,0.25)]" href="settings.html">
           <span class="material-symbols-outlined text-title-lg">settings</span>Pengaturan
         </a>
       </nav>
     </div>
     <div class="flex flex-col gap-space-md pt-space-md">
-      <!-- Status Supabase Dinamis -->
       <div class="bg-surface-container-low rounded-xl p-space-sm flex items-center justify-between">
         <div class="flex items-center gap-space-xs">
           <span class="relative flex h-2 w-2" id="supabaseStatusPing">
@@ -118,7 +117,6 @@
         <span class="material-symbols-outlined text-secondary text-body-md" id="supabaseStatusIcon">cloud_done</span>
       </div>
       
-      <!-- Tombol Keluar (Logout) -->
       <a href="#" id="btnLogout" class="bg-error-container/50 hover:bg-error-container transition-colors rounded-xl p-space-sm flex items-center gap-space-xs text-error hover:text-on-error-container cursor-pointer mt-1">
         <span class="material-symbols-outlined text-body-md">logout</span>
         <div class="flex flex-col">
@@ -141,7 +139,13 @@
       <div class="flex items-center gap-space-lg">
         <div class="hidden sm:flex items-center gap-space-xs bg-surface-container-low px-space-md py-space-xs rounded-full text-on-surface-variant font-label-md text-label-md">
           <span class="material-symbols-outlined text-body-md text-primary">calendar_today</span>
-          <span id="currentDateDisplay">Memuat tanggal...</span>
+          <span id="currentDateDisplay"></span>
+          <!-- Inline script to display date immediately -->
+          <script>
+            document.getElementById('currentDateDisplay').textContent = new Intl.DateTimeFormat('id-ID', {
+                weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Makassar'
+            }).format(new Date());
+          </script>
         </div>
 
         <div class="flex items-center gap-space-sm pl-space-sm">
@@ -156,42 +160,33 @@
 
     <main class="w-full pt-16 bg-surface min-h-screen">
       <div class="flex flex-col w-full">
-        <div class="p-gutter flex flex-col gap-space-lg max-w-7xl mx-auto w-full">
+        <div class="p-gutter flex flex-col gap-space-md max-w-7xl mx-auto w-full">
           
-          <!-- Header Section -->
-          <section class="flex flex-col md:flex-row md:items-center justify-between gap-space-md">
-            <div class="flex flex-col gap-space-xs">
-              <div class="flex items-center gap-space-xs font-label-md text-label-md text-outline">
-                <a href="dashboard.html" class="hover:text-primary transition-colors cursor-pointer">Beranda</a>
-                <span class="material-symbols-outlined text-body-sm text-outline-variant">chevron_right</span>
-                <span class="text-primary font-semibold">Pengaturan Akun</span>
-              </div>
-              <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Pengaturan Akun</h1>
-              <p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
-                Kelola informasi login, alamat email terdaftar, dan kata sandi akun SIHADIR Anda.
-              </p>
+          <!-- Header Section (Tanpa Tombol) -->
+          <section class="flex flex-col gap-space-xs mb-space-sm">
+            <div class="flex items-center gap-space-xs font-label-md text-label-md text-outline">
+              <a href="dashboard.html" class="hover:text-primary transition-colors cursor-pointer">Beranda</a>
+              <span class="material-symbols-outlined text-body-sm text-outline-variant">chevron_right</span>
+              <span class="text-primary font-semibold">Pengaturan Akun</span>
             </div>
-            <!-- Global Action Button (diarahkan ke bawah) -->
-            <div class="flex items-center gap-space-sm self-start md:self-auto">
-              <button onclick="document.getElementById('btnUpdatePassword').click()" class="inline-flex items-center gap-space-xs px-space-lg py-2.5 rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg shadow-[0_4px_14px_rgba(37,99,235,0.28)] hover:bg-primary transition-all">
-                <span class="material-symbols-outlined text-body-lg">check_circle</span>
-                <span>Simpan Perubahan</span>
-              </button>
-            </div>
+            <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Pengaturan Akun</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+              Kelola informasi login, alamat email terdaftar, dan kata sandi akun SIHADIR Anda.
+            </p>
           </section>
 
-          <!-- Single Simplified Card Panel -->
-          <div class="max-w-2xl mx-auto w-full">
+          <!-- Kartu Pengaturan Full Width -->
+          <div class="w-full">
             <div class="bg-surface-container-lowest p-space-xl rounded-2xl shadow-sm flex flex-col gap-space-lg border border-surface-container-high/40">
               
               <!-- Profile Identity Header -->
               <div class="flex items-center gap-space-md pb-space-md border-b border-surface-container-high">
                 <div class="w-12 h-12 rounded-2xl bg-primary-container text-on-primary flex items-center justify-center font-bold text-headline-md shadow-sm">
-                  AS
+                  A
                 </div>
                 <div class="flex flex-col flex-1">
                   <div class="flex items-center gap-space-xs">
-                    <h2 class="font-title-lg text-title-lg text-on-surface">Pengaturan Akun Petugas / Admin</h2>
+                    <h2 class="font-title-lg text-title-lg text-on-surface">Pengaturan Akun Admin</h2>
                   </div>
                   <p class="font-body-sm text-body-sm text-on-surface-variant">
                     UPTD SMP NEGERI 14 TANRALILI • Hak Akses Administrator Presensi
@@ -200,10 +195,10 @@
               </div>
 
               <!-- Form Fields -->
-              <form class="flex flex-col gap-space-md" onsubmit="event.preventDefault();">
+              <form class="flex flex-col gap-space-lg" onsubmit="event.preventDefault();">
                 
-                <!-- Current Registered Email -->
-                <div class="flex flex-col gap-space-sm">
+                <!-- Pengaturan Email -->
+                <div class="flex flex-col gap-space-sm max-w-3xl">
                   <div class="flex flex-col gap-space-xs">
                     <div class="flex items-center justify-between">
                       <label class="font-label-md text-label-md text-on-surface">Alamat Email Terdaftar</label>
@@ -225,73 +220,64 @@
                     <span class="font-body-sm text-body-sm text-outline">Email ini digunakan untuk masuk ke sistem dan memulihkan kata sandi.</span>
                   </div>
 
-                  <!-- Sub-form Ubah Email Baru (Hidden by default) -->
-                  <div id="emailChangeSection" class="hidden bg-surface-container-low/70 border border-surface-container-high/60 rounded-xl p-space-md flex flex-col gap-space-sm transition-all">
+                  <!-- Sub-form Ubah Email Baru -->
+                  <div id="emailChangeSection" class="hidden bg-surface-container-low/70 border border-surface-container-high/60 rounded-xl p-space-md flex flex-col gap-space-sm transition-all mt-2">
                     <div class="flex items-center justify-between pb-space-xs border-b border-surface-container-high/40">
                       <div class="flex items-center gap-space-xs text-primary">
                         <span class="material-symbols-outlined text-title-md">mail_lock</span>
-                        <span class="font-label-md text-label-md font-semibold text-on-surface">Alur Perubahan Alamat Email</span>
+                        <span class="font-label-md text-label-md font-semibold text-on-surface">Masukkan Email Baru</span>
                       </div>
-                      <span class="text-label-sm text-outline font-label-sm">Verifikasi Diperlukan</span>
+                      <span class="text-label-sm text-outline font-label-sm">Verifikasi Diperlukan Nanti</span>
                     </div>
-                    <div class="grid grid-cols-1 gap-space-md mt-1">
-                      <div class="flex flex-col gap-space-xs">
-                        <label class="font-label-md text-label-md text-on-surface">Email Baru</label>
-                        <div class="relative flex items-center">
-                          <span class="material-symbols-outlined absolute left-3 text-outline text-title-md">alternate_email</span>
-                          <input id="newEmailInput" class="w-full bg-surface-container-lowest text-on-surface font-body-md text-body-md pl-10 pr-space-md py-2 rounded-xl border border-surface-container-high focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm" placeholder="Masukkan email baru Anda" type="email">
-                        </div>
+                    <div class="flex flex-col gap-space-xs mt-1">
+                      <label class="font-label-md text-label-md text-on-surface">Email Baru</label>
+                      <div class="relative flex items-center">
+                        <span class="material-symbols-outlined absolute left-3 text-outline text-title-md">alternate_email</span>
+                        <input id="newEmailInput" class="w-full bg-surface-container-lowest text-on-surface font-body-md text-body-md pl-10 pr-space-md py-2.5 rounded-xl border border-surface-container-high focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm" placeholder="Masukkan email baru Anda" type="email">
                       </div>
-                    </div>
-                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-space-sm pt-space-xs">
-                      <div class="flex items-center gap-1.5 text-outline text-body-sm">
-                        <span class="material-symbols-outlined text-body-md text-primary">info</span>
-                        <span>Tautan konfirmasi akan dikirim ke alamat email baru.</span>
-                      </div>
-                      <button id="btnUpdateEmail" class="inline-flex items-center justify-center gap-1 px-space-md py-2 rounded-lg bg-primary-container hover:bg-primary text-on-primary font-label-md text-label-md shadow-sm transition-all whitespace-nowrap self-start sm:self-auto" type="button">
-                        <span class="material-symbols-outlined text-body-sm">send</span>
-                        <span>Kirim Verifikasi</span>
-                      </button>
+                      <span class="font-body-sm text-body-sm text-outline mt-1">Isi hanya jika Anda ingin mengganti email.</span>
                     </div>
                   </div>
                 </div>
 
-                <div class="pt-space-xs border-t border-surface-container-high/60 my-space-xs"></div>
+                <div class="border-t border-surface-container-high/60 max-w-3xl"></div>
 
-                <!-- Update Password Section -->
-                <div class="flex flex-col gap-space-xs">
-                  <span class="font-label-md text-label-md text-on-surface font-semibold text-primary flex items-center gap-1">
-                    <span class="material-symbols-outlined text-body-md">lock_reset</span>
-                    Ubah Kata Sandi
-                  </span>
-                  <p class="font-body-sm text-body-sm text-on-surface-variant mb-2">Biarkan kosong jika Anda tidak ingin mengubah kata sandi.</p>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+                <!-- Pengaturan Kata Sandi -->
+                <div class="flex flex-col gap-space-md max-w-3xl">
                   <div class="flex flex-col gap-space-xs">
-                    <label class="font-label-md text-label-md text-on-surface">Kata Sandi Baru</label>
-                    <div class="relative flex items-center">
-                      <span class="material-symbols-outlined absolute left-3 text-outline text-title-md">key</span>
-                      <input id="newPasswordInput" class="w-full bg-surface-container-low text-on-surface font-body-md text-body-md pl-10 pr-space-md py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" placeholder="Minimal 6 karakter" type="password">
-                    </div>
+                    <span class="font-label-md text-label-md text-on-surface font-semibold text-primary flex items-center gap-1">
+                      <span class="material-symbols-outlined text-body-md">lock_reset</span>
+                      Ubah Kata Sandi
+                    </span>
+                    <p class="font-body-sm text-body-sm text-on-surface-variant">Biarkan kosong jika Anda tidak ingin mengubah kata sandi.</p>
                   </div>
-                  <div class="flex flex-col gap-space-xs">
-                    <label class="font-label-md text-label-md text-on-surface">Konfirmasi Sandi Baru</label>
-                    <div class="relative flex items-center">
-                      <span class="material-symbols-outlined absolute left-3 text-outline text-title-md">check</span>
-                      <input id="confirmPasswordInput" class="w-full bg-surface-container-low text-on-surface font-body-md text-body-md pl-10 pr-space-md py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" placeholder="Ulangi kata sandi baru" type="password">
+
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+                    <div class="flex flex-col gap-space-xs">
+                      <label class="font-label-md text-label-md text-on-surface">Kata Sandi Baru</label>
+                      <div class="relative flex items-center">
+                        <span class="material-symbols-outlined absolute left-3 text-outline text-title-md">key</span>
+                        <input id="newPasswordInput" class="w-full bg-surface-container-low text-on-surface font-body-md text-body-md pl-10 pr-space-md py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" placeholder="Minimal 6 karakter" type="password">
+                      </div>
+                    </div>
+                    <div class="flex flex-col gap-space-xs">
+                      <label class="font-label-md text-label-md text-on-surface">Konfirmasi Sandi Baru</label>
+                      <div class="relative flex items-center">
+                        <span class="material-symbols-outlined absolute left-3 text-outline text-title-md">check</span>
+                        <input id="confirmPasswordInput" class="w-full bg-surface-container-low text-on-surface font-body-md text-body-md pl-10 pr-space-md py-2.5 rounded-xl focus:outline-none focus:ring-2 focus:ring-primary shadow-sm" placeholder="Ulangi kata sandi baru" type="password">
+                      </div>
                     </div>
                   </div>
                 </div>
 
                 <!-- Form Action Buttons -->
-                <div class="flex items-center justify-end gap-space-sm pt-space-md border-t border-surface-container-high mt-space-xs">
+                <div class="flex items-center justify-end gap-space-sm pt-space-lg border-t border-surface-container-high mt-space-md">
                   <button type="reset" class="px-space-lg py-2.5 rounded-xl bg-surface-container-low text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container hover:text-on-surface transition-all">
                     Batal
                   </button>
-                  <button id="btnUpdatePassword" class="inline-flex items-center gap-space-xs px-space-xl py-2.5 rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg shadow-[0_4px_14px_rgba(37,99,235,0.28)] hover:bg-primary transition-all" type="button">
+                  <button id="btnSaveChanges" class="inline-flex items-center gap-space-xs px-space-xl py-2.5 rounded-xl bg-primary-container text-on-primary font-label-lg text-label-lg shadow-[0_4px_14px_rgba(37,99,235,0.28)] hover:bg-primary transition-all" type="button">
                     <span class="material-symbols-outlined text-body-lg">save</span>
-                    <span>Simpan Kata Sandi</span>
+                    <span>Simpan Perubahan</span>
                   </button>
                 </div>
               </form>
@@ -314,7 +300,6 @@
   <script>
     let toastTimer;
 
-    // Menampilkan pesan notifikasi tipe Toast
     function showToast(message, isError = false) {
       const toast = document.getElementById('save-toast');
       const icon = document.getElementById('toast-icon');
@@ -322,13 +307,13 @@
 
       text.innerText = message;
       if(isError) {
-        toast.classList.remove('bg-inverse-surface', 'text-inverse-on-surface');
-        toast.classList.add('bg-error-container', 'text-on-error-container');
+        toast.classList.replace('bg-inverse-surface', 'bg-error-container');
+        toast.classList.replace('text-inverse-on-surface', 'text-on-error-container');
         icon.innerText = 'error';
         icon.classList.replace('text-secondary', 'text-error');
       } else {
-        toast.classList.add('bg-inverse-surface', 'text-inverse-on-surface');
-        toast.classList.remove('bg-error-container', 'text-on-error-container');
+        toast.classList.replace('bg-error-container', 'bg-inverse-surface');
+        toast.classList.replace('text-on-error-container', 'text-inverse-on-surface');
         icon.innerText = 'check_circle';
         icon.classList.replace('text-error', 'text-secondary');
       }
@@ -340,10 +325,10 @@
       toastTimer = setTimeout(() => {
         toast.classList.add('translate-y-24', 'opacity-0');
         toast.classList.remove('translate-y-0', 'opacity-100');
-      }, 3500);
+      }, 4000);
     }
 
-    // Inisialisasi Tanggal
+    // Function to keep the date updated (e.g. at midnight)
     function updateDate() {
       var el = document.getElementById('currentDateDisplay');
       if (!el) return;
@@ -351,10 +336,9 @@
           weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Makassar'
       }).format(new Date());
     }
-    updateDate();
+    // Set interval to check every minute, so it changes dynamically without refresh
     setInterval(updateDate, 60 * 1000);
 
-    // Mengecek Koneksi DB untuk UI Indicator
     async function checkConnection() {
       try {
         if (typeof window.supabase === 'undefined') throw new Error();
@@ -371,83 +355,110 @@
       }
     }
 
-    // Auth Guard & Memuat Data Pengguna saat halaman siap
     window.addEventListener('DOMContentLoaded', async () => {
       if (typeof window.supabase === 'undefined') return;
       checkConnection();
 
-      // Cek Sesi
       const { data: { session }, error } = await window.supabase.auth.getSession();
       if (error || !session) {
-        // Lempar ke login jika belum otentikasi
         window.location.replace('index.html'); 
         return;
       }
 
-      // Memuat Email Saat ini ke dalam Input
-      const userEmail = session.user.email;
-      document.getElementById('currentEmail').value = userEmail;
+      document.getElementById('currentEmail').value = session.user.email;
 
-      // Event Listener Logout
       document.getElementById('btnLogout').addEventListener('click', async (e) => {
         e.preventDefault();
         await window.supabase.auth.signOut();
         window.location.replace('index.html');
       });
 
-      // Logika Update Password
-      document.getElementById('btnUpdatePassword').addEventListener('click', async () => {
+      // Logika Gabungan: Simpan Email & Sandi sekaligus
+      document.getElementById('btnSaveChanges').addEventListener('click', async () => {
+        const newEmail = document.getElementById('newEmailInput').value.trim();
         const newPass = document.getElementById('newPasswordInput').value;
         const confirmPass = document.getElementById('confirmPasswordInput').value;
+        
+        let hasChanges = false;
+        let emailSuccess = false;
+        let passSuccess = false;
 
-        if (!newPass) {
-          showToast("Harap isi kata sandi baru Anda terlebih dahulu.", true);
+        // Validasi Email
+        if (newEmail) {
+          if (!newEmail.includes('@')) {
+            showToast("Harap masukkan alamat email yang valid.", true);
+            return;
+          }
+          hasChanges = true;
+        }
+
+        // Validasi Sandi
+        if (newPass || confirmPass) {
+          if (newPass.length < 6) {
+            showToast("Kata sandi harus terdiri dari minimal 6 karakter.", true);
+            return;
+          }
+          if (newPass !== confirmPass) {
+            showToast("Konfirmasi kata sandi tidak cocok!", true);
+            return;
+          }
+          hasChanges = true;
+        }
+
+        // Jika form kosong tapi tombol disimpan diklik
+        if (!hasChanges) {
+          showToast("Tidak ada perubahan baru untuk disimpan.", true);
           return;
         }
 
-        if (newPass.length < 6) {
-          showToast("Kata sandi harus terdiri dari minimal 6 karakter.", true);
-          return;
-        }
+        // State Loading Button
+        const btn = document.getElementById('btnSaveChanges');
+        const originalHtml = btn.innerHTML;
+        btn.innerHTML = `<span class="material-symbols-outlined text-body-lg animate-spin">progress_activity</span><span>Menyimpan...</span>`;
+        btn.disabled = true;
 
-        if (newPass !== confirmPass) {
-          showToast("Konfirmasi kata sandi tidak cocok!", true);
-          return;
-        }
+        try {
+          // 1. Eksekusi Ubah Email Jika Ada
+          if (newEmail) {
+            const { error: errEmail } = await window.supabase.auth.updateUser({ email: newEmail });
+            if (errEmail) throw new Error("Gagal memproses email: " + errEmail.message);
+            emailSuccess = true;
+          }
 
-        // Panggil API Supabase
-        const { error: updateError } = await window.supabase.auth.updateUser({
-          password: newPass
-        });
+          // 2. Eksekusi Ubah Sandi Jika Ada
+          if (newPass) {
+            const { error: errPass } = await window.supabase.auth.updateUser({ password: newPass });
+            if (errPass) throw new Error("Gagal memperbarui sandi: " + errPass.message);
+            passSuccess = true;
+          }
 
-        if (updateError) {
-          showToast("Gagal memperbarui: " + updateError.message, true);
-        } else {
-          showToast("Kata sandi berhasil diperbarui!");
-          document.getElementById('newPasswordInput').value = '';
-          document.getElementById('confirmPasswordInput').value = '';
-        }
-      });
+          // Atur Pesan Sukses
+          let successMsg = "";
+          if (emailSuccess && passSuccess) {
+            successMsg = "Kata sandi diubah & tautan verifikasi email telah dikirim!";
+          } else if (emailSuccess) {
+            successMsg = "Tautan verifikasi telah dikirim ke email baru Anda.";
+          } else if (passSuccess) {
+            successMsg = "Kata sandi berhasil diperbarui!";
+          }
 
-      // Logika Update Email
-      document.getElementById('btnUpdateEmail').addEventListener('click', async () => {
-        const newEmail = document.getElementById('newEmailInput').value;
-        if(!newEmail || !newEmail.includes('@')) {
-          showToast("Harap masukkan alamat email yang valid.", true);
-          return;
-        }
+          showToast(successMsg);
+          
+          // Reset Input field setelah berhasil
+          if (emailSuccess) {
+             document.getElementById('newEmailInput').value = '';
+             document.getElementById('emailChangeSection').classList.add('hidden');
+          }
+          if (passSuccess) {
+             document.getElementById('newPasswordInput').value = '';
+             document.getElementById('confirmPasswordInput').value = '';
+          }
 
-        // Panggil API Supabase
-        const { error: updateEmailError } = await window.supabase.auth.updateUser({
-          email: newEmail
-        });
-
-        if (updateEmailError) {
-          showToast("Gagal memproses email: " + updateEmailError.message, true);
-        } else {
-          showToast("Verifikasi dikirim! Cek email baru Anda untuk konfirmasi.");
-          document.getElementById('newEmailInput').value = '';
-          document.getElementById('emailChangeSection').classList.add('hidden');
+        } catch (err) {
+          showToast(err.message, true);
+        } finally {
+          btn.innerHTML = originalHtml;
+          btn.disabled = false;
         }
       });
     });
