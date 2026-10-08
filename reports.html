@@ -27,6 +27,23 @@
       main > :last-child { margin-bottom: 0 !important; }
     }
     ::-webkit-scrollbar { display: none; }
+
+    /* Definisi class ikon Material Symbols */
+    .material-symbols-outlined {
+      font-family: 'Material Symbols Outlined';
+      font-weight: normal;
+      font-style: normal;
+      font-size: 24px;
+      line-height: 1;
+      letter-spacing: normal;
+      text-transform: none;
+      display: inline-block;
+      white-space: nowrap;
+      word-wrap: normal;
+      direction: ltr;
+      font-variation-settings: 'FILL' 1, 'wght' 500, 'GRAD' 0, 'opsz' 24;
+      -webkit-font-smoothing: antialiased;
+    }
     
     input[type="date"]::-webkit-calendar-picker-indicator {
         background: transparent;
@@ -133,13 +150,13 @@
         <span class="material-symbols-outlined text-outline text-body-md" id="supabaseStatusIcon">sync</span>
       </div>
       <!-- Tombol Keluar Sistem -->
-<a href="#" id="btnLogout" class="bg-error-container/50 hover:bg-error-container transition-colors rounded-xl p-space-sm flex items-center gap-space-xs text-error hover:text-on-error-container cursor-pointer mt-1">
-  <span class="material-symbols-outlined text-body-md">logout</span>
-  <div class="flex flex-col">
-    <span class="font-label-sm text-label-sm font-semibold">Keluar Sistem</span>
-    <span class="font-body-sm text-body-sm opacity-80">Akhiri sesi aktif</span>
-  </div>
-</a>
+      <a href="#" id="btnLogout" class="bg-error-container/50 hover:bg-error-container transition-colors rounded-xl p-space-sm flex items-center gap-space-xs text-error hover:text-on-error-container cursor-pointer mt-1">
+        <span class="material-symbols-outlined text-body-md">logout</span>
+        <div class="flex flex-col">
+          <span class="font-label-sm text-label-sm font-semibold">Keluar Sistem</span>
+          <span class="font-body-sm text-body-sm opacity-80">Akhiri sesi aktif</span>
+        </div>
+      </a>
     </div>
   </aside>
 
@@ -209,10 +226,10 @@
             <!-- Metric 1: Hadir Tepat Waktu -->
             <div class="bg-surface-container-lowest p-space-md rounded-2xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
               <div class="absolute -right-3 -top-3 w-16 h-16 rounded-full bg-emerald-100 pointer-events-none transition-transform group-hover:scale-125"></div>
-              <div class="flex items-center justify-between">
+              <div class="flex items-center justify-between relative">
                 <span class="font-label-md text-label-md text-on-surface-variant">Hadir Tepat Waktu</span>
-                <span class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center">
-                  <span class="material-symbols-outlined text-body-lg">check_circle</span>
+                <span class="w-10 h-10 rounded-xl bg-emerald-500 text-white flex items-center justify-center shadow-md">
+                  <span class="material-symbols-outlined">how_to_reg</span>
                 </span>
               </div>
               <div class="mt-space-md flex items-baseline gap-space-xs">
@@ -224,10 +241,10 @@
             <!-- Metric 2: Terlambat -->
             <div class="bg-surface-container-lowest p-space-md rounded-2xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
               <div class="absolute -right-3 -top-3 w-16 h-16 rounded-full bg-amber-100 pointer-events-none transition-transform group-hover:scale-125"></div>
-              <div class="flex items-center justify-between">
+              <div class="flex items-center justify-between relative">
                 <span class="font-label-md text-label-md text-on-surface-variant">Total Terlambat</span>
-                <span class="w-8 h-8 rounded-xl bg-amber-100 text-amber-600 flex items-center justify-center">
-                  <span class="material-symbols-outlined text-body-lg">alarm_on</span>
+                <span class="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center shadow-md">
+                  <span class="material-symbols-outlined">schedule</span>
                 </span>
               </div>
               <div class="mt-space-md flex items-baseline gap-space-xs">
@@ -239,7 +256,7 @@
             <!-- Metric 3: Total Terdaftar -->
             <div class="bg-surface-container-lowest p-space-md rounded-2xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
               <div class="absolute -right-3 -top-3 w-16 h-16 rounded-full bg-surface-container-high/60 pointer-events-none transition-transform group-hover:scale-125"></div>
-              <div class="flex items-center justify-between">
+              <div class="flex items-center justify-between relative">
                 <span class="font-label-md text-label-md text-on-surface-variant">Total Terdaftar</span>
                 <span class="w-8 h-8 rounded-xl bg-surface-container-high text-on-surface-variant flex items-center justify-center">
                   <span class="material-symbols-outlined text-body-lg">group</span>
@@ -254,7 +271,7 @@
             <!-- Metric 4: Sudah Tap Pulang -->
             <div class="bg-surface-container-lowest p-space-md rounded-2xl shadow-sm flex flex-col justify-between relative overflow-hidden group hover:shadow-md transition-shadow">
               <div class="absolute -right-3 -top-3 w-16 h-16 rounded-full bg-surface-variant/40 pointer-events-none transition-transform group-hover:scale-125"></div>
-              <div class="flex items-center justify-between">
+              <div class="flex items-center justify-between relative">
                 <span class="font-label-md text-label-md text-on-surface-variant">Sudah Tap Pulang</span>
                 <span class="w-8 h-8 rounded-xl bg-surface-variant text-primary flex items-center justify-center">
                   <span class="material-symbols-outlined text-body-lg">exit_to_app</span>
@@ -381,7 +398,7 @@
              String(d.getSeconds()).padStart(2, '0');
     }
 
-    // Fungsi Baru: Cek Status Kehadiran Sesuai Aturan Jam
+    // Cek Status Kehadiran Sesuai Aturan Jam
     function getAttendanceStatus(isoString) {
       if (!isoString) return null;
       const d = new Date(isoString);
