@@ -478,7 +478,8 @@
     document.getElementById('closeModalBtn').addEventListener('click', hideModal);
     document.getElementById('cancelModalBtn').addEventListener('click', hideModal);
 
-function printQR(nama, nis, qrId, kelas) {
+
+    function printQR(nama, nis, qrId, kelas) {
     if (!qrId) {
         showToast('Kode QR siswa tidak tersedia.', 'error', 'Gagal');
         return;
@@ -573,63 +574,7 @@ function printQR(nama, nis, qrId, kelas) {
     }, 100);
 }
 
-    if (!qrId) {
-        showToast('Kode QR siswa tidak tersedia.', 'error', 'Gagal');
-        return;
-    }
 
-    // Buat QR sementara di luar layar
-    const tempDiv = document.createElement('div');
-
-    new QRCode(tempDiv, {
-        text: qrId,
-        width: 500,
-        height: 500,
-        correctLevel: QRCode.CorrectLevel.H
-    });
-
-    // Tunggu QR selesai dibuat
-    setTimeout(() => {
-        const canvas = tempDiv.querySelector('canvas');
-        const img = tempDiv.querySelector('img');
-
-        let dataUrl = '';
-
-        if (canvas) {
-            dataUrl = canvas.toDataURL('image/png');
-        } else if (img) {
-            dataUrl = img.src;
-        }
-
-        if (!dataUrl) {
-            showToast('QR gagal dibuat.', 'error', 'Gagal');
-            return;
-        }
-
-        // Buat link download
-        const link = document.createElement('a');
-
-        // Nama file yang aman
-        const safeName = String(nama || 'siswa')
-            .replace(/[^a-zA-Z0-9\s-_]/g, '')
-            .replace(/\s+/g, '_');
-
-        link.download = `QR_${safeName}_${nis}.png`;
-        link.href = dataUrl;
-
-        // Jalankan download otomatis
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-
-        showToast(
-            `QR ${nama} berhasil diunduh.`,
-            'success',
-            'QR Berhasil Diunduh'
-        );
-
-    }, 100);
-}
     // --- MUAT DATA ---
     const avatarColors = ['bg-primary-fixed text-on-primary-fixed', 'bg-secondary-fixed text-on-secondary-fixed', 'bg-tertiary-fixed text-on-tertiary-fixed', 'bg-surface-container-highest text-primary'];
     let studentsById = new Map();
