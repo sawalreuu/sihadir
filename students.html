@@ -192,10 +192,10 @@
                         <form class="flex flex-col gap-space-md mt-space-xs" id="add-student-form">
                             <input type="hidden" id="editStudentId" value=""/>
                             <div class="flex flex-col gap-1.5">
-                                <label class="font-label-md text-label-md text-on-surface-variant">Nomor Induk Siswa (NIS)</label>
+                                <label class="font-label-md text-label-md text-on-surface-variant">Nomor Induk Siswa Nasional (NISN)</label>
                                 <div class="flex items-center gap-space-xs bg-surface-container-low px-space-md py-2.5 rounded-xl">
                                     <span class="material-symbols-outlined text-body-md text-outline">badge</span>
-                                    <input class="bg-transparent w-full text-on-surface font-body-md text-body-md focus:outline-none" id="inputNis" placeholder="Contoh: 2024007" required type="text"/>
+                                    <input class="bg-transparent w-full text-on-surface font-body-md text-body-md focus:outline-none" id="inputNis" placeholder="Contoh: 0012345678" required type="text"/>
                                 </div>
                             </div>
                             <div class="flex flex-col gap-1.5">
@@ -255,7 +255,7 @@
                     <div class="bg-surface-container-lowest p-space-md rounded-2xl shadow-sm flex flex-col md:flex-row items-stretch md:items-center justify-between gap-space-md mt-2">
                         <div class="flex-1 flex items-center gap-space-sm bg-surface-container-low px-space-md py-2.5 rounded-xl text-on-surface-variant focus-within:ring-2 focus-within:ring-primary/20 focus-within:bg-surface-container-lowest transition-all">
                             <span class="material-symbols-outlined text-title-md text-outline">search</span>
-                            <input class="bg-transparent w-full text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none" id="searchStudent" oninput="handleSearch(this.value)" placeholder="Cari berdasarkan NIS atau Nama..." type="text"/>
+                            <input class="bg-transparent w-full text-on-surface font-body-md text-body-md placeholder:text-outline focus:outline-none" id="searchStudent" oninput="handleSearch(this.value)" placeholder="Cari berdasarkan NISN atau Nama..." type="text"/>
                             <button class="hidden text-outline hover:text-on-surface" id="clearSearchBtn" onclick="clearSearch()">
                                 <span class="material-symbols-outlined text-title-md">cancel</span>
                             </button>
@@ -316,7 +316,7 @@
                             <table class="w-full text-left border-collapse">
                                 <thead>
                                     <tr class="bg-surface-container-low text-on-surface-variant font-label-md text-label-md uppercase tracking-wider h-12">
-                                        <th class="py-space-sm px-space-lg font-semibold w-36" scope="col">NIS</th>
+                                        <th class="py-space-sm px-space-lg font-semibold w-36" scope="col">NISN</th>
                                         <th class="py-space-sm px-space-lg font-semibold" scope="col">Nama Lengkap</th>
                                         <th class="py-space-sm px-space-lg font-semibold w-44" scope="col">Kelas</th>
                                         <th class="py-space-sm px-space-lg font-semibold text-right w-36" scope="col">Aksi</th>
@@ -334,7 +334,7 @@
                                 <span class="material-symbols-outlined text-headline-xl">person_search</span>
                             </div>
                             <p class="font-title-lg text-title-lg text-on-surface">Data siswa tidak ditemukan</p>
-                            <p class="font-body-sm text-body-sm text-on-surface-variant max-w-sm mt-1">Coba periksa ejaan NIS atau kata kunci nama siswa yang Anda masukkan.</p>
+                            <p class="font-body-sm text-body-sm text-on-surface-variant max-w-sm mt-1">Coba periksa ejaan NISN atau kata kunci nama siswa yang Anda masukkan.</p>
                         </div>
                     </div>
 
@@ -506,7 +506,7 @@
                     <div class="card">
                         <h2>KARTU PELAJAR</h2>
                         <p><strong>${esc(nama)}</strong></p>
-                        <p>NIS: ${esc(nis)} &nbsp;|&nbsp; ${esc(kelas)}</p>
+                        <p>NISN: ${esc(nis)} &nbsp;|&nbsp; ${esc(kelas)}</p>
                         <img class="qr-img" src="${dataUrl}" />
                         <div class="footer">Scan QR ini pada mesin SIHADIR</div>
                     </div>
@@ -601,7 +601,7 @@
                 const qrCodeId = 'qr-' + Math.random().toString(36).substr(2, 9);
                 res = await window.supabase.from('students').insert([{ nis: nis, nama: name.toUpperCase(), kelas: kelas, qr_rfid_id: qrCodeId }]);
             }
-            if (res.error) showToast('Gagal menyimpan! NIS mungkin duplikat.', 'error', 'Error');
+            if (res.error) showToast('Gagal menyimpan! NISN mungkin duplikat.', 'error', 'Error');
             else {
                 hideModal(); document.getElementById('add-student-form').reset(); document.getElementById('editStudentId').value = '';
                 showToast(`Data siswa berhasil disimpan.`, 'success', 'Tersimpan');
@@ -615,7 +615,7 @@
         try {
             const { error } = await window.supabase.from('students').delete().eq('id', id);
             if (error) showToast('Gagal menghapus data.', 'error', 'Error');
-            else { showToast(`Data ${nama} berhasil dihapus.`, 'success', 'Terhapus'); loadData(); } // fixed error -> success for deletion toast
+            else { showToast(`Data ${nama} berhasil dihapus.`, 'success', 'Terhapus'); loadData(); }
         } catch(err) { showToast('Koneksi database bermasalah.', 'error', 'Gagal'); }
     }
 
@@ -645,14 +645,14 @@
         
         // Data template kosong dengan header yang benar
         const ws_data = [
-            ["NIS", "Nama Lengkap", "Kelas"]
+            ["NISN", "Nama Lengkap", "Kelas"]
         ];
         
         const ws = XLSX.utils.aoa_to_sheet(ws_data);
         
         // Mengatur lebar kolom agar rapi saat dibuka
         ws['!cols'] = [
-            { wch: 15 }, // NIS
+            { wch: 15 }, // NISN
             { wch: 35 }, // Nama Lengkap
             { wch: 12 }  // Kelas
         ];
@@ -689,8 +689,8 @@
 
                 // Memetakan data dari Excel ke skema Supabase
                 const dataToInsert = json.map(row => {
-                    // Penyesuaian nama kolom (huruf besar/kecil)
-                    const nis = String(row['NIS'] || row['nis'] || '').trim();
+                    // Penyesuaian nama kolom (huruf besar/kecil) — prioritaskan NISN, tetap terima NIS lama
+                    const nis = String(row['NISN'] || row['nisn'] || row['NIS'] || row['nis'] || '').trim();
                     const nama = String(row['Nama Lengkap'] || row['nama'] || row['NAMA'] || '').trim().toUpperCase();
                     const kelas = String(row['Kelas'] || row['kelas'] || row['KELAS'] || '').trim();
 
@@ -715,7 +715,7 @@
                 
                 if (error) {
                     console.error("Kesalahan Import:", error);
-                    showToast("Gagal menyimpan. Pastikan tidak ada NIS duplikat.", "error", "Gagal Impor");
+                    showToast("Gagal menyimpan. Pastikan tidak ada NISN duplikat.", "error", "Gagal Impor");
                 } else {
                     showToast(`Berhasil mengimpor ${dataToInsert.length} data siswa.`, "success", "Impor Sukses");
                     loadData(); // Memuat ulang tabel
