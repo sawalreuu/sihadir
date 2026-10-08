@@ -478,46 +478,64 @@
     document.getElementById('closeModalBtn').addEventListener('click', hideModal);
     document.getElementById('cancelModalBtn').addEventListener('click', hideModal);
 
-    function printQR(nama, nis, qrId, kelas) {
-        const tempDiv = document.createElement('div');
-        new QRCode(tempDiv, { text: qrId, width: 150, height: 150 });
-        
-        setTimeout(() => {
-            const img = tempDiv.querySelector('img');
-            const canvas = tempDiv.querySelector('canvas');
-            const dataUrl = (img && img.src) || canvas.toDataURL();
-            const w = window.open('', '_blank');
-            
-            w.document.write(`
-                <html>
-                <head>
-                    <title>Cetak QR - ${esc(nama)}</title>
-                    <style>
-                        body { font-family: sans-serif; display: flex; justify-content: center; align-items: center; padding: 20px; margin: 0; }
-                        .card { width: 300px; padding: 20px; border: 2px solid #000; border-radius: 12px; text-align: center; }
-                        .card h2 { margin: 0 0 10px; font-size: 20px; border-bottom: 2px solid #000; padding-bottom: 10px; }
-                        .card p { margin: 5px 0; font-size: 16px; }
-                        .qr-img { margin: 20px auto; width: 150px; height: 150px; }
-                        .footer { font-size: 12px; margin-top: 20px; }
-                        @media print { @page { size: auto; margin: 0mm; } body { padding: 2cm; } }
-                    </style>
-                </head>
-                <body>
-                    <div class="card">
-                        <h2>KARTU PELAJAR</h2>
-                        <p><strong>${esc(nama)}</strong></p>
-                        <p>NIS: ${esc(nis)} &nbsp;|&nbsp; ${esc(kelas)}</p>
-                        <img class="qr-img" src="${dataUrl}" />
-                        <div class="footer">Scan QR ini pada mesin SIHADIR</div>
-                    </div>
-                </body>
-                </html>
-            `);
-            w.document.close();
-            setTimeout(() => { w.focus(); w.print(); }, 500);
-        }, 100);
+function printQR(nama, nis, qrId, kelas) {
+    if (!qrId) {
+        showToast('Kode QR siswa tidak tersedia.', 'error', 'Gagal');
+        return;
     }
 
+    // Buat QR sementara di luar layar
+    const tempDiv = document.createElement('div');
+
+    new QRCode(tempDiv, {
+        text: qrId,
+        width: 500,
+        height: 500,
+        correctLevel: QRCode.CorrectLevel.H
+    });
+
+    // Tunggu QR selesai dibuat
+    setTimeout(() => {
+        const canvas = tempDiv.querySelector('canvas');
+        const img = tempDiv.querySelector('img');
+
+        let dataUrl = '';
+
+        if (canvas) {
+            dataUrl = canvas.toDataURL('image/png');
+        } else if (img) {
+            dataUrl = img.src;
+        }
+
+        if (!dataUrl) {
+            showToast('QR gagal dibuat.', 'error', 'Gagal');
+            return;
+        }
+
+        // Buat link download
+        const link = document.createElement('a');
+
+        // Nama file yang aman
+        const safeName = String(nama || 'siswa')
+            .replace(/[^a-zA-Z0-9\s-_]/g, '')
+            .replace(/\s+/g, '_');
+
+        link.download = `QR_${safeName}_${nis}.png`;
+        link.href = dataUrl;
+
+        // Jalankan download otomatis
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+
+        showToast(
+            `QR ${nama} berhasil diunduh.`,
+            'success',
+            'QR Berhasil Diunduh'
+        );
+
+    }, 100);
+}
     // --- MUAT DATA ---
     const avatarColors = ['bg-primary-fixed text-on-primary-fixed', 'bg-secondary-fixed text-on-secondary-fixed', 'bg-tertiary-fixed text-on-tertiary-fixed', 'bg-surface-container-highest text-primary'];
     let studentsById = new Map();
