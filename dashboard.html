@@ -81,7 +81,7 @@
   <aside class="fixed left-0 top-0 h-full w-64 bg-surface-container-lowest z-50 flex flex-col justify-between p-space-lg shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
     <div class="flex flex-col gap-space-lg">
       <div class="flex items-center gap-space-sm">
-        <img alt="SIHADIR Logo" class="h-8 w-auto object-contain" src="assets/logo sekolah.png" />
+        <img alt="SIHADIR Logo" class="h-8 w-auto object-contain" src="assets/logo sekolah.png" onerror="this.src='https://via.placeholder.com/32'" />
         <div>
           <span class="font-title-lg text-title-lg text-primary tracking-tight block">SIHADIR</span>
           <span class="font-body-sm text-body-sm text-on-surface-variant block">Sistem Presensi Siswa</span>
@@ -101,8 +101,8 @@
           <span class="material-symbols-outlined text-title-lg">qr_code_scanner</span>Buka Scanner
         </a>
         <a class="flex items-center gap-space-sm px-space-md py-space-sm rounded-xl text-on-surface-variant font-label-lg text-label-lg hover:bg-surface-container-high hover:text-on-surface transition-all" href="settings.html">
-                    <span class="material-symbols-outlined text-title-lg">settings</span> Pengaturan
-                </a>
+          <span class="material-symbols-outlined text-title-lg">settings</span> Pengaturan
+        </a>
       </nav>
     </div>
     <div class="flex flex-col gap-space-md pt-space-md">
@@ -117,13 +117,6 @@
         </div>
         <span class="material-symbols-outlined text-outline text-body-md" id="supabaseStatusIcon">sync</span>
       </div>
-      <a href="settings.html" class="bg-surface-container-lowest hover:bg-surface-container-high transition-colors rounded-xl p-space-sm flex items-center gap-space-xs text-on-surface-variant">
-        <span class="material-symbols-outlined text-body-md text-primary">settings</span>
-        <div class="flex flex-col">
-          <span class="font-label-sm text-label-sm text-on-surface font-semibold">Pengaturan</span>
-          <span class="font-body-sm text-body-sm text-outline">Konfigurasi sistem</span>
-        </div>
-      </a>
     </div>
   </aside>
 
@@ -148,9 +141,9 @@
         <div class="flex items-center gap-space-sm pl-space-sm">
           <div class="text-right hidden md:block">
             <span class="font-title-md text-title-md text-on-surface block leading-tight">Admin Sekolah</span>
-            <span class="font-body-sm text-body-sm text-on-surface-variant block">Petugas Piket</span>
           </div>
-          <img alt="Profile" class="w-8 h-8 rounded-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAe3xWH7adnvgfkpb8Q1JnvJEczn3F2XVBqd9UcpwviPoyJwls-Mqa8JcEJY1JrN6OdKySG5K9YnI0jtUOfsnFYphc6ipvu7en74pqprhkeEqjqAS88ZY_c4sx-LF4TCGBXnpbAWdz5eOJi3NH8p3wTX0RjuyK2PyeTfgCiiN-SvZ5duPTwSTw01IPasVFR-pi-q0KjQRSi6xRqx0Coy78SAa7Z0kDRXghoKwDjbxcqCzV3GCmoQiVL" />
+          <!-- Avatar Inisial Default -->
+          <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold">A</div>
         </div>
       </div>
     </header>
@@ -190,7 +183,7 @@
             <!-- Total Siswa -->
             <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
               <div class="flex items-center justify-between">
-                <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Total Siswa Terdaftar</span>
+                <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Total Terdaftar</span>
                 <div class="w-10 h-10 rounded-xl bg-surface-container-high flex items-center justify-center text-primary">
                   <span class="material-symbols-outlined">group</span>
                 </div>
@@ -233,18 +226,18 @@
             <!-- Izin / Sakit / Terlambat -->
             <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
               <div class="flex items-center justify-between">
-                <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Terlambat Masuk</span>
-                <div class="w-10 h-10 rounded-xl bg-tertiary-fixed flex items-center justify-center text-tertiary">
+                <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Total Terlambat</span>
+                <div class="w-10 h-10 rounded-xl bg-amber-100 flex items-center justify-center text-amber-600">
                   <span class="material-symbols-outlined">alarm_on</span>
                 </div>
               </div>
               <div class="mt-space-md">
                 <div class="flex items-baseline gap-space-xs">
-                  <span class="font-headline-xl text-headline-xl text-tertiary" id="statTerlambat">0</span>
+                  <span class="font-headline-xl text-headline-xl text-amber-600" id="statTerlambat">0</span>
                   <span class="font-label-lg text-label-lg text-on-surface-variant">Siswa</span>
                 </div>
                 <div class="flex items-center gap-space-sm mt-space-xs font-body-sm text-body-sm text-on-surface-variant">
-                  <span class="px-2 py-0.5 rounded bg-tertiary-fixed text-on-tertiary-fixed-variant font-semibold">Tiba > 07:15 WIB</span>
+                  <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-semibold">Tiba > 07:30</span>
                 </div>
               </div>
             </div>
@@ -253,16 +246,16 @@
             <div class="bg-surface-container-lowest rounded-2xl p-space-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
               <div class="flex items-center justify-between">
                 <span class="font-label-md text-label-md text-on-surface-variant uppercase tracking-wider">Belum Hadir</span>
-                <div class="w-10 h-10 rounded-xl bg-error-container flex items-center justify-center text-error">
+                <div class="w-10 h-10 rounded-xl bg-surface-container-high/60 flex items-center justify-center text-on-surface-variant">
                   <span class="material-symbols-outlined">pending_actions</span>
                 </div>
               </div>
               <div class="mt-space-md">
                 <div class="flex items-baseline gap-space-xs">
-                  <span class="font-headline-xl text-headline-xl text-error" id="statBelumHadir">0</span>
+                  <span class="font-headline-xl text-headline-xl text-on-surface-variant" id="statBelumHadir">0</span>
                   <span class="font-label-lg text-label-lg text-on-surface-variant">Siswa</span>
                 </div>
-                <div class="flex items-center gap-space-xs mt-space-xs font-body-sm text-body-sm text-error">
+                <div class="flex items-center gap-space-xs mt-space-xs font-body-sm text-body-sm text-outline">
                   <span class="material-symbols-outlined text-body-sm">schedule</span>
                   <span>Menunggu scan gerbang</span>
                 </div>
@@ -356,14 +349,13 @@
       return String(d.getHours()).padStart(2, '0') + ':' + String(d.getMinutes()).padStart(2, '0') + ':' + String(d.getSeconds()).padStart(2, '0');
     }
 
-    // Cek Keterlambatan (> 07:15)
+    // Fungsi Baru: Menyamakan aturan terlambat dengan reports.html (> 07:30)
     function isLate(isoString) {
       if (!isoString) return false;
       const d = new Date(isoString);
-      if (d.getHours() > 7 || (d.getHours() === 7 && d.getMinutes() > 15)) {
-        return true;
-      }
-      return false;
+      const totalMinutes = (d.getHours() * 60) + d.getMinutes();
+      // 07:30 = 450 menit. Jika lebih dari itu, terlambat.
+      return totalMinutes > 450;
     }
 
     async function loadDashboardData() {
@@ -439,9 +431,11 @@
                     if (att.status === 'PULANG') {
                         badgeHTML = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-label-sm bg-surface-container-high text-on-surface-variant font-semibold"><span class="w-2 h-2 rounded-full bg-outline"></span>Tap Pulang</span>`;
                     } else if (late) {
-                        badgeHTML = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-label-sm bg-error-container text-error font-semibold"><span class="w-2 h-2 rounded-full bg-error"></span>Terlambat Masuk</span>`;
+                        // Jika terlambat > 07:30
+                        badgeHTML = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-label-sm bg-amber-100 text-amber-700 font-semibold"><span class="w-2 h-2 rounded-full bg-amber-500"></span>Terlambat Masuk</span>`;
                     } else {
-                        badgeHTML = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-label-sm bg-surface-container-high text-primary font-semibold"><span class="w-2 h-2 rounded-full bg-primary"></span>Hadir Tepat Waktu</span>`;
+                        // Hadir Tepat Waktu (<= 07:30)
+                        badgeHTML = `<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-label-sm font-label-sm bg-emerald-100 text-emerald-700 font-semibold"><span class="w-2 h-2 rounded-full bg-emerald-500"></span>Hadir Tepat Waktu</span>`;
                     }
 
                     tbody.innerHTML += `
