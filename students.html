@@ -484,6 +484,100 @@ function printQR(nama, nis, qrId, kelas) {
         return;
     }
 
+    // Buat QR sementara
+    const tempDiv = document.createElement('div');
+
+    new QRCode(tempDiv, {
+        text: qrId,
+        width: 500,
+        height: 500,
+        correctLevel: QRCode.CorrectLevel.H
+    });
+
+    setTimeout(() => {
+        const qrCanvas = tempDiv.querySelector('canvas');
+        const qrImg = tempDiv.querySelector('img');
+
+        let qrDataUrl = '';
+
+        if (qrCanvas) {
+            qrDataUrl = qrCanvas.toDataURL('image/png');
+        } else if (qrImg) {
+            qrDataUrl = qrImg.src;
+        }
+
+        if (!qrDataUrl) {
+            showToast('QR gagal dibuat.', 'error', 'Gagal');
+            return;
+        }
+
+        // ==============================
+        // CANVAS HASIL AKHIR
+        // ==============================
+        const padding = 40;
+        const qrSize = 500;
+        const finalSize = qrSize + (padding * 2);
+
+        const finalCanvas = document.createElement('canvas');
+        finalCanvas.width = finalSize;
+        finalCanvas.height = finalSize;
+
+        const ctx = finalCanvas.getContext('2d');
+
+        // Background putih
+        ctx.fillStyle = '#ffffff';
+        ctx.fillRect(0, 0, finalSize, finalSize);
+
+        // Gambar QR di tengah dengan margin putih
+        const qrImage = new Image();
+
+        qrImage.onload = () => {
+            ctx.drawImage(
+                qrImage,
+                padding,
+                padding,
+                qrSize,
+                qrSize
+            );
+
+            // Hasil akhir menjadi PNG
+            const finalDataUrl = finalCanvas.toDataURL('image/png');
+
+            // Nama file
+            const safeName = String(nama || 'siswa')
+                .replace(/[^a-zA-Z0-9\s-_]/g, '')
+                .replace(/\s+/g, '_');
+
+            const safeNis = String(nis || '')
+                .replace(/[^a-zA-Z0-9-_]/g, '');
+
+            // Download
+            const link = document.createElement('a');
+
+            link.download = `QR_${safeName}_${safeNis}.png`;
+            link.href = finalDataUrl;
+
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            showToast(
+                `QR ${nama} berhasil diunduh.`,
+                'success',
+                'QR Berhasil Diunduh'
+            );
+        };
+
+        qrImage.src = qrDataUrl;
+
+    }, 100);
+}
+
+    if (!qrId) {
+        showToast('Kode QR siswa tidak tersedia.', 'error', 'Gagal');
+        return;
+    }
+
     // Buat QR sementara di luar layar
     const tempDiv = document.createElement('div');
 
