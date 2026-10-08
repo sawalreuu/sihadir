@@ -105,26 +105,17 @@
         </a>
       </nav>
     </div>
-    <div class="flex flex-col gap-space-md pt-space-md">
+    
       <div class="bg-surface-container-low rounded-xl p-space-sm flex items-center justify-between">
         <div class="flex items-center gap-space-xs">
           <span class="relative flex h-2 w-2" id="supabaseStatusPing">
-            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span>
-            <span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-outline opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2 w-2 bg-outline"></span>
           </span>
           <span class="font-label-sm text-label-sm text-on-surface" id="supabaseStatusText">Mengecek Koneksi...</span>
         </div>
-        <span class="material-symbols-outlined text-secondary text-body-md" id="supabaseStatusIcon">cloud_done</span>
+        <span class="material-symbols-outlined text-outline text-body-md" id="supabaseStatusIcon">sync</span>
       </div>
-      
-      <a href="#" id="btnLogout" class="bg-error-container/50 hover:bg-error-container transition-colors rounded-xl p-space-sm flex items-center gap-space-xs text-error hover:text-on-error-container cursor-pointer mt-1">
-        <span class="material-symbols-outlined text-body-md">logout</span>
-        <div class="flex flex-col">
-          <span class="font-label-sm text-label-sm font-semibold">Keluar Sistem</span>
-          <span class="font-body-sm text-body-sm opacity-80">Akhiri sesi aktif</span>
-        </div>
-      </a>
-    </div>
   </aside>
 
   <!-- Main Content Area -->
