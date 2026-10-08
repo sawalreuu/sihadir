@@ -1,6 +1,6 @@
 // --- KONFIGURASI SUPABASE ---
 const SUPABASE_URL = 'https://iaosgzutbgemmtqdisui.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imlhb3NnenV0YmdlbW10cWRpc3VpIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTA5MzcwNTcsImV4cCI6MjEwNjUxMzA1N30.kD-coPBUMvSOEh89dvW5vpOwyPzdCh3qwqfRarSGPn8';
+const SUPABASE_ANON_KEY = 'sb_publishable_5V_WJSAroz4Fddr5SQkZgw_FhXzL-2Y';
 
 // Inisialisasi Klien Supabase
 if (window.supabase && typeof window.supabase.createClient === 'function') {
