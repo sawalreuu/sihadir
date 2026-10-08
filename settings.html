@@ -356,11 +356,20 @@
 
       document.getElementById('currentEmail').value = session.user.email;
 
-      document.getElementById('btnLogout').addEventListener('click', async (e) => {
-        e.preventDefault();
-        await window.supabase.auth.signOut();
-        window.location.replace('index.html');
-      });
+// Cek dulu apakah tombol btnLogout ada di halaman ini
+const btnLogout = document.getElementById('btnLogout');
+
+if (btnLogout) {
+  btnLogout.addEventListener('click', async (e) => {
+    e.preventDefault(); // Mencegah pindah halaman sebelum proses logout selesai
+    
+    // Proses logout Supabase
+    await window.supabase.auth.signOut();
+    
+    // Lempar kembali ke halaman index (login)
+    window.location.replace('index.html');
+  });
+}
 
       // Logika Gabungan: Simpan Email & Sandi sekaligus
       document.getElementById('btnSaveChanges').addEventListener('click', async () => {
