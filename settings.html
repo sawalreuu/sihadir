@@ -9,7 +9,6 @@
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet" />
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
   
   <!-- Supabase CDN -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4"></script>
@@ -106,7 +105,6 @@
       </nav>
     </div>
     <div class="flex flex-col gap-space-md pt-space-md">
-
       <div class="bg-surface-container-low rounded-xl p-space-sm flex items-center justify-between">
         <div class="flex items-center gap-space-xs">
           <span class="relative flex h-2 w-2" id="supabaseStatusPing">
@@ -141,19 +139,16 @@
         <div class="hidden sm:flex items-center gap-space-xs bg-surface-container-low px-space-md py-space-xs rounded-full text-on-surface-variant font-label-md text-label-md">
           <span class="material-symbols-outlined text-body-md text-primary">calendar_today</span>
           <span id="currentDateDisplay"></span>
-          <!-- Inline script to display date immediately -->
           <script>
             document.getElementById('currentDateDisplay').textContent = new Intl.DateTimeFormat('id-ID', {
                 weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Makassar'
             }).format(new Date());
           </script>
         </div>
-
         <div class="flex items-center gap-space-sm pl-space-sm">
           <div class="text-right hidden md:block">
             <span class="font-title-md text-title-md text-on-surface block leading-tight">Admin Sekolah</span>
           </div>
-          <!-- Avatar Inisial Default -->
           <div class="w-8 h-8 rounded-full bg-primary text-white flex items-center justify-center font-bold">A</div>
         </div>
       </div>
@@ -163,12 +158,22 @@
       <div class="flex flex-col w-full">
         <div class="p-gutter flex flex-col gap-space-md max-w-7xl mx-auto w-full">
         
+          <section class="flex flex-col gap-space-xs mb-space-sm">
+            <div class="flex items-center gap-space-xs font-label-md text-label-md text-outline">
+              <a href="dashboard.html" class="hover:text-primary transition-colors cursor-pointer">Beranda</a>
+              <span class="material-symbols-outlined text-body-sm text-outline-variant">chevron_right</span>
+              <span class="text-primary font-semibold">Pengaturan Akun</span>
+            </div>
+            <h1 class="font-headline-lg text-headline-lg text-on-surface tracking-tight">Pengaturan Akun</h1>
+            <p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">
+              Kelola informasi login, alamat email terdaftar, dan kata sandi akun SIHADIR Anda.
+            </p>
+          </section>
 
           <!-- Kartu Pengaturan Full Width -->
           <div class="w-full">
             <div class="bg-surface-container-lowest p-space-xl rounded-2xl shadow-sm flex flex-col gap-space-lg border border-surface-container-high/40">
               
-              <!-- Profile Identity Header -->
               <div class="flex items-center gap-space-md pb-space-md border-b border-surface-container-high">
                 <div class="w-12 h-12 rounded-2xl bg-primary-container text-on-primary flex items-center justify-center font-bold text-headline-md shadow-sm">
                   A
@@ -184,7 +189,7 @@
               </div>
 
               <!-- Form Fields -->
-              <form class="flex flex-col gap-space-lg" onsubmit="event.preventDefault();">
+              <form class="flex flex-col gap-space-lg" id="settingsForm" onsubmit="event.preventDefault();">
                 
                 <!-- Pengaturan Email -->
                 <div class="flex flex-col gap-space-sm max-w-3xl">
@@ -209,7 +214,6 @@
                     <span class="font-body-sm text-body-sm text-outline">Email ini digunakan untuk masuk ke sistem dan memulihkan kata sandi.</span>
                   </div>
 
-                  <!-- Sub-form Ubah Email Baru -->
                   <div id="emailChangeSection" class="hidden bg-surface-container-low/70 border border-surface-container-high/60 rounded-xl p-space-md flex flex-col gap-space-sm transition-all mt-2">
                     <div class="flex items-center justify-between pb-space-xs border-b border-surface-container-high/40">
                       <div class="flex items-center gap-space-xs text-primary">
@@ -224,7 +228,7 @@
                         <span class="material-symbols-outlined absolute left-3 text-outline text-title-md">alternate_email</span>
                         <input id="newEmailInput" class="w-full bg-surface-container-lowest text-on-surface font-body-md text-body-md pl-10 pr-space-md py-2.5 rounded-xl border border-surface-container-high focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary shadow-sm" placeholder="Masukkan email baru Anda" type="email">
                       </div>
-                      <span class="font-body-sm text-body-sm text-outline mt-1">Isi hanya jika Anda ingin mengganti email.</span>
+                      <span class="font-body-sm text-body-sm text-outline mt-1">Isi hanya jika Anda ingin mengganti email. Cek kotak masuk email baru nanti untuk konfirmasi.</span>
                     </div>
                   </div>
                 </div>
@@ -314,10 +318,9 @@
       toastTimer = setTimeout(() => {
         toast.classList.add('translate-y-24', 'opacity-0');
         toast.classList.remove('translate-y-0', 'opacity-100');
-      }, 4000);
+      }, 5000);
     }
 
-    // Function to keep the date updated (e.g. at midnight)
     function updateDate() {
       var el = document.getElementById('currentDateDisplay');
       if (!el) return;
@@ -325,10 +328,8 @@
           weekday: 'long', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Asia/Makassar'
       }).format(new Date());
     }
-    // Set interval to check every minute, so it changes dynamically without refresh
-    setInterval(updateDate, 60 * 1000);
+    setInterval(updateDate, 60 * 1000); // PERBAIKAN: Syntax Error yang bikin script mati
 
-    // INI YANG DIPERBAIKI UNTUK IKON
     async function checkConnection() {
       try {
         if (typeof window.supabase === 'undefined') throw new Error();
@@ -336,19 +337,12 @@
         if (error && error.code !== 'PGRST116') throw error;
         document.getElementById('supabaseStatusText').innerText = 'Database Terhubung';
         document.getElementById('supabaseStatusPing').innerHTML = `<span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-secondary opacity-75"></span><span class="relative inline-flex rounded-full h-2 w-2 bg-secondary"></span>`;
-        
-        // Ubah warna ikon
         document.getElementById('supabaseStatusIcon').classList.replace('text-outline', 'text-secondary');
-        // Ubah bentuk ikon menjadi centang awan (cloud_done)
         document.getElementById('supabaseStatusIcon').innerText = 'cloud_done';
-        
       } catch(e) {
         document.getElementById('supabaseStatusText').innerText = 'Gagal Terhubung';
         document.getElementById('supabaseStatusPing').innerHTML = `<span class="relative inline-flex rounded-full h-2 w-2 bg-error"></span>`;
-        
-        // Ubah warna ikon
         document.getElementById('supabaseStatusIcon').classList.replace('text-secondary', 'text-error');
-        // Ubah bentuk ikon menjadi awan coret (cloud_off)
         document.getElementById('supabaseStatusIcon').innerText = 'cloud_off';
       }
     }
@@ -365,22 +359,16 @@
 
       document.getElementById('currentEmail').value = session.user.email;
 
-      // Cek dulu apakah tombol btnLogout ada di halaman ini
       const btnLogout = document.getElementById('btnLogout');
-
       if (btnLogout) {
         btnLogout.addEventListener('click', async (e) => {
-          e.preventDefault(); // Mencegah pindah halaman sebelum proses logout selesai
-          
-          // Proses logout Supabase
+          e.preventDefault(); 
           await window.supabase.auth.signOut();
-          
-          // Lempar kembali ke halaman index (login)
           window.location.replace('index.html');
         });
       }
 
-      // Logika Gabungan: Simpan Email & Sandi sekaligus
+      // Logika Auth Update Supabase yang Benar
       document.getElementById('btnSaveChanges').addEventListener('click', async () => {
         const newEmail = document.getElementById('newEmailInput').value.trim();
         const newPass = document.getElementById('newPasswordInput').value;
@@ -412,46 +400,44 @@
           hasChanges = true;
         }
 
-        // Jika form kosong tapi tombol disimpan diklik
         if (!hasChanges) {
           showToast("Tidak ada perubahan baru untuk disimpan.", true);
           return;
         }
 
-        // State Loading Button
         const btn = document.getElementById('btnSaveChanges');
         const originalHtml = btn.innerHTML;
         btn.innerHTML = `<span class="material-symbols-outlined text-body-lg animate-spin">progress_activity</span><span>Menyimpan...</span>`;
         btn.disabled = true;
 
         try {
-          // 1. Eksekusi Ubah Email Jika Ada
           if (newEmail) {
+            // Eksekusi Ubah Email via Supabase
             const { error: errEmail } = await window.supabase.auth.updateUser({ email: newEmail });
-            if (errEmail) throw new Error("Gagal memproses email: " + errEmail.message);
+            if (errEmail) throw new Error("Gagal ubah email: " + errEmail.message);
             emailSuccess = true;
           }
 
-          // 2. Eksekusi Ubah Sandi Jika Ada
           if (newPass) {
+            // Eksekusi Ubah Sandi via Supabase
             const { error: errPass } = await window.supabase.auth.updateUser({ password: newPass });
-            if (errPass) throw new Error("Gagal memperbarui sandi: " + errPass.message);
+            if (errPass) throw new Error("Gagal ubah sandi: " + errPass.message);
             passSuccess = true;
           }
 
           // Atur Pesan Sukses
           let successMsg = "";
           if (emailSuccess && passSuccess) {
-            successMsg = "Kata sandi diubah & tautan verifikasi email telah dikirim!";
+            successMsg = "Sandi diubah! Tautan konfirmasi juga telah dikirim ke email baru.";
           } else if (emailSuccess) {
-            successMsg = "Tautan verifikasi telah dikirim ke email baru Anda.";
+            successMsg = "Sukses! Cek kotak masuk email baru untuk konfirmasi perubahan.";
           } else if (passSuccess) {
             successMsg = "Kata sandi berhasil diperbarui!";
           }
 
           showToast(successMsg);
           
-          // Reset Input field setelah berhasil
+          // Reset form jika sukses
           if (emailSuccess) {
              document.getElementById('newEmailInput').value = '';
              document.getElementById('emailChangeSection').classList.add('hidden');
